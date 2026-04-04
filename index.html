@@ -373,6 +373,12 @@
 </div>
 
 <script>
+  // ระบุไฟล์ที่มีอยู่จริง — เพิ่มตรงนี้เมื่อ upload ไฟล์ใหม่
+  const available = new Set([
+    'quiz_2013_sec2.html',
+    'quiz_2013_sec3.html',
+  ]);
+
   const years = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'];
   const grid = document.getElementById('yearGrid');
   years.forEach(y => {
@@ -382,22 +388,24 @@
     const lbl = document.createElement('span');
     lbl.className = 'year-label';
     lbl.textContent = y;
-
-    const b2 = document.createElement('button');
-    b2.className = 'year-btn';
-    b2.textContent = 'หมวด 2';
-    b2.onclick = () => { window.location.href = `quiz_${y}_sec2.html`; };
-
-    const b3 = document.createElement('button');
-    b3.className = 'year-btn';
-    b3.textContent = 'หมวด 3';
-    b3.onclick = () => {
-      alert(`ข้อสอบปี ${y} หมวด 3 กำลังจัดเตรียม...`);
-    };
-
     row.appendChild(lbl);
-    row.appendChild(b2);
-    row.appendChild(b3);
+
+    [2, 3].forEach(sec => {
+      const filename = `quiz_${y}_sec${sec}.html`;
+      const btn = document.createElement('button');
+      btn.textContent = `หมวด ${sec}`;
+      if (available.has(filename)) {
+        btn.className = `year-btn active-${sec}`;
+        btn.onclick = () => { window.location.href = filename; };
+      } else {
+        btn.className = 'year-btn';
+        btn.disabled = true;
+        btn.style.cssText = 'opacity:0.35;cursor:not-allowed';
+        btn.title = `ยังไม่มีข้อสอบปี ${y} หมวด ${sec}`;
+      }
+      row.appendChild(btn);
+    });
+
     grid.appendChild(row);
   });
 
