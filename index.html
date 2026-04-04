@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คลัง NL</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&family=Noto+Serif+Thai:wght@400;600;700&display=swap');
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --bg:#f4f1eb;
+      --surface:#ffffff;
+      --surface2:#edeae2;
+      --accent:#1a472a;
+      --accent2:#2d6a4f;
+      --accent-light:#d8f3dc;
+      --gold:#a07208;
+      --gold-light:#fef9ec;
+      --text:#111111;
+      --text2:#444440;
+      --text3:#888880;
+      --border:rgba(0,0,0,0.11);
+      --border2:rgba(0,0,0,0.06);
+      --shadow:0 1px 4px rgba(0,0,0,0.07);
+      --r:10px;
+      --transition: color 0.25s, background 0.25s, border-color 0.25s;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Sarabun',sans-serif;
+      min-height:100vh;
+      transition: background 0.3s, color 0.3s;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap{max-width:960px;margin:0 auto;padding:24px 16px}
+
+    /* ── Header ── */
+    .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap}
+    .logo-area{display:flex;align-items:center;gap:14px}
+    .logo-icon{
+      width:46px;height:46px;
+      background:var(--accent);
+      border-radius:11px;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+      box-shadow: 0 2px 8px rgba(26,71,42,0.25);
+    }
+    .logo-icon svg{width:24px;height:24px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .logo-text h1{
+      font-family:'Noto Serif Thai',serif;
+      font-size:23px;font-weight:700;
+      color:var(--accent);
+      letter-spacing:-0.2px;
+      line-height:1.2;
+    }
+    .logo-text .subtitle{
+      font-size:11.5px;
+      color:var(--text3);
+      margin-top:2px;
+      font-weight:400;
+      letter-spacing:0.3px;
+      font-family:'IBM Plex Mono',monospace;
+    }
+
+    .dark-btn{
+      background:var(--surface);
+      border:0.5px solid var(--border);
+      border-radius:8px;
+      padding:7px 14px;
+      font-size:13px;
+      font-family:'Sarabun',sans-serif;
+      color:var(--text2);
+      cursor:pointer;
+      display:flex;align-items:center;gap:6px;
+      transition: var(--transition);
+      font-weight:500;
+    }
+    .dark-btn:hover{background:var(--surface2)}
+
+    /* ── Countdown ── */
+    .countdown{
+      background:var(--accent);
+      border-radius:var(--r);
+      padding:24px 28px;
+      margin-bottom:24px;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+      box-shadow: 0 3px 12px rgba(26,71,42,0.2);
+    }
+    .cd-label{color:rgba(255,255,255,0.7);font-size:12.5px;margin-bottom:5px;font-weight:400;letter-spacing:0.2px}
+    .cd-title{color:white;font-size:17px;font-weight:600;font-family:'Noto Serif Thai',serif;letter-spacing:-0.2px}
+    .cd-units{display:flex;gap:10px;flex-wrap:wrap}
+    .cd-unit{
+      text-align:center;
+      background:rgba(255,255,255,0.13);
+      border:0.5px solid rgba(255,255,255,0.15);
+      border-radius:8px;
+      padding:10px 14px;
+      min-width:64px;
+    }
+    .cd-num{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;color:white;display:block;line-height:1}
+    .cd-lbl{font-size:11px;color:rgba(255,255,255,0.6);margin-top:5px;display:block;letter-spacing:0.3px}
+
+    /* ── Grid ── */
+    .grid{display:grid;grid-template-columns:220px 1fr;gap:20px}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+
+    /* ── Sidebar ── */
+    .sidebar{display:flex;flex-direction:column;gap:12px}
+    .sidebar-card{
+      background:var(--surface);
+      border:0.5px solid var(--border);
+      border-radius:var(--r);
+      padding:16px;
+      box-shadow:var(--shadow);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .sidebar-card h3{
+      font-size:11px;font-weight:600;
+      color:var(--text3);
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:12px;
+    }
+    .year-grid{display:flex;flex-direction:column;gap:5px}
+    .year-row{display:grid;grid-template-columns:52px 1fr 1fr;gap:4px;align-items:center}
+    .year-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--text3)}
+    .year-btn{
+      background:var(--bg);
+      border:0.5px solid var(--border);
+      border-radius:6px;
+      padding:6px 0;
+      font-size:12px;font-weight:500;
+      font-family:'Sarabun',sans-serif;
+      color:var(--text2);
+      cursor:pointer;
+      transition: all 0.15s;
+      text-align:center;
+    }
+    .year-btn:hover{background:var(--accent-light);border-color:var(--accent2);color:var(--accent)}
+    .year-btn.active-2{background:var(--accent);color:white;border-color:var(--accent)}
+    .year-btn.active-3{background:#1e6fb5;color:white;border-color:#1e6fb5}
+
+    .ref-link{
+      display:block;
+      background:var(--gold-light);
+      border:0.5px solid rgba(160,114,8,0.25);
+      border-radius:7px;
+      padding:10px 14px;
+      font-size:13px;font-weight:500;
+      color:var(--gold);
+      cursor:pointer;text-align:center;
+      transition: background 0.2s;
+      text-decoration:none;
+    }
+    .ref-link:hover{background:#fdefc0}
+
+    /* ── Main Card ── */
+    .main-card{
+      background:var(--surface);
+      border:0.5px solid var(--border);
+      border-radius:var(--r);
+      padding:20px 24px;
+      box-shadow:var(--shadow);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .main-card h2{
+      font-size:15px;font-weight:600;
+      color:var(--text);
+      margin-bottom:16px;
+      padding-bottom:12px;
+      border-bottom:0.5px solid var(--border2);
+      font-family:'Noto Serif Thai',serif;
+      letter-spacing:-0.1px;
+    }
+
+    /* ── Todo ── */
+    .todo{display:flex;flex-direction:column;gap:9px}
+    .todo-item{
+      display:flex;gap:14px;
+      padding:13px 16px;
+      border-radius:8px;
+      background:var(--bg);
+      border:0.5px solid var(--border2);
+      align-items:flex-start;
+      transition: border-color 0.15s, background 0.3s;
+    }
+    .todo-item:hover{border-color:var(--border)}
+    .todo-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:6px}
+    .dot-green{background:#2d6a4f}
+    .dot-blue{background:#1e6fb5}
+    .dot-orange{background:#c45c10}
+    .dot-purple{background:#6b3fa0}
+    .dot-gold{background:#a07208}
+    .todo-info{flex:1}
+    .todo-date{
+      font-size:11.5px;
+      font-family:'IBM Plex Mono',monospace;
+      color:var(--text3);
+      margin-bottom:3px;
+      letter-spacing:0.1px;
+    }
+    .todo-task{font-size:14px;font-weight:500;color:var(--text);line-height:1.4}
+    .todo-badge{
+      display:inline-block;
+      font-size:11px;
+      padding:2px 9px;
+      border-radius:20px;
+      margin-top:5px;
+      font-weight:600;
+      letter-spacing:0.3px;
+    }
+    .badge-green{background:#d8f3dc;color:#1a472a}
+    .badge-blue{background:#ddeeff;color:#1e6fb5}
+    .badge-orange{background:#fce8d8;color:#c45c10}
+    .badge-gold{background:#fef3d0;color:#a07208}
+
+    /* ── DARK MODE ── */
+    body.dark{
+      --bg:#0e1411;
+      --surface:#162019;
+      --surface2:#1c2820;
+      --accent:#52b788;
+      --accent2:#74c69d;
+      --accent-light:#162d22;
+      --gold:#e8b84b;
+      --gold-light:#1e1a08;
+      --text:#f0ede4;
+      --text2:#c8c8b8;
+      --text3:#737368;
+      --border:rgba(255,255,255,0.09);
+      --border2:rgba(255,255,255,0.055);
+      --shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+
+    body.dark .countdown{
+      background: linear-gradient(135deg, #152c1f 0%, #1a3828 100%);
+      border:0.5px solid rgba(82,183,136,0.25);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+    }
+    body.dark .cd-unit{background:rgba(82,183,136,0.1);border-color:rgba(82,183,136,0.15)}
+    body.dark .cd-title{color:#a7e8c4;font-family:'Noto Serif Thai',serif}
+    body.dark .cd-label{color:rgba(167,232,196,0.55)}
+    body.dark .cd-num{color:#74c69d}
+    body.dark .cd-lbl{color:rgba(167,232,196,0.5)}
+
+    body.dark .logo-text h1{color:#74c69d}
+    body.dark .logo-text .subtitle{color:var(--text3)}
+    body.dark .logo-icon{background:#1e3d2a;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+    body.dark .logo-icon svg{stroke:#74c69d}
+
+    body.dark .year-btn.active-2{background:var(--accent);color:#0e1411}
+    body.dark .year-btn.active-3{background:#378add;color:#0e1411}
+    body.dark .year-btn:hover{background:var(--accent-light);color:var(--accent2);border-color:var(--accent)}
+
+    body.dark .ref-link{
+      color:var(--gold);
+      background:#1e1a08;
+      border-color:rgba(232,184,75,0.2);
+    }
+    body.dark .ref-link:hover{background:#262008}
+
+    body.dark .dot-green{background:#52b788}
+    body.dark .dot-gold{background:#e8b84b}
+
+    body.dark .main-card h2{color:#e8e4d8}
+    body.dark .todo-task{color:#e8e4d8}
+    body.dark .todo-date{color:var(--text3)}
+
+    body.dark .badge-green{background:#162d22;color:#74c69d}
+    body.dark .badge-blue{background:#102035;color:#5baee8}
+    body.dark .badge-orange{background:#2a1508;color:#e8884b}
+    body.dark .badge-gold{background:#1e1a08;color:#e8b84b}
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hdr">
+    <div class="logo-area">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="12 2 2 7 12 12 22 7 12 2"></polyline>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <h1>คลัง NL</h1>
+        <span class="subtitle">by c.cxn.n vmkku35</span>
+      </div>
+    </div>
+    <button class="dark-btn" id="themeBtn" onclick="toggleDark()">
+      <span id="themeIcon">🌙</span>
+      <span id="themeLabel">Dark Mode</span>
+    </button>
+  </header>
+
+  <div class="countdown">
+    <div>
+      <div class="cd-label">นับถอยหลังสู่วันสอบ</div>
+      <div class="cd-title">สอบ NL — 6 มิถุนายน 2029</div>
+    </div>
+    <div class="cd-units">
+      <div class="cd-unit"><span class="cd-num" id="cd-d">--</span><span class="cd-lbl">วัน</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">ชั่วโมง</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">นาที</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">วินาที</span></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <h3>ปีข้อสอบ</h3>
+        <div class="year-grid" id="yearGrid"></div>
+      </div>
+      <div class="sidebar-card">
+        <h3>ลิงก์</h3>
+        <a class="ref-link" href="reference.html">📚 Reference</a>
+      </div>
+    </aside>
+
+    <main class="main-card">
+      <h2>กำหนดการสอบ</h2>
+      <div class="todo">
+        <div class="todo-item">
+          <div class="todo-dot dot-green"></div>
+          <div class="todo-info">
+            <div class="todo-date">27 เม.ย. — 08 พ.ค. 2029</div>
+            <div class="todo-task">สมัครสอบ NL</div>
+            <span class="todo-badge badge-green">สมัคร</span>
+          </div>
+        </div>
+        <div class="todo-item">
+          <div class="todo-dot dot-blue"></div>
+          <div class="todo-info">
+            <div class="todo-date">15 พ.ค. 2029</div>
+            <div class="todo-task">ประกาศที่นั่งสอบ</div>
+            <span class="todo-badge badge-blue">ประกาศ</span>
+          </div>
+        </div>
+        <div class="todo-item">
+          <div class="todo-dot dot-orange"></div>
+          <div class="todo-info">
+            <div class="todo-date">06 มิ.ย. 2029 · 13:30 — 16:30 น.</div>
+            <div class="todo-task">สอบหมวด 2</div>
+            <span class="todo-badge badge-orange">สอบ</span>
+          </div>
+        </div>
+        <div class="todo-item">
+          <div class="todo-dot dot-purple"></div>
+          <div class="todo-info">
+            <div class="todo-date">07 มิ.ย. 2029 · 09:30 — 12:30 น.</div>
+            <div class="todo-task">สอบหมวด 3</div>
+            <span class="todo-badge badge-orange">สอบ</span>
+          </div>
+        </div>
+        <div class="todo-item">
+          <div class="todo-dot dot-gold"></div>
+          <div class="todo-info">
+            <div class="todo-date">24 ก.ค. 2029</div>
+            <div class="todo-task">ประกาศผลสอบ</div>
+            <span class="todo-badge badge-gold">ผล</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  // ระบุไฟล์ที่มีอยู่จริง — เพิ่มตรงนี้เมื่อ upload ไฟล์ใหม่
+  const available = new Set([
+    'quiz_2013_sec2.html',
+    'quiz_2013_sec3.html',
+  ]);
+
+  const years = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'];
+  const grid = document.getElementById('yearGrid');
+  years.forEach(y => {
+    const row = document.createElement('div');
+    row.className = 'year-row';
+
+    const lbl = document.createElement('span');
+    lbl.className = 'year-label';
+    lbl.textContent = y;
+    row.appendChild(lbl);
+
+    [2, 3].forEach(sec => {
+      const filename = `quiz_${y}_sec${sec}.html`;
+      const btn = document.createElement('button');
+      btn.textContent = `หมวด ${sec}`;
+      if (available.has(filename)) {
+        btn.className = `year-btn active-${sec}`;
+        btn.onclick = () => { window.location.href = filename; };
+      } else {
+        btn.className = 'year-btn';
+        btn.disabled = true;
+        btn.style.cssText = 'opacity:0.35;cursor:not-allowed';
+        btn.title = `ยังไม่มีข้อสอบปี ${y} หมวด ${sec}`;
+      }
+      row.appendChild(btn);
+    });
+
+    grid.appendChild(row);
+  });
+
+  const target = new Date("2029-06-06T00:00:00").getTime();
+  function tick(){
+    const now = Date.now();
+    const d = target - now;
+    if(d <= 0){
+      ['cd-d','cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent='00');
+      return;
+    }
+    document.getElementById('cd-d').textContent = String(Math.floor(d/86400000)).padStart(2,'0');
+    document.getElementById('cd-h').textContent = String(Math.floor(d%86400000/3600000)).padStart(2,'0');
+    document.getElementById('cd-m').textContent = String(Math.floor(d%3600000/60000)).padStart(2,'0');
+    document.getElementById('cd-s').textContent = String(Math.floor(d%60000/1000)).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 1000);
+
+  function toggleDark(){
+    const dark = document.body.classList.toggle('dark');
+    document.getElementById('themeIcon').textContent = dark ? '☀️' : '🌙';
+    document.getElementById('themeLabel').textContent = dark ? 'Light Mode' : 'Dark Mode';
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }
+
+  // Restore saved theme
+  if(localStorage.getItem('theme') === 'dark'){
+    document.body.classList.add('dark');
+    document.getElementById('themeIcon').textContent = '☀️';
+    document.getElementById('themeLabel').textContent = 'Light Mode';
+  }
+</script>
+
+</body>
+</html>
