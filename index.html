@@ -39,7 +39,6 @@
 
     .wrap{max-width:960px;margin:0 auto;padding:24px 16px}
 
-    /* ── Header ── */
     .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap}
     .logo-area{display:flex;align-items:center;gap:14px}
     .logo-icon{
@@ -81,7 +80,6 @@
     }
     .dark-btn:hover{background:var(--surface2)}
 
-    /* ── Countdown ── */
     .countdown{
       background:var(--accent);
       border-radius:var(--r);
@@ -104,11 +102,9 @@
     .cd-num{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;color:white;display:block;line-height:1}
     .cd-lbl{font-size:11px;color:rgba(255,255,255,0.6);margin-top:5px;display:block;letter-spacing:0.3px}
 
-    /* ── Grid ── */
     .grid{display:grid;grid-template-columns:220px 1fr;gap:20px}
     @media(max-width:640px){.grid{grid-template-columns:1fr}}
 
-    /* ── Sidebar ── */
     .sidebar{display:flex;flex-direction:column;gap:12px}
     .sidebar-card{
       background:var(--surface);
@@ -118,13 +114,8 @@
       box-shadow:var(--shadow);
       transition: background 0.3s, border-color 0.3s;
     }
-    .sidebar-card h3{
-      font-size:11px;font-weight:600;
-      color:var(--text3);
-      text-transform:uppercase;
-      letter-spacing:1px;
-      margin-bottom:12px;
-    }
+    .sidebar-card h3{ display:none } /* replaced by section-header */
+
     .year-grid{display:flex;flex-direction:column;gap:5px}
     .year-row{display:grid;grid-template-columns:52px 1fr 1fr;gap:4px;align-items:center}
     .year-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--text3)}
@@ -144,6 +135,40 @@
     .year-btn.active-2{background:var(--accent);color:white;border-color:var(--accent)}
     .year-btn.active-3{background:#1e6fb5;color:white;border-color:#1e6fb5}
 
+    /* ── Section headers (KU & KKU) ── */
+    .section-divider{
+      display:flex;align-items:center;gap:8px;
+      margin-bottom:10px;
+    }
+    .section-divider-line{flex:1;height:1px;}
+    .section-divider-label{
+      font-size:11px;font-weight:800;letter-spacing:1.8px;
+      text-transform:uppercase;
+      font-family:'IBM Plex Mono',monospace;
+      white-space:nowrap;
+      padding:3px 10px;
+      border-radius:20px;
+    }
+
+    /* KU — green */
+    .section-divider.ku .section-divider-line{background:linear-gradient(90deg,transparent,#2d6a4f88,transparent)}
+    .section-divider.ku .section-divider-label{
+      background:linear-gradient(135deg,#1a472a,#2d6a4f);
+      color:#b7f5cc;
+      box-shadow:0 1px 6px rgba(26,71,42,0.25);
+    }
+
+    /* KKU — indigo/purple */
+    .section-divider.kku .section-divider-line{background:linear-gradient(90deg,transparent,#4f39a888,transparent)}
+    .section-divider.kku .section-divider-label{
+      background:linear-gradient(135deg,#3b2f8a,#5b3fc8);
+      color:#d6ccff;
+      box-shadow:0 1px 6px rgba(75,50,180,0.28);
+    }
+
+    /* KKU gap */
+    .kku-gap{margin-top:14px}
+
     .ref-link{
       display:block;
       background:var(--gold-light);
@@ -158,7 +183,6 @@
     }
     .ref-link:hover{background:#fdefc0}
 
-    /* ── Main Card ── */
     .main-card{
       background:var(--surface);
       border:0.5px solid var(--border);
@@ -177,7 +201,6 @@
       letter-spacing:-0.1px;
     }
 
-    /* ── Todo ── */
     .todo{display:flex;flex-direction:column;gap:9px}
     .todo-item{
       display:flex;gap:14px;
@@ -196,80 +219,47 @@
     .dot-purple{background:#6b3fa0}
     .dot-gold{background:#a07208}
     .todo-info{flex:1}
-    .todo-date{
-      font-size:11.5px;
-      font-family:'IBM Plex Mono',monospace;
-      color:var(--text3);
-      margin-bottom:3px;
-      letter-spacing:0.1px;
-    }
+    .todo-date{font-size:11.5px;font-family:'IBM Plex Mono',monospace;color:var(--text3);margin-bottom:3px;letter-spacing:0.1px}
     .todo-task{font-size:14px;font-weight:500;color:var(--text);line-height:1.4}
-    .todo-badge{
-      display:inline-block;
-      font-size:11px;
-      padding:2px 9px;
-      border-radius:20px;
-      margin-top:5px;
-      font-weight:600;
-      letter-spacing:0.3px;
-    }
+    .todo-badge{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;margin-top:5px;font-weight:600;letter-spacing:0.3px}
     .badge-green{background:#d8f3dc;color:#1a472a}
     .badge-blue{background:#ddeeff;color:#1e6fb5}
     .badge-orange{background:#fce8d8;color:#c45c10}
     .badge-gold{background:#fef3d0;color:#a07208}
 
-    /* ── DARK MODE ── */
+    /* DARK MODE */
     body.dark{
-      --bg:#0e1411;
-      --surface:#162019;
-      --surface2:#1c2820;
-      --accent:#52b788;
-      --accent2:#74c69d;
-      --accent-light:#162d22;
-      --gold:#e8b84b;
-      --gold-light:#1e1a08;
-      --text:#f0ede4;
-      --text2:#c8c8b8;
-      --text3:#737368;
-      --border:rgba(255,255,255,0.09);
-      --border2:rgba(255,255,255,0.055);
+      --bg:#0e1411;--surface:#162019;--surface2:#1c2820;
+      --accent:#52b788;--accent2:#74c69d;--accent-light:#162d22;
+      --gold:#e8b84b;--gold-light:#1e1a08;
+      --text:#f0ede4;--text2:#c8c8b8;--text3:#737368;
+      --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.055);
       --shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
-
-    body.dark .countdown{
-      background: linear-gradient(135deg, #152c1f 0%, #1a3828 100%);
-      border:0.5px solid rgba(82,183,136,0.25);
-      box-shadow: 0 3px 12px rgba(0,0,0,0.4);
-    }
+    body.dark .countdown{background:linear-gradient(135deg,#152c1f 0%,#1a3828 100%);border:0.5px solid rgba(82,183,136,0.25);box-shadow:0 3px 12px rgba(0,0,0,0.4)}
     body.dark .cd-unit{background:rgba(82,183,136,0.1);border-color:rgba(82,183,136,0.15)}
-    body.dark .cd-title{color:#a7e8c4;font-family:'Noto Serif Thai',serif}
+    body.dark .cd-title{color:#a7e8c4}
     body.dark .cd-label{color:rgba(167,232,196,0.55)}
     body.dark .cd-num{color:#74c69d}
     body.dark .cd-lbl{color:rgba(167,232,196,0.5)}
-
     body.dark .logo-text h1{color:#74c69d}
     body.dark .logo-text .subtitle{color:var(--text3)}
     body.dark .logo-icon{background:#1e3d2a;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
     body.dark .logo-icon svg{stroke:#74c69d}
-
     body.dark .year-btn.active-2{background:var(--accent);color:#0e1411}
     body.dark .year-btn.active-3{background:#378add;color:#0e1411}
     body.dark .year-btn:hover{background:var(--accent-light);color:var(--accent2);border-color:var(--accent)}
-
-    body.dark .ref-link{
-      color:var(--gold);
-      background:#1e1a08;
-      border-color:rgba(232,184,75,0.2);
-    }
+    body.dark .section-divider.ku .section-divider-line{background:linear-gradient(90deg,transparent,#52b78866,transparent)}
+    body.dark .section-divider.ku .section-divider-label{background:linear-gradient(135deg,#1a3d2a,#2d6a4f);color:#74c69d;box-shadow:0 1px 8px rgba(82,183,136,0.2)}
+    body.dark .section-divider.kku .section-divider-line{background:linear-gradient(90deg,transparent,#7c5ce866,transparent)}
+    body.dark .section-divider.kku .section-divider-label{background:linear-gradient(135deg,#2a1f5c,#4a35a8);color:#c4b5fd;box-shadow:0 1px 8px rgba(124,92,232,0.25)}
+    body.dark .ref-link{color:var(--gold);background:#1e1a08;border-color:rgba(232,184,75,0.2)}
     body.dark .ref-link:hover{background:#262008}
-
     body.dark .dot-green{background:#52b788}
     body.dark .dot-gold{background:#e8b84b}
-
     body.dark .main-card h2{color:#e8e4d8}
     body.dark .todo-task{color:#e8e4d8}
     body.dark .todo-date{color:var(--text3)}
-
     body.dark .badge-green{background:#162d22;color:#74c69d}
     body.dark .badge-blue{background:#102035;color:#5baee8}
     body.dark .badge-orange{background:#2a1508;color:#e8884b}
@@ -315,9 +305,23 @@
   <div class="grid">
     <aside class="sidebar">
       <div class="sidebar-card">
-        <h3>ปีข้อสอบ</h3>
+        <!-- KU header -->
+        <div class="section-divider ku">
+          <div class="section-divider-line"></div>
+          <span class="section-divider-label">KU</span>
+          <div class="section-divider-line"></div>
+        </div>
         <div class="year-grid" id="yearGrid"></div>
+
+        <!-- KKU header -->
+        <div class="section-divider kku kku-gap">
+          <div class="section-divider-line"></div>
+          <span class="section-divider-label">KKU</span>
+          <div class="section-divider-line"></div>
+        </div>
+        <div class="year-row" id="kkuRow"></div>
       </div>
+
       <div class="sidebar-card">
         <h3>ลิงก์</h3>
         <a class="ref-link" href="reference.html">📚 Reference</a>
@@ -373,17 +377,22 @@
 </div>
 
 <script>
-  // ระบุไฟล์ที่มีอยู่จริง — เพิ่มตรงนี้เมื่อ upload ไฟล์ใหม่
+  // ── ไฟล์ที่มีอยู่จริง — เพิ่มตรงนี้เมื่อ upload ไฟล์ใหม่ ──
   const available = new Set([
     'quiz_2013_sec2.html',
     'quiz_2013_sec3.html',
     'quiz_2014_sec2.html',
-    'quiz_2015_sec2.html',
+    'quiz_2015_sec2.thml',
     'quiz_2015_sec3.html',
+    // KKU — เพิ่ม/ลบตรงนี้
+    // 'quiz_kku_sec2.html',
+    // 'quiz_kku_sec3.html',
   ]);
 
-  const years = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'];
+  // ── ปีข้อสอบ KU (ลบ 2022, 2023 ออก) ──
+  const years = ['2013','2014','2015','2016','2017','2018','2019','2020','2021'];
   const grid = document.getElementById('yearGrid');
+
   years.forEach(y => {
     const row = document.createElement('div');
     row.className = 'year-row';
@@ -412,6 +421,31 @@
     grid.appendChild(row);
   });
 
+  // ── KKU row ──
+  const kkuRow = document.getElementById('kkuRow');
+
+  const kkuLbl = document.createElement('span');
+  kkuLbl.className = 'year-label';
+  kkuLbl.textContent = 'KKU';
+  kkuRow.appendChild(kkuLbl);
+
+  [2, 3].forEach(sec => {
+    const filename = `quiz_kku_sec${sec}.html`;
+    const btn = document.createElement('button');
+    btn.textContent = `หมวด ${sec}`;
+    if (available.has(filename)) {
+      btn.className = `year-btn active-${sec}`;
+      btn.onclick = () => { window.location.href = filename; };
+    } else {
+      btn.className = 'year-btn';
+      btn.disabled = true;
+      btn.style.cssText = 'opacity:0.35;cursor:not-allowed';
+      btn.title = `ยังไม่มีข้อสอบ KKU หมวด ${sec}`;
+    }
+    kkuRow.appendChild(btn);
+  });
+
+  // ── Countdown ──
   const target = new Date("2029-06-06T00:00:00").getTime();
   function tick(){
     const now = Date.now();
@@ -434,7 +468,6 @@
     localStorage.setItem('theme', dark ? 'dark' : 'light');
   }
 
-  // Restore saved theme
   if(localStorage.getItem('theme') === 'dark'){
     document.body.classList.add('dark');
     document.getElementById('themeIcon').textContent = '☀️';
