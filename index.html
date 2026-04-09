@@ -10,12 +10,12 @@
     *{box-sizing:border-box;margin:0;padding:0}
 
     :root{
-      --bg:#f4f1eb;
-      --surface:#ffffff;
-      --surface2:#edeae2;
-      --accent:#1a472a;
-      --accent2:#2d6a4f;
-      --accent-light:#d8f3dc;
+      --bg:#F2E0D0;
+      --surface:#fdf6f0;
+      --surface2:#e8d4c2;
+      --accent:#6E88B0;
+      --accent2:#5a749e;
+      --accent-light:#dce6f3;
       --gold:#a07208;
       --gold-light:#fef9ec;
       --text:#111111;
@@ -43,16 +43,16 @@
     .logo-area{display:flex;align-items:center;gap:14px}
     .logo-icon{
       width:46px;height:46px;
-      background:var(--accent);
+      background:#6E88B0;
       border-radius:11px;
       display:flex;align-items:center;justify-content:center;flex-shrink:0;
-      box-shadow: 0 2px 8px rgba(26,71,42,0.25);
+      box-shadow: 0 2px 8px rgba(110,136,176,0.3);
     }
     .logo-icon svg{width:24px;height:24px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
     .logo-text h1{
       font-family:'Noto Serif Thai',serif;
       font-size:23px;font-weight:700;
-      color:var(--accent);
+      color:#6E88B0;
       letter-spacing:-0.2px;
       line-height:1.2;
     }
@@ -81,12 +81,12 @@
     .dark-btn:hover{background:var(--surface2)}
 
     .countdown{
-      background:var(--accent);
+      background:#6E88B0;
       border-radius:var(--r);
       padding:24px 28px;
       margin-bottom:24px;
       display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
-      box-shadow: 0 3px 12px rgba(26,71,42,0.2);
+      box-shadow: 0 3px 12px rgba(110,136,176,0.3);
     }
     .cd-label{color:rgba(255,255,255,0.7);font-size:12.5px;margin-bottom:5px;font-weight:400;letter-spacing:0.2px}
     .cd-title{color:white;font-size:17px;font-weight:600;font-family:'Noto Serif Thai',serif;letter-spacing:-0.2px}
@@ -131,9 +131,23 @@
       transition: all 0.15s;
       text-align:center;
     }
-    .year-btn:hover{background:var(--accent-light);border-color:var(--accent2);color:var(--accent)}
-    .year-btn.active-2{background:var(--accent);color:white;border-color:var(--accent)}
-    .year-btn.active-3{background:#1e6fb5;color:white;border-color:#1e6fb5}
+    .year-btn:hover{background:var(--accent-light);border-color:var(--accent2);color:#4a6a96}
+    .year-btn.active-2{
+      background:#C5E384;
+      color:#1a3a00;
+      border-color:#a8cc5a;
+      font-weight:700;
+      box-shadow:0 2px 8px rgba(197,227,132,0.45);
+      letter-spacing:0.1px;
+    }
+    .year-btn.active-3{
+      background:#200F07;
+      color:#f5e6d8;
+      border-color:#3a1a0a;
+      font-weight:700;
+      box-shadow:0 2px 8px rgba(32,15,7,0.35);
+      letter-spacing:0.1px;
+    }
 
     /* ── Section headers (KU & KKU) ── */
     .section-divider{
@@ -150,20 +164,20 @@
       border-radius:20px;
     }
 
-    /* KU — green */
-    .section-divider.ku .section-divider-line{background:linear-gradient(90deg,transparent,#2d6a4f88,transparent)}
+    /* KU — blue mirage */
+    .section-divider.ku .section-divider-line{background:linear-gradient(90deg,transparent,#6E88B088,transparent)}
     .section-divider.ku .section-divider-label{
-      background:linear-gradient(135deg,#1a472a,#2d6a4f);
-      color:#b7f5cc;
-      box-shadow:0 1px 6px rgba(26,71,42,0.25);
+      background:linear-gradient(135deg,#4a6a96,#6E88B0);
+      color:#e8f0fa;
+      box-shadow:0 1px 6px rgba(110,136,176,0.3);
     }
 
-    /* KKU — indigo/purple */
-    .section-divider.kku .section-divider-line{background:linear-gradient(90deg,transparent,#4f39a888,transparent)}
+    /* KKU — blue mirage deeper */
+    .section-divider.kku .section-divider-line{background:linear-gradient(90deg,transparent,#4a6a9688,transparent)}
     .section-divider.kku .section-divider-label{
-      background:linear-gradient(135deg,#3b2f8a,#5b3fc8);
-      color:#d6ccff;
-      box-shadow:0 1px 6px rgba(75,50,180,0.28);
+      background:linear-gradient(135deg,#364f72,#4a6a96);
+      color:#d0dff5;
+      box-shadow:0 1px 6px rgba(70,106,150,0.3);
     }
 
     /* KKU gap */
@@ -229,39 +243,54 @@
 
     /* DARK MODE */
     body.dark{
-      --bg:#0e1411;--surface:#162019;--surface2:#1c2820;
-      --accent:#52b788;--accent2:#74c69d;--accent-light:#162d22;
+      --bg:#222222;--surface:#2c2c2c;--surface2:#333333;
+      --accent:#C2D8C4;--accent2:#a8c8ab;--accent-light:#2a3a2c;
       --gold:#e8b84b;--gold-light:#1e1a08;
       --text:#f0ede4;--text2:#c8c8b8;--text3:#737368;
       --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.055);
       --shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
-    body.dark .countdown{background:linear-gradient(135deg,#152c1f 0%,#1a3828 100%);border:0.5px solid rgba(82,183,136,0.25);box-shadow:0 3px 12px rgba(0,0,0,0.4)}
-    body.dark .cd-unit{background:rgba(82,183,136,0.1);border-color:rgba(82,183,136,0.15)}
-    body.dark .cd-title{color:#a7e8c4}
-    body.dark .cd-label{color:rgba(167,232,196,0.55)}
-    body.dark .cd-num{color:#74c69d}
-    body.dark .cd-lbl{color:rgba(167,232,196,0.5)}
-    body.dark .logo-text h1{color:#74c69d}
+    body.dark .countdown{background:#2c3c2e;border:0.5px solid rgba(194,216,196,0.25);box-shadow:0 3px 12px rgba(0,0,0,0.4)}
+    body.dark .cd-unit{background:rgba(194,216,196,0.1);border-color:rgba(194,216,196,0.15)}
+    body.dark .cd-title{color:#C2D8C4}
+    body.dark .cd-label{color:rgba(194,216,196,0.6)}
+    body.dark .cd-num{color:#C2D8C4}
+    body.dark .cd-lbl{color:rgba(194,216,196,0.5)}
+    body.dark .logo-text h1{color:#C2D8C4}
     body.dark .logo-text .subtitle{color:var(--text3)}
-    body.dark .logo-icon{background:#1e3d2a;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
-    body.dark .logo-icon svg{stroke:#74c69d}
-    body.dark .year-btn.active-2{background:var(--accent);color:#0e1411}
-    body.dark .year-btn.active-3{background:#378add;color:#0e1411}
+    body.dark .logo-icon{background:#2a3a2c;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+    body.dark .logo-icon svg{stroke:#C2D8C4}
+    body.dark .year-btn.active-2{
+      background:#E8A736;
+      color:#1a0e00;
+      border-color:#c98a1a;
+      font-weight:700;
+      box-shadow:0 2px 10px rgba(232,167,54,0.4);
+    }
+    body.dark .year-btn.active-3{
+      background:#FAEFD9;
+      color:#200F07;
+      border-color:#e0d0aa;
+      font-weight:700;
+      box-shadow:0 2px 10px rgba(250,239,217,0.2);
+    }
     body.dark .year-btn:hover{background:var(--accent-light);color:var(--accent2);border-color:var(--accent)}
-    body.dark .section-divider.ku .section-divider-line{background:linear-gradient(90deg,transparent,#52b78866,transparent)}
-    body.dark .section-divider.ku .section-divider-label{background:linear-gradient(135deg,#1a3d2a,#2d6a4f);color:#74c69d;box-shadow:0 1px 8px rgba(82,183,136,0.2)}
-    body.dark .section-divider.kku .section-divider-line{background:linear-gradient(90deg,transparent,#7c5ce866,transparent)}
-    body.dark .section-divider.kku .section-divider-label{background:linear-gradient(135deg,#2a1f5c,#4a35a8);color:#c4b5fd;box-shadow:0 1px 8px rgba(124,92,232,0.25)}
+    body.dark .section-divider.ku .section-divider-line{background:linear-gradient(90deg,transparent,#C2D8C466,transparent)}
+    body.dark .section-divider.ku .section-divider-label{background:linear-gradient(135deg,#2a3a2c,#3d5c40);color:#C2D8C4;box-shadow:0 1px 8px rgba(194,216,196,0.15)}
+    body.dark .section-divider.kku .section-divider-line{background:linear-gradient(90deg,transparent,#a8c8ab66,transparent)}
+    body.dark .section-divider.kku .section-divider-label{background:linear-gradient(135deg,#243428,#354d38);color:#b8d4ba;box-shadow:0 1px 8px rgba(168,200,171,0.15)}
     body.dark .ref-link{color:var(--gold);background:#1e1a08;border-color:rgba(232,184,75,0.2)}
     body.dark .ref-link:hover{background:#262008}
-    body.dark .dot-green{background:#52b788}
+    body.dark .dot-green{background:#C2D8C4}
+    body.dark .dot-blue{background:#8ab0d8}
+    body.dark .dot-orange{background:#e8884b}
+    body.dark .dot-purple{background:#b8a0d8}
     body.dark .dot-gold{background:#e8b84b}
     body.dark .main-card h2{color:#e8e4d8}
     body.dark .todo-task{color:#e8e4d8}
     body.dark .todo-date{color:var(--text3)}
-    body.dark .badge-green{background:#162d22;color:#74c69d}
-    body.dark .badge-blue{background:#102035;color:#5baee8}
+    body.dark .badge-green{background:#2a3a2c;color:#C2D8C4}
+    body.dark .badge-blue{background:#1a2a3a;color:#8ab0d8}
     body.dark .badge-orange{background:#2a1508;color:#e8884b}
     body.dark .badge-gold{background:#1e1a08;color:#e8b84b}
   </style>
@@ -322,10 +351,6 @@
         <div class="year-row" id="kkuRow"></div>
       </div>
 
-      <div class="sidebar-card">
-        <h3>ลิงก์</h3>
-        <a class="ref-link" href="reference.html">📚 Reference</a>
-      </div>
     </aside>
 
     <main class="main-card">
