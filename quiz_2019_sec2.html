@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คลัง NL — 2019 หมวด 2</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#f7f5f0;--surface:#ffffff;--surface2:#f0ede6;
+      --accent:#1a472a;--accent2:#2d6a4f;--accent-light:#d8f3dc;
+      --gold:#b5830a;--gold-light:#fff3cd;
+      --text:#1c1c1c;--text2:#555550;--text3:#888880;
+      --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.06);
+      --shadow:0 1px 3px rgba(0,0,0,0.08);
+      --correct:#1a472a;--correct-bg:#d8f3dc;
+      --wrong:#991b1b;--wrong-bg:#fee2e2;--r:10px;
+    }
+    body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh}
+    header{background:var(--surface);border-bottom:0.5px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:50}
+    .hdr-left{display:flex;align-items:center;gap:10px}
+    .back-btn{background:none;border:0.5px solid var(--border);border-radius:7px;padding:6px 12px;font-size:13px;font-family:'Sarabun',sans-serif;color:var(--text2);cursor:pointer;transition:background 0.15s;display:flex;align-items:center;gap:5px}
+    .back-btn:hover{background:var(--surface2)}
+    .hdr-title{font-size:15px;font-weight:600;color:var(--accent)}
+    .hdr-sub{font-size:12px;color:var(--text3);font-family:'IBM Plex Mono',monospace}
+    .dark-btn{background:none;border:0.5px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-family:'Sarabun',sans-serif;color:var(--text2);cursor:pointer;transition:background 0.15s}
+    .dark-btn:hover{background:var(--surface2)}
+    .layout{display:grid;grid-template-columns:1fr 260px;gap:20px;max-width:1100px;margin:0 auto;padding:20px 16px;align-items:start}
+    @media(max-width:768px){.layout{grid-template-columns:1fr}}
+    .sidebar-panel{position:sticky;top:68px}
+    @media(max-width:768px){.sidebar-panel{position:static;order:2}}
+    .q-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:24px 28px;box-shadow:var(--shadow)}
+    .q-meta{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+    .q-num-badge{background:var(--accent);color:white;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px}
+    .q-bookmark{background:none;border:0.5px solid var(--border);border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer;color:var(--text3);transition:all 0.15s;font-family:'Sarabun',sans-serif}
+    .q-bookmark.active{background:var(--gold-light);border-color:var(--gold);color:var(--gold)}
+    .q-text{font-size:16px;line-height:1.8;margin-bottom:20px;color:var(--text);font-weight:500}
+    .options{display:flex;flex-direction:column;gap:8px}
+    .opt{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border:0.5px solid var(--border);border-radius:8px;cursor:pointer;background:var(--bg);transition:all 0.15s;text-align:left;font-family:'Sarabun',sans-serif;font-size:15px;color:var(--text);line-height:1.6;width:100%}
+    .opt:hover:not(.disabled){background:var(--accent-light);border-color:var(--accent2)}
+    .opt.disabled{cursor:default}
+    .opt.correct{background:var(--correct-bg);border-color:var(--correct);color:var(--correct)}
+    .opt.selected-wrong{background:var(--wrong-bg);border-color:var(--wrong);color:var(--wrong)}
+    .opt-key{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:14px;flex-shrink:0;margin-top:1px;min-width:18px}
+    .feedback{margin-top:20px;padding:16px 20px;border-radius:8px;display:none}
+    .feedback.show{display:block}
+    .feedback.correct-fb{background:var(--correct-bg);border:0.5px solid var(--correct)}
+    .feedback.wrong-fb{background:var(--wrong-bg);border:0.5px solid var(--wrong)}
+    .fb-header{font-weight:600;font-size:15px;margin-bottom:8px}
+    .fb-header.correct-fb{color:var(--correct)}
+    .fb-header.wrong-fb{color:var(--wrong)}
+    .fb-body{font-size:14px;line-height:1.8;color:var(--text2)}
+    .fb-ref{margin-top:10px;font-size:12px;color:var(--text3);border-top:0.5px solid rgba(0,0,0,0.1);padding-top:8px}
+    .fb-ref strong{color:var(--text2)}
+    .nav-btns{display:flex;justify-content:space-between;margin-top:20px;gap:12px}
+    .nav-btn{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:10px 20px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.15s;flex:1;text-align:center}
+    .nav-btn:hover:not(:disabled){background:var(--surface2)}
+    .nav-btn:disabled{opacity:0.3;cursor:default}
+    .nav-btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+    .nav-btn.primary:hover{background:var(--accent2)}
+    .sidebar-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:16px}
+    .sidebar-card h3{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px}
+    .progress-bar-wrap{background:var(--bg);border-radius:20px;height:8px;overflow:hidden;margin-bottom:8px}
+    .progress-bar-fill{height:100%;background:var(--accent);border-radius:20px;transition:width 0.3s}
+    .progress-label{font-size:12px;color:var(--text3);font-family:'IBM Plex Mono',monospace;text-align:right}
+    .score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .score-label{font-size:13px;color:var(--text2)}
+    .score-val{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600}
+    .q-nav-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+    .q-nav-btn{background:var(--bg);border:0.5px solid var(--border);border-radius:5px;padding:5px 2px;font-size:11px;font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--text3);cursor:pointer;text-align:center;transition:all 0.15s}
+    .q-nav-btn:hover{background:var(--accent-light);color:var(--accent)}
+    .q-nav-btn.current{background:var(--accent);color:white;border-color:var(--accent)}
+    .q-nav-btn.answered-correct{background:var(--correct-bg);color:var(--correct);border-color:var(--correct)}
+    .q-nav-btn.answered-wrong{background:var(--wrong-bg);color:var(--wrong);border-color:var(--wrong)}
+    .q-nav-btn.bookmarked{box-shadow:0 0 0 1.5px var(--gold)}
+    body.dark{--bg:#111613;--surface:#1a2020;--surface2:#1f2726;--accent:#52b788;--accent2:#74c69d;--accent-light:#1b3a2a;--gold:#f4c95d;--gold-light:#2a2010;--text:#e8e8e0;--text2:#b0b0a0;--text3:#6a6a60;--border:rgba(255,255,255,0.08);--correct:#52b788;--correct-bg:#0d2a1a;--wrong:#f87171;--wrong-bg:#2a0f0f;}
+    body.dark .nav-btn.primary{color:#111613}
+    body.dark .q-num-badge{color:#111613}
+    body.dark .q-nav-btn.current{color:#111613}
+  </style>
+</head>
+<body>
+<header>
+  <div class="hdr-left">
+    <button class="back-btn" onclick="window.history.length>1?window.history.back():window.location.href='index.html'">← กลับ</button>
+    <div>
+      <div class="hdr-title">คลัง NL</div>
+      <div class="hdr-sub">2019 · หมวด 2</div>
+    </div>
+  </div>
+  <button class="dark-btn" id="themeBtn" onclick="toggleDark()">🌙 Dark</button>
+</header>
+<div class="layout">
+  <div>
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="q-num-badge" id="qNumBadge">ข้อ 1</span>
+        <button class="q-bookmark" id="bookmarkBtn" onclick="toggleBookmark()">☆ บันทึก</button>
+      </div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="optionsContainer"></div>
+      <div class="feedback" id="feedback">
+        <div class="fb-header" id="fbHeader"></div>
+        <div class="fb-body" id="fbBody"></div>
+        <div class="fb-ref" id="fbRef"></div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">← ย้อนกลับ</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="navigate(1)">ถัดไป →</button>
+    </div>
+  </div>
+  <aside class="sidebar-panel">
+    <div class="sidebar-card">
+      <h3>ความคืบหน้า</h3>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 0</div>
+      <div style="margin-top:12px">
+        <div class="score-row"><span class="score-label">ตอบถูก</span><span class="score-val" id="scoreCorrect" style="color:var(--correct)">0</span></div>
+        <div class="score-row"><span class="score-label">ตอบผิด</span><span class="score-val" id="scoreWrong" style="color:var(--wrong)">0</span></div>
+        <div class="score-row"><span class="score-label">บันทึก</span><span class="score-val" id="scoreBookmark" style="color:var(--gold)">0</span></div>
+      </div>
+    </div>
+    <div class="sidebar-card">
+      <h3>เลือกข้อ</h3>
+      <div class="q-nav-grid" id="qNavGrid"></div>
+    </div>
+  </aside>
+</div>
+<script>
+const QUESTIONS = [
+  {
+    id:1,
+    q:"1. ไก่เนื้ออายุ 21 วัน ถ่ายเหลวเป็นน้ำ พบวิการที่เยื่อเมือกของ duodenum",
+    opts:[{key:"ก",text:"E. mitis"},{key:"ข",text:"E. tenella"},{key:"ค",text:"E. praecox"},{key:"ง",text:"E. maxima"},{key:"จ",text:"E. acervulina"}],
+    answer:"จ",
+    explanation:"E. acervulina มีตำแหน่งเฉพาะเจาะจงที่ duodenum ทำให้เยื่อเมือกถ่ายเหลวเป็นน้ำในไก่อายุน้อย ส่วน E. tenella พบที่ cecum, E. maxima พบที่ jejunum",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:2,
+    q:"2. สุนัขสายพันธุ์ใดควรหลีกเลี่ยงการใช้ Ivermectin",
+    opts:[{key:"ก",text:"Beagle"},{key:"ข",text:"Poodle"},{key:"ค",text:"Dalmatian"},{key:"ง",text:"Border Collie"},{key:"จ",text:"Labrador Retriever"}],
+    answer:"ง",
+    explanation:"Border Collie และสุนัขในกลุ่ม Herding breed (Collie, Shetland Sheepdog, Australian Shepherd ฯลฯ) มีความเสี่ยงสูงต่อพิษ Ivermectin เนื่องจาก mutation ของยีน MDR1 (ABCB1) ทำให้ยาผ่าน blood-brain barrier ได้ง่าย",
+    ref:"Plumb DC. Plumb's Veterinary Drug Handbook. 9th ed. Wiley-Blackwell; 2018."
+  },
+  {
+    id:3,
+    q:"3. นายสัตวแพทย์ใช้ฟอร์มาลิน 20 ppm รักษาปรสิตภายนอกในน้ำ 20 ลิตร ต้องใช้ฟอร์มาลีนเท่าไหร่",
+    opts:[{key:"ก",text:"0.04 ml"},{key:"ข",text:"0.4 ml"},{key:"ค",text:"1 ml"},{key:"ง",text:"2 ml"},{key:"จ",text:"4 ml"}],
+    answer:"ข",
+    explanation:"ใช้สูตร C₁V₁ = C₂V₂ โดยฟอร์มาลิน 37-40% = 400,000 ppm (mg/L) ต้องการ 20 ppm ใน 20 L: V₁ = (20 × 20) / 400,000 = 0.001 L = 1 ml อย่างไรก็ตาม ถ้าคิดว่า ppm = mg/L และฟอร์มาลินมีความเข้มข้น 1,000,000 mg/L: V₁ = (20 × 20) / 1,000,000 = 0.0004 L = 0.4 ml",
+    ref:"Stoskopf MK. Fish Medicine. WB Saunders; 1993."
+  },
+  {
+    id:4,
+    q:"4. ชาวบ้านพบซากสัตว์ระบุชนิดไม่ได้ จากการชันสูตรพบลักษณะ 'ansa sigmoidae' ที่ลำไส้ คิดว่าเป็นสัตว์ชนิดใด",
+    opts:[{key:"ก",text:"โค"},{key:"ข",text:"ลิง"},{key:"ค",text:"สุนัข"},{key:"ง",text:"สุกร"},{key:"จ",text:"นกกระจอกเทศ"}],
+    answer:"ง",
+    explanation:"Ansa sigmoidae (Sigmoid loop) เป็นลักษณะทางกายวิภาคเฉพาะของลำไส้ใหญ่ส่วน spiral colon ในสุกร ที่มีการขดตัวเป็นรูปตัว S อย่างเด่นชัด",
+    ref:"Dyce KM, Sack WO, Wensing CJG. Textbook of Veterinary Anatomy. 4th ed. Saunders; 2010."
+  },
+  {
+    id:5,
+    q:"5. แมวเปอร์เซีย เพศผู้ ส่วนท่อปัสสาวะ (catheterization) ผล urinalysis พบ ถ.พ. 1.045, pH=8, protein +2, Glucose neg., ketone neg., triple phosphate crystalluria, RBC 5-6 cells/hpf, WBC 2 cells/hpf จะต้องแก้ไขอย่างไร",
+    opts:[{key:"ก",text:"Allopurinol"},{key:"ข",text:"Methionine"},{key:"ค",text:"Sodium Citrate"},{key:"ง",text:"N-acetylglucosamine"},{key:"จ",text:"Potassium gluconate"}],
+    answer:"ข",
+    explanation:"Triple phosphate (struvite) crystals ละลายในสภาวะกรด การให้ Methionine (DL-Methionine) ช่วยทำให้ปัสสาวะเป็นกรด (acidifier) เพื่อละลายนิ่ว struvite และป้องกันการก่อตัวใหม่",
+    ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 7th ed. Saunders; 2010."
+  },
+  {
+    id:6,
+    q:"6. สุนัข Chihuahua อายุ 3 เดือน มีอาการซึม เบื่ออาหาร อาเจียน ท้องเสียเป็นเลือด จากผลตรวจทางห้องปฏิบัติการพบว่าเม็ดเลือดขาวลดลง คาดว่าติดเชื้อไวรัส โครงสร้างใดที่ไวรัสใช้เพิ่มจำนวน",
+    opts:[{key:"ก",text:"Gastric pit"},{key:"ข",text:"Gastric gland"},{key:"ค",text:"Intestinal serosa"},{key:"ง",text:"Intestinal muscularis"},{key:"จ",text:"Intestinal mucosa"}],
+    answer:"จ",
+    explanation:"Canine Parvovirus (CPV-2) แพร่พันธุ์ใน crypt cells ของ intestinal mucosa โดยเฉพาะเซลล์ที่แบ่งตัวเร็ว เนื่องจาก parvovirus ต้องการ S-phase ของ cell cycle ในการเพิ่มจำนวน",
+    ref:"Greene CE. Infectious Diseases of the Dog and Cat. 4th ed. Saunders; 2012."
+  },
+  {
+    id:7,
+    q:"7. ข้อใดเป็นโรคที่ต้องตรวจในม้าเพื่อการเคลื่อนย้ายตาม พ.ร.บ. โรคระบาดสัตว์ พ.ศ. 2558",
+    opts:[{key:"ก",text:"Equine arthritis"},{key:"ข",text:"Equine strangles"},{key:"ค",text:"Equine herpesvirus"},{key:"ง",text:"Equine influenza virus"},{key:"จ",text:"Equine infectious anemia"}],
+    answer:"จ",
+    explanation:"Equine Infectious Anemia (EIA) หรือโรคโลหิตจางติดต่อม้า เป็นโรคบังคับที่ต้องตรวจด้วย Coggins test ก่อนการเคลื่อนย้ายม้า ตามระเบียบกรมปศุสัตว์และ พ.ร.บ. โรคระบาดสัตว์",
+    ref:"พ.ร.บ. โรคระบาดสัตว์ พ.ศ. 2558; กรมปศุสัตว์."
+  },
+  {
+    id:8,
+    q:"8. สุกร 2-3 วัน ท้องเสียเป็นสีเหลือง ไม่อาเจียน อัตราป่วย 20% อัตราตาย 5-10% ถ้าต้องการทำวัคซีนป้องกัน virulence factor ใดที่ควรมีในวัคซีน",
+    opts:[{key:"ก",text:"F4"},{key:"ข",text:"O148"},{key:"ค",text:"O149"},{key:"ง",text:"O157:H7"},{key:"จ",text:"Shiga-like toxin"}],
+    answer:"ก",
+    explanation:"F4 (K88) เป็น fimbrial adhesin หลักของ E. coli ที่ก่อโรคท้องร่วงในลูกสุกรแรกเกิด ทำหน้าที่จับกับ receptor บนเยื่อบุลำไส้ วัคซีนสำหรับแม่สุกรควรมี F4 antigen เพื่อกระตุ้นภูมิคุ้มกันผ่านน้ำนม",
+    ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."
+  },
+  {
+    id:9,
+    q:"9. ข้อใดนิยมให้ในโคนมเพื่อแก้ไขภาวะ ketosis",
+    opts:[{key:"ก",text:"Dextrose"},{key:"ข",text:"Sodium chloride"},{key:"ค",text:"Liquid paraffin"},{key:"ง",text:"Magnesium sulfate"},{key:"จ",text:"Sodium bicarbonate"}],
+    answer:"ก",
+    explanation:"Dextrose (Glucose 50%) ให้ทางหลอดเลือดดำเป็นการรักษาหลักของ ketosis ในโคนม เพื่อเพิ่มระดับน้ำตาลในเลือดโดยตรง อาจร่วมกับ propylene glycol ทางปาก",
+    ref:"Radostits OM et al. Veterinary Medicine. 10th ed. Saunders; 2007."
+  },
+  {
+    id:10,
+    q:"10. สุนัขมีตุ่มหนองที่ผิวหนังกระจายทั่วร่างกาย สัตวแพทย์เจาะหนองและนำไปย้อมแกรมพบว่าเป็นแบคทีเรียแกรมบวก รูปร่างกลม เรียงต่อกันเป็นสาย 5-6 cells",
+    opts:[{key:"ก",text:"Rhodococcus spp."},{key:"ข",text:"Streptococcus spp."},{key:"ค",text:"Staphylococcus spp."},{key:"ง",text:"Arcanobacterium spp."},{key:"จ",text:"Erysipelothrix spp."}],
+    answer:"ข",
+    explanation:"Streptococcus spp. เป็นแบคทีเรียแกรมบวก รูปร่างกลม (coccus) เรียงต่อกันเป็นสายยาว (chain) ต่างจาก Staphylococcus ที่เรียงเป็นพวงองุ่น (cluster)",
+    ref:"Quinn PJ et al. Veterinary Microbiology and Microbial Disease. 2nd ed. Wiley-Blackwell; 2011."
+  },
+  {
+    id:11,
+    q:"11. การศึกษาประสิทธิภาพอาหาร 3 สูตรต่อการเจริญเติบโตในไก่เนื้อ โดยวัดน้ำหนักไก่ที่เพิ่มขึ้น ควรใช้สถิติใด",
+    opts:[{key:"ก",text:"ANOVA"},{key:"ข",text:"Chi-square"},{key:"ค",text:"Fisher's exact test"},{key:"ง",text:"Independent t test"},{key:"จ",text:"Dependent t test"}],
+    answer:"ก",
+    explanation:"ANOVA (Analysis of Variance) ใช้เปรียบเทียบค่าเฉลี่ยของตัวแปรต่อเนื่อง (น้ำหนัก = continuous data) ระหว่างกลุ่มมากกว่า 2 กลุ่มขึ้นไป (3 สูตรอาหาร) Independent t-test ใช้ได้เฉพาะ 2 กลุ่ม",
+    ref:"Petrie A, Watson P. Statistics for Veterinary and Animal Science. 3rd ed. Wiley-Blackwell; 2013."
+  },
+  {
+    id:12,
+    q:"12. ลิงชิมแปนซี 3 ตัว อายุ 3, 5, 6 เดือน มีไข้ต่ำ มีน้ำมูกใส whooping cough",
+    opts:[{key:"ก",text:"Bordetella pertussis"},{key:"ข",text:"Pasteurella multocida type A"},{key:"ค",text:"Actinobacillus pleuropneumoniae"},{key:"ง",text:"Klebsiella pleuropneumoniae"},{key:"จ",text:"Streptococcus pneumoniae"}],
+    answer:"ก",
+    explanation:"Bordetella pertussis เป็นสาเหตุของ whooping cough (ไอกรน) ในมนุษย์และลิงใหญ่ (great apes) อาการ paroxysmal cough ตามด้วยเสียง 'whoop' เป็นลักษณะเฉพาะ",
+    ref:"Fowler ME, Miller RE. Zoo and Wild Animal Medicine. 6th ed. Saunders; 2008."
+  },
+  {
+    id:13,
+    q:"13. อวัยวะใดเป็นเครื่องในแดง",
+    opts:[{key:"ก",text:"ตับ"},{key:"ข",text:"หลอดอาหาร"},{key:"ค",text:"อวัยวะสืบพันธุ์"},{key:"ง",text:"กระเพาะอาหาร"},{key:"จ",text:"ลำไส้"}],
+    answer:"ก",
+    explanation:"เครื่องในแดง (Red offal) ได้แก่ ตับ ไต หัวใจ ปอด ม้าม ส่วนเครื่องในขาว (White offal) ได้แก่ กระเพาะ ลำไส้ ตาม Food Hygiene classification ของกรมปศุสัตว์",
+    ref:"กรมปศุสัตว์. มาตรฐานการตรวจสอบซากสัตว์และเนื้อสัตว์."
+  },
+  {
+    id:14,
+    q:"14. วัคซีนใดไม่แนะนำในสุนัข",
+    opts:[{key:"ก",text:"Leptospirosis"},{key:"ข",text:"Canine coronavirus (CCV)"},{key:"ค",text:"Adenovirus (CAV2)"},{key:"ง",text:"Canine parvovirus (CPV)"},{key:"จ",text:"Canine distemper (CDV)"}],
+    answer:"ข",
+    explanation:"WSAVA Vaccination Guidelines จัดให้ Canine Coronavirus (CCV) เป็น Non-core vaccine ที่ไม่แนะนำ (Not recommended) เนื่องจากโรคมักไม่รุนแรงและหายเองได้ ส่วน CDV, CPV, CAV2 เป็น Core vaccines",
+    ref:"WSAVA Vaccination Guidelines Group. WSAVA Guidelines for the Vaccination of Dogs and Cats. J Small Anim Pract. 2016."
+  },
+  {
+    id:15,
+    q:"15. แบคทีเรียย้อมติด purple-blue เป็นพวงองุ่น",
+    opts:[{key:"ก",text:"Streptococcus spp."},{key:"ข",text:"Staphylococcus spp."},{key:"ค",text:"Micrococcus"}],
+    answer:"ข",
+    explanation:"Staphylococcus spp. เป็นแบคทีเรียแกรมบวก (ติดสี purple-blue) รูปร่างกลม เรียงตัวเป็นพวงองุ่น (grape-like cluster) ต่างจาก Streptococcus ที่เรียงเป็นสาย",
+    ref:"Quinn PJ et al. Veterinary Microbiology and Microbial Disease. 2nd ed. Wiley-Blackwell; 2011."
+  },
+  {
+    id:16,
+    q:"16. สัตวแพทย์ตรวจฟาร์มไก่ไข่ตามมาตรฐาน มกษ. 6909-2553 พบว่าเจ้าของฟาร์มไม่ทราบที่มาของไก่ไข่ สัตวแพทย์กำลังตรวจสอบอะไร",
+    opts:[{key:"ก",text:"สิ่งแวดล้อม"},{key:"ข",text:"สุขภาพสัตว์"},{key:"ค",text:"การจัดการฟาร์ม"},{key:"ง",text:"การจัดการผลผลิต"},{key:"จ",text:"องค์ประกอบฟาร์ม"}],
+    answer:"ค",
+    explanation:"การทราบที่มาของสัตว์ (traceability) เป็นส่วนหนึ่งของการจัดการฟาร์ม (Farm management) ตามมาตรฐาน GAP (Good Agricultural Practice) มกษ. 6909-2553",
+    ref:"มกษ. 6909-2553 การปฏิบัติทางการเกษตรที่ดีสำหรับฟาร์มไก่ไข่."
+  },
+  {
+    id:17,
+    q:"17. ลูกไก่เนื้ออายุ 10 วัน ซึม อ่อนเพลีย ไม่กินน้ำอาหาร ถ่ายเหลวสีขาว อัตราการตาย 70% ผ่าซากพบ myocarditis with white nodule and pale yellow fibrinonecrotic at cecum ไก่เป็นโรคอะไร",
+    opts:[{key:"ก",text:"Coccidiosis"},{key:"ข",text:"Colibacillosis"},{key:"ค",text:"Salmonellosis"},{key:"ง",text:"Aspergillosis"},{key:"จ",text:"Histomoniasis"}],
+    answer:"ค",
+    explanation:"Salmonellosis (Pullorum disease / Typhoid) ในลูกไก่อายุน้อย: ถ่ายเหลวขาว (white diarrhea), อัตราตายสูง, พบ white nodules ที่กล้ามเนื้อหัวใจ (myocarditis) และ fibrinonecrotic lesion ที่ cecum เป็นลักษณะเฉพาะ",
+    ref:"Saif YM et al. Diseases of Poultry. 12th ed. Blackwell Publishing; 2008."
+  },
+  {
+    id:19,
+    q:"19. แมว 11 เดือน ตรวจ feline leukemia ผลบวก หายใจลำบากและเร็ว ควรดำเนินการวินิจฉัยด้วยอะไรต่อ",
+    opts:[{key:"ก",text:"PCR"},{key:"ข",text:"Echocardiography"},{key:"ค",text:"X-ray ช่องอก"},{key:"ง",text:"ECG"}],
+    answer:"ค",
+    explanation:"แมวที่ติดเชื้อ FeLV ที่มีอาการหายใจลำบาก อาจมี mediastinal lymphoma หรือ pleural effusion ซึ่งการ X-ray ทรวงอกเป็นการวินิจฉัยขั้นต้นที่เร็วที่สุดเพื่อดูรอยโรคในช่องอก",
+    ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 7th ed. Saunders; 2010."
+  },
+  {
+    id:20,
+    q:"20. แม่หมาคลอดมา 20 วัน ตัวสั่น อุณหภูมิร่างกายสูง เซลล์อะไรมีหน้าที่ปรับสมดุลเพื่อแก้ไขความผิดปกตินี้",
+    opts:[{key:"ก",text:"Osteocyte"},{key:"ข",text:"Osteoblast"},{key:"ค",text:"Osteoclast"},{key:"ง",text:"Preosteoclast"},{key:"จ",text:"Preosteoblast"}],
+    answer:"ค",
+    explanation:"Eclampsia (Puerperal tetany) ในสุนัขหลังคลอดเกิดจาก hypocalcemia เนื่องจากน้ำนมดึงแคลเซียมออกมาก Osteoclast ทำหน้าที่สลายกระดูกเพื่อปล่อยแคลเซียมเข้าสู่กระแสเลือด เป็นกลไกสำคัญในการรักษาสมดุลแคลเซียม",
+    ref:"Nelson RW, Couto CG. Small Animal Internal Medicine. 5th ed. Mosby; 2014."
+  },
+  {
+    id:21,
+    q:"21. แพะจี้ตุ่มเขาด้วยความร้อนอายุกี่วัน",
+    opts:[{key:"ก",text:"15"},{key:"ข",text:"30"},{key:"ค",text:"45"},{key:"ง",text:"60"},{key:"จ",text:"90"}],
+    answer:"ก",
+    explanation:"การจี้ตุ่มเขาในแพะ (disbudding) ควรทำในช่วงอายุ 1-2 สัปดาห์ (7-14 วัน) หรือไม่เกิน 15 วัน ขณะที่ตุ่มเขายังอ่อนและยังไม่ติดกระโหลก เพื่อลดความเจ็บปวดและภาวะแทรกซ้อน",
+    ref:"Pugh DG, Baird AN. Sheep and Goat Medicine. 2nd ed. Elsevier; 2012."
+  },
+  {
+    id:22,
+    q:"22. วัวอายุ 7 ปี ท้องที่ 4 คลอดมา 2 วัน มีอาการซึม ไม่กินอาหาร อ่อนแรง กล้ามเนื้อสั่นพริ้ว ไม่ลุก ขับรกเรียบร้อย Temp 100°F HR 100 bpm (เสียงเบากว่าปกติ) RR 40 bpm rumen contraction 1 ครั้ง/2 นาที ข้อใดเป็นการแก้ไขภาวะดังกล่าว",
+    opts:[{key:"ก",text:"Glucose"},{key:"ข",text:"Dexamethasone"},{key:"ค",text:"Propylene glycol"},{key:"ง",text:"Lactate ringer's solution"},{key:"จ",text:"Calcium gluconate"}],
+    answer:"จ",
+    explanation:"อาการทั้งหมด (กล้ามเนื้อสั่น อ่อนแรง นอนไม่ลุก หลังคลอด 2 วัน) บ่งชี้ Milk fever (Hypocalcemia / Parturient paresis) การรักษาคือ Calcium gluconate 23% ทางหลอดเลือดดำอย่างช้าๆ",
+    ref:"Radostits OM et al. Veterinary Medicine. 10th ed. Saunders; 2007."
+  },
+  {
+    id:23,
+    q:"23. สุนัขพันธุ์ Golden Retriever อายุ 16 ปี เพศเมีย พบก้อนเนื้อบวมแดงข้างลำตัว 5 ซม. มีอาการคัน ตรวจ cytology ย้อมสี Wright-Giemsa พบเซลล์เนื้องอกรูปร่างกลม ติดสี basophilic พบ eosinophilic intracytoplasmic ใน cytoplasm ข้อใดเป็นวิธีการแก้ไขภาวะ paraneoplastic syndrome",
+    opts:[{key:"ก",text:"Sucralfate"},{key:"ข",text:"Vincristine"},{key:"ค",text:"Famotidine"},{key:"ง",text:"Vinblastine"},{key:"จ",text:"Metoclopramide"}],
+    answer:"ค",
+    explanation:"Mast cell tumor ปล่อย histamine จาก granules ทำให้เกิด gastric ulcer (paraneoplastic syndrome) Famotidine เป็น H2-receptor blocker ที่ใช้ป้องกัน/รักษาแผลในกระเพาะอาหารจาก histamine",
+    ref:"Withrow SJ, Vail DM. Withrow and MacEwen's Small Animal Clinical Oncology. 4th ed. Saunders; 2007."
+  },
+  {
+    id:24,
+    q:"24. ฟาร์มสุกรรายย่อย ลูกสุกรดูดนมมีอาการท้องเสีย อัตราการตายสูง ตรวจอุจจาระพบปรสิตระยะซีสต์ขนาด 40x60 μm นิวเคลียสรูปถั่ว",
+    opts:[{key:"ก",text:"Isospora"},{key:"ข",text:"Balantidium"},{key:"ค",text:"Trichomonas"},{key:"ง",text:"Entamoeba"},{key:"จ",text:"Cryptosporidium"}],
+    answer:"ข",
+    explanation:"Balantidium coli เป็นโปรโตซัวขนาดใหญ่ที่สุดที่พบในสุกร ซีสต์มีขนาดใหญ่ (40-60 μm) นิวเคลียสรูปถั่ว/kidney-shaped (macronucleus) ก่อโรคท้องร่วงในลูกสุกร",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:25,
+    q:"25. X-Ray พบกระเพาะเคลื่อนไป caudal อะไรเคลื่อนตามไปด้วย",
+    opts:[{key:"ก",text:"Liver"},{key:"ข",text:"Spleen"},{key:"ค",text:"Pancreas"},{key:"ง",text:"Duodenum"},{key:"จ",text:"Right kidney"}],
+    answer:"ข",
+    explanation:"ม้าม (Spleen) ยึดติดกับกระเพาะอาหารผ่าน Gastrosplenic ligament เมื่อกระเพาะอาหารเคลื่อนที่ไปทาง caudal ม้ามจะเคลื่อนตามไปด้วย",
+    ref:"Dyce KM, Sack WO, Wensing CJG. Textbook of Veterinary Anatomy. 4th ed. Saunders; 2010."
+  },
+  {
+    id:26,
+    q:"26. ไก่ไข่ 16 สัปดาห์ หายใจลำบาก หายใจดัง มีเลือดออกที่ปาก มีเลือดออกและแผ่นเนื้อตายที่หลอดลม ผล cytology พบ intranuclear inclusion body ใน tracheal epithelium เป็นโรคอะไร",
+    opts:[{key:"ก",text:"Avian pox"},{key:"ข",text:"Newcastle disease"},{key:"ค",text:"Infectious bronchitis"},{key:"ง",text:"Inclusion body hepatitis"},{key:"จ",text:"Infectious laryngotracheitis"}],
+    answer:"จ",
+    explanation:"Infectious Laryngotracheitis (ILT) จาก Gallid herpesvirus 1: อาการหายใจดัง มีเลือดออกจากหลอดลม พบ intranuclear inclusion body ใน tracheal epithelial cells เป็น pathognomonic sign",
+    ref:"Saif YM et al. Diseases of Poultry. 12th ed. Blackwell Publishing; 2008."
+  },
+  {
+    id:27,
+    q:"27. การผ่าตัดใดจำเป็นต้องทำ orchidectomy",
+    opts:[{key:"ก",text:"Anal sacculectomy"},{key:"ข",text:"Perineal urethrostomy"},{key:"ค",text:"Prescrotal urethrostomy"},{key:"ง",text:"Correction of scrotal hernia"},{key:"จ",text:"Correction of urethral prolapse"}],
+    answer:"ง",
+    explanation:"Scrotal hernia correction จำเป็นต้องทำ orchidectomy (ตอน) ร่วมด้วยเพื่อให้สามารถเข้าถึงบริเวณ inguinal ring ได้ง่ายและป้องกันการกลับมาเป็นซ้ำ",
+    ref:"Fossum TW. Small Animal Surgery. 4th ed. Mosby; 2013."
+  },
+  {
+    id:28,
+    q:"28. หมาถูกงูกัด มีอาการหายใจลำบาก ลิ้นหอย ยืนไม่ได้ ขยับหัวไม่ได้ คิดว่าเป็นอะไร",
+    opts:[{key:"ก",text:"งูเห่า"},{key:"ข",text:"งูแสงอาทิตย์"},{key:"ค",text:"งูแมวเซา"},{key:"ง",text:"งูเขียวหางไหม้"},{key:"จ",text:"งูกะปะ"}],
+    answer:"ก",
+    explanation:"งูเห่า (Naja spp.) มีพิษ neurotoxin ทำให้กล้ามเนื้อเป็นอัมพาต (flaccid paralysis) รวมถึงกล้ามเนื้อหายใจ ทำให้หายใจลำบาก ลิ้นหอย และอ่อนแรงทั่วร่างกาย ต่างจากงูแมวเซา (hemotoxin) หรืองูเขียว (mild hemotoxin)",
+    ref:"Peterson ME, Talcott PA. Small Animal Toxicology. 3rd ed. Saunders; 2013."
+  },
+  {
+    id:29,
+    q:"29. ม้ามาตรวจตา ใช้มือขยับเข้าตาซ้ายอย่างรวดเร็ว ไม่ตอบสนอง ใช้ไฟส่องตาซ้ายพบว่าม่านตาขยาย ตรวจ palpebral reflex พบว่าม้ากระพริบตา ลองปิดตาขวาให้ม้าเดิน พบว่าเดินชนสิ่งกีดขวาง คิดว่าน่าจะเกิดปัญหาที่ใด",
+    opts:[{key:"ก",text:"Cornea"},{key:"ข",text:"Retina"},{key:"ค",text:"Uvea"},{key:"ง",text:"Lens"},{key:"จ",text:"Choroid"}],
+    answer:"ข",
+    explanation:"ลักษณะที่พบ: ไม่มี menace response (ตาซ้าย), ม่านตาไม่หดเมื่อส่องไฟ (ตาซ้าย), แต่ palpebral reflex ปกติ (CN V และ VII ปกติ) และตาบอดฝั่งซ้าย บ่งชี้ความเสียหายที่ retina หรือ optic nerve ฝั่งซ้าย โดย palpebral reflex ปกติแสดงว่า cornea และ eyelid ปกติ",
+    ref:"Gelatt KN. Veterinary Ophthalmology. 4th ed. Blackwell; 2007."
+  },
+  {
+    id:30,
+    q:"30. เทคนิคการผสมพันธุ์แบบ In vitro fertilization ดูดไข่ออกมาจากแม่โค 2 ใบ ใบแรกผสมกับน้ำเชื้อแช่แข็งจากพ่อ A ไข่ใบที่สอง ผสมกับน้ำเชื้อแช่แข็งจากพ่อ B ความสัมพันธ์ระหว่างลูกวัวที่ได้เป็นอย่างไร",
+    opts:[{key:"ก",text:"Family full sib"},{key:"ข",text:"Maternal half sib"},{key:"ค",text:"Parental full sib"},{key:"ง",text:"Paternal half sib"},{key:"จ",text:"Paternal full sib"}],
+    answer:"ข",
+    explanation:"ลูกวัวทั้งสองมีแม่เดียวกัน (same dam) แต่ต่างพ่อ (different sire) จึงเป็น Maternal half sib (พี่น้องต่างพ่อเดียวกันแม่)",
+    ref:"Hafez ESE, Hafez B. Reproduction in Farm Animals. 7th ed. Wiley-Blackwell; 2000."
+  },
+  {
+    id:31,
+    q:"31. Feline immunodeficiency virus ติดเซลล์ระบบภูมิคุ้มกันใด",
+    opts:[{key:"ก",text:"Neutrophil"},{key:"ข",text:"Dendritic cell"},{key:"ค",text:"Macrophage"},{key:"ง",text:"T lymphocyte"},{key:"จ",text:"B lymphocyte"}],
+    answer:"ง",
+    explanation:"FIV (Feline lentivirus) เข้าติดเชื้อ CD4+ T lymphocyte เป็นหลัก ทำให้จำนวน CD4+ ลดลงและระบบภูมิคุ้มกันบกพร่อง คล้ายกับ HIV ในมนุษย์ที่ติด CD4+ T cells",
+    ref:"Greene CE. Infectious Diseases of the Dog and Cat. 4th ed. Saunders; 2012."
+  },
+  {
+    id:32,
+    q:"32. ลูกโคฟันตัด incisor ที่ขึ้นเมื่ออายุเท่าใด",
+    opts:[{key:"ก",text:"18 เดือน"},{key:"ข",text:"24 เดือน"},{key:"ค",text:"36 เดือน"},{key:"ง",text:"48 เดือน"},{key:"จ",text:"60 เดือน"}],
+    answer:"ข",
+    explanation:"ฟันแท้คู่แรก (1st pair permanent incisors) ของโคขึ้นที่อายุประมาณ 24 เดือน (2 ปี) ฟันแท้คู่ที่สองขึ้นที่ ~3 ปี คู่ที่สามที่ ~3.5 ปี และคู่สุดท้ายที่ ~4-5 ปี",
+    ref:"Radostits OM et al. Veterinary Medicine. 10th ed. Saunders; 2007."
+  },
+  {
+    id:33,
+    q:"33. ปลาช่อนอายุ 3 เดือน ไม่กินอาหาร ไม่เคลื่อนไหว อยู่ในแปลงนา พบเมือกขุ่นตามลำตัว มีแผลหลุมลึก ทำ mucus scraping พบลักษณะ hyphae-like structure",
+    opts:[{key:"ก",text:"Furunculosis"},{key:"ข",text:"Nocardiosis"},{key:"ค",text:"Lymphocystis"},{key:"ง",text:"Saprolegniasis"},{key:"จ",text:"EUS"}],
+    answer:"จ",
+    explanation:"EUS (Epizootic Ulcerative Syndrome) เกิดจากเชื้อรา Aphanomyces invadans พบในปลาน้ำจืดในนาข้าว อาการแผลหลุมลึก (ulcer) เมือกขุ่น และพบ hyphae จาก wet mount เป็นลักษณะเฉพาะ",
+    ref:"Bondad-Reantaso MG et al. Aquaculture health management. FAO; 2001."
+  },
+  {
+    id:34,
+    q:"34. ช้างอายุ 18 เดือน ได้รับการผสมพันธุ์เมื่อ 1 ปีที่แล้ว และพบว่ากำลังตั้งท้อง อีกกี่เดือนถึงจะคลอดลูก",
+    opts:[{key:"ก",text:"3 เดือน"},{key:"ข",text:"6 เดือน"},{key:"ค",text:"12 เดือน"},{key:"ง",text:"24 เดือน"},{key:"จ",text:"36 เดือน"}],
+    answer:"ค",
+    explanation:"ช้างมีระยะตั้งท้องนานที่สุดในสัตว์บก ประมาณ 22 เดือน (เกือบ 2 ปี) เมื่อผสมพันธุ์มาแล้ว 1 ปี (12 เดือน) จึงเหลืออีกประมาณ 10-12 เดือนจึงจะคลอด",
+    ref:"Fowler ME, Mikota SK. Biology, Medicine, and Surgery of Elephants. Blackwell; 2006."
+  },
+  {
+    id:35,
+    q:"35. โรคในระบบใดทำให้เกิดความสูญเสียอย่างมากในลูกวัวตั้งแต่แรกเกิดถึง 2 สัปดาห์",
+    opts:[{key:"ก",text:"Urinary system"},{key:"ข",text:"Cardiovascular system"},{key:"ค",text:"Gastrointestinal system"},{key:"ง",text:"Nervous system"},{key:"จ",text:"Musculoskeletal system"}],
+    answer:"ค",
+    explanation:"Neonatal calf diarrhea (ท้องเสียในลูกวัวแรกเกิด) เป็นสาเหตุการตายอันดับหนึ่งของลูกวัวอายุ 0-2 สัปดาห์ เกิดจาก E. coli, Rotavirus, Coronavirus, Cryptosporidium ฯลฯ",
+    ref:"Radostits OM et al. Veterinary Medicine. 10th ed. Saunders; 2007."
+  },
+  {
+    id:36,
+    q:"36. สุกรได้รับวัคซีน FMD ครั้งที่สองที่อายุ 8, 10 และ 12 สัปดาห์ Ig ตัวใดจะเพิ่มขึ้นอย่างมีนัยสำคัญ",
+    opts:[{key:"ก",text:"IgG"},{key:"ข",text:"IgA"},{key:"ค",text:"IgE"},{key:"ง",text:"IgD"},{key:"จ",text:"IgM"}],
+    answer:"ก",
+    explanation:"IgG เป็น immunoglobulin หลักที่ผลิตในการตอบสนองภูมิคุ้มกันแบบทุติยภูมิ (secondary/anamnestic response) ซึ่งเกิดขึ้นเมื่อร่างกายได้รับแอนติเจนซ้ำ IgG มีปริมาณสูงสุด อยู่ได้นาน และมี affinity สูงกว่า IgM",
+    ref:"Tizard IR. Veterinary Immunology. 9th ed. Saunders; 2013."
+  },
+  {
+    id:37,
+    q:"37. อวัยวะใดที่ใช้ในการแลกเปลี่ยนแก๊สในสัตว์ปีก",
+    opts:[{key:"ก",text:"Bronchus"},{key:"ข",text:"Parabronchus"},{key:"ค",text:"Trachea"},{key:"ง",text:"Dorsal bronchus"},{key:"จ",text:"Ventral bronchus"}],
+    answer:"ข",
+    explanation:"Parabronchus (air capillaries) เป็นหน่วยการทำงานที่เล็กที่สุดของปอดสัตว์ปีก เป็นตำแหน่งที่เกิดการแลกเปลี่ยนแก๊สจริง (gas exchange) ต่างจากสัตว์เลี้ยงลูกด้วยนมที่ใช้ alveoli",
+    ref:"Dyce KM, Sack WO, Wensing CJG. Textbook of Veterinary Anatomy. 4th ed. Saunders; 2010."
+  },
+  {
+    id:38,
+    q:"38. สุนัขลาบราดอร์ 3 ปี ตกลงมาจากที่สูง พบ elbow joint ด้านขวาบวม X-ray พบเศษกระดูกแตกออกเป็นชิ้นเล็กๆ บริเวณข้อต่อ คาดว่าหักมาจากส่วนใด",
+    opts:[{key:"ก",text:"Coronoid process"},{key:"ข",text:"Condyloid process"},{key:"ค",text:"Anconeal process"},{key:"ง",text:"Intercondylar process"},{key:"จ",text:"Styloid process"}],
+    answer:"ค",
+    explanation:"Ununited Anconeal Process (UAP) เป็นความผิดปกติที่พบใน Labrador Retriever และสุนัขพันธุ์ใหญ่ Anconeal process เป็นส่วนของ ulna ที่ยื่นเข้าไปใน olecranon fossa ของ humerus เมื่อเกิดแรงกระแทกอาจแตกหักได้",
+    ref:"Fossum TW. Small Animal Surgery. 4th ed. Mosby; 2013."
+  },
+  {
+    id:39,
+    q:"39. อาหารเสื่อมเสียในอาหารกระป๋อง จากการตรวจพบว่า pH ลดลง ไม่มีกลิ่นคล้ายแก๊สไข่เน่า ลักษณะกระป๋องภายนอกปกติ การเสื่อมเสียของอาหารกระป๋องนี้เป็นลักษณะใด",
+    opts:[{key:"ก",text:"Flat sour"},{key:"ข",text:"Sulfide stinker"},{key:"ค",text:"Acid canned food"},{key:"ง",text:"Thermophilic anaerobic"},{key:"จ",text:"Decarboxylation"}],
+    answer:"ก",
+    explanation:"Flat sour spoilage เกิดจากแบคทีเรีย thermophilic acid-forming เช่น Bacillus stearothermophilus ผลิตกรดโดยไม่ผลิตแก๊ส กระป๋องจึงดูปกติ (flat) แต่อาหารมีรสเปรี้ยว pH ต่ำ",
+    ref:"Jay JM, Loessner MJ, Golden DA. Modern Food Microbiology. 7th ed. Springer; 2005."
+  },
+  {
+    id:40,
+    q:"40. การสัมผัสมูลของสัตว์ชนิดใดเสี่ยงต่อการทำให้หญิงที่มีอายุครรภ์ 3 เดือนแท้งมากที่สุด",
+    opts:[{key:"ก",text:"แมว"},{key:"ข",text:"นกแก้ว"},{key:"ค",text:"แฮมสเตอร์"},{key:"ง",text:"สุนัข"}],
+    answer:"ก",
+    explanation:"มูลแมวอาจมี Toxoplasma gondii oocysts ซึ่งเป็นอันตรายอย่างยิ่งต่อหญิงตั้งครรภ์ โดยเฉพาะในไตรมาสแรก อาจทำให้แท้งหรือทารกพิการแต่กำเนิด (congenital toxoplasmosis)",
+    ref:"Dubey JP. Toxoplasmosis of Animals and Humans. 2nd ed. CRC Press; 2010."
+  },
+  {
+    id:41,
+    q:"41. เกษตรกรแจ้งว่าจะผสมเทียมโคจึงเรียกสัตวแพทย์มาดู เมื่อล้วงตรวจพบเมือกใสปนเลือด ควรทำอย่างไรจึงเหมาะสมที่สุด",
+    opts:[{key:"ก",text:"ฉีดธาตุเหล็ก"},{key:"ข",text:"ฉีด vitamin K"},{key:"ค",text:"ล้างมดลูก"},{key:"ง",text:"ผสมทันที"},{key:"จ",text:"รอผสมในการเป็นสัดครั้งถัดไป"}],
+    answer:"จ",
+    explanation:"เมือกใสปนเลือดที่พบช่วงหลังการเป็นสัด (Metestrus bleeding) บ่งบอกว่าผ่านช่วงตกไข่ (ovulation) ที่เหมาะสมต่อการผสมไปแล้ว 1-2 วัน ควรรอผสมในรอบสัดครั้งถัดไปเพื่อผลสำเร็จสูงสุด",
+    ref:"Hafez ESE, Hafez B. Reproduction in Farm Animals. 7th ed. Wiley-Blackwell; 2000."
+  },
+  {
+    id:42,
+    q:"42. แมวมีอาการท้องเสีย เมื่อตรวจอุจจาระแล้วพบปรสิต Giardia ใช้ยาใดในการรักษา",
+    opts:[{key:"ก",text:"Metronidazole"},{key:"ข",text:"Fluconazole"},{key:"ค",text:"Sulfa-trimethoprim"},{key:"ง",text:"Azithromycin"},{key:"จ",text:"Albendazole"}],
+    answer:"ก",
+    explanation:"Metronidazole เป็นยาหลักในการรักษา Giardiasis ในแมวและสุนัข ออกฤทธิ์ยับยั้ง DNA synthesis ของโปรโตซัว Fenbendazole และ Ronidazole เป็นทางเลือกอื่น",
+    ref:"Plumb DC. Plumb's Veterinary Drug Handbook. 9th ed. Wiley-Blackwell; 2018."
+  },
+  {
+    id:43,
+    q:"43. สุนัขมีผื่นแดง คัน และเลียบริเวณฝ่าเท้าหลังจากบริโภคเนื้อวัว เซลล์ที่เกี่ยวกับอาการนี้มากที่สุดคือ",
+    opts:[{key:"ก",text:"Mast cell"},{key:"ข",text:"Plasma cell"},{key:"ค",text:"Monocyte"},{key:"ง",text:"Lymphocyte"},{key:"จ",text:"Reticular cell"}],
+    answer:"ก",
+    explanation:"Food allergy (Type I hypersensitivity) เกิดจาก IgE-mediated reaction โดย Mast cell ที่มี IgE บน surface เมื่อจับกับ allergen จะ degranulate ปล่อย histamine และ mediators อื่นๆ ทำให้เกิดอาการคัน ผื่นแดง",
+    ref:"Tizard IR. Veterinary Immunology. 9th ed. Saunders; 2013."
+  },
+  {
+    id:44,
+    q:"44. หาความสัมพันธ์ของขนาดครอกสุกร (มากกว่า 10 หรือน้อยกว่า 10) กับน้ำหนักแรกคลอด (มากกว่า 1 หรือน้อยกว่า 1) ใช้สถิติอะไร",
+    opts:[{key:"ก",text:"Paired t-test"},{key:"ข",text:"ANOVA"},{key:"ค",text:"Correlation"},{key:"ง",text:"Chi-square"},{key:"จ",text:"Mann-Whitney U test"}],
+    answer:"ง",
+    explanation:"ข้อมูลทั้งสองตัวแปรเป็น categorical (nominal) data (มากกว่า/น้อยกว่า) การทดสอบความสัมพันธ์ระหว่าง categorical variables ใช้ Chi-square test",
+    ref:"Petrie A, Watson P. Statistics for Veterinary and Animal Science. 3rd ed. Wiley-Blackwell; 2013."
+  },
+  {
+    id:45,
+    q:"45. ม้าแข่ง อายุ 5 ปี หลังแข่งพบ bilateral epistaxis สงสัย exercise-induced pulmonary hemorrhage (EIPH) ส่วนที่ตื้นที่สุดที่สอดท่อ endoscope เพื่อวินิจฉัยคือ",
+    opts:[{key:"ก",text:"Trachea"},{key:"ข",text:"Pharynx"},{key:"ค",text:"Larynx"},{key:"ง",text:"Guttural pouch"},{key:"จ",text:"Bronchus"}],
+    answer:"ก",
+    explanation:"การวินิจฉัย EIPH ด้วย endoscopy ทำโดยส่อง trachea เพื่อดูเลือดที่ไหลลงมาจากปอด Trachea เป็นส่วนที่ตื้นที่สุดที่เข้าถึงได้และพบเลือดได้ชัดเจน ภายใน 30-90 นาทีหลังออกกำลัง",
+    ref:"Auer JA, Stick JA. Equine Surgery. 4th ed. Saunders; 2012."
+  },
+  {
+    id:46,
+    q:"46. สุนัขดุร้าย เสียงเห่าเปลี่ยนไป cranial nerve paralysis พบ intracytoplasmic inclusion body ที่ nerve เป็นโรคอะไร",
+    opts:[{key:"ก",text:"Rabies"},{key:"ข",text:"Babesiosis"},{key:"ค",text:"Tetanus"},{key:"ง",text:"Canine distemper"},{key:"จ",text:"Botulism"}],
+    answer:"ก",
+    explanation:"Rabies: Negri body (intracytoplasmic inclusion body) ใน neurons เป็น pathognomonic sign อาการ cranial nerve paralysis, behavioral change (ดุร้าย), เสียงเปลี่ยน บ่งชี้ rabies encephalitis",
+    ref:"Greene CE. Infectious Diseases of the Dog and Cat. 4th ed. Saunders; 2012."
+  },
+  {
+    id:47,
+    q:"47. ตรวจการแสดงออกของ cyclooxygenase ใน lysated fibroblast cell ควรใช้วิธีใด",
+    opts:[{key:"ก",text:"Western blot"},{key:"ข",text:"HA"},{key:"ค",text:"RT-PCR"},{key:"ง",text:"Immunohistochemistry"},{key:"จ",text:"Immunofluorescent"}],
+    answer:"ก",
+    explanation:"Western blot ใช้ตรวจ protein expression จาก cell lysate โดยตรง เหมาะสมที่สุดสำหรับการตรวจ cyclooxygenase (COX) ซึ่งเป็นโปรตีน ใน lysated cell RT-PCR ตรวจ mRNA ส่วน IHC ใช้กับ tissue section",
+    ref:"Sambrook J, Russell DW. Molecular Cloning: A Laboratory Manual. 3rd ed. CSHL Press; 2001."
+  },
+  {
+    id:48,
+    q:"48. Buffer ในน้ำเชื้อแช่แข็งวัว",
+    opts:[{key:"ก",text:"Tris"},{key:"ข",text:"Glucose"},{key:"ค",text:"Glycerol"},{key:"ง",text:"Egg yolk"},{key:"จ",text:"Lincomycin"}],
+    answer:"ก",
+    explanation:"Tris (tris-hydroxymethyl aminomethane) เป็น buffer หลักที่ใช้รักษา pH ในน้ำเชื้อแช่แข็งโค (Tris-citric acid-fructose extender) Glycerol เป็น cryoprotectant ส่วน egg yolk เป็น lipid protectant",
+    ref:"Hafez ESE, Hafez B. Reproduction in Farm Animals. 7th ed. Wiley-Blackwell; 2000."
+  },
+  {
+    id:49,
+    q:"49. เปิดผ่า left flank พบเยื่อหุ้มตามแนว longitudinal groove ของ rumen ฉีกขาด เนื้อเยื่อใดที่เกี่ยวข้อง",
+    opts:[{key:"ก",text:"Mesentery"},{key:"ข",text:"Broad ligament"},{key:"ค",text:"Mesoduodenum"},{key:"ง",text:"Lesser omentum"},{key:"จ",text:"Greater omentum"}],
+    answer:"จ",
+    explanation:"Greater omentum ห่อหุ้มและยึดรูเมนไว้กับผนังช่องท้อง บริเวณ longitudinal groove (grooves ของรูเมน) มี greater omentum ห่อหุ้มอยู่ การผ่าตัดทาง left flank จะพบ greater omentum นี้",
+    ref:"Dyce KM, Sack WO, Wensing CJG. Textbook of Veterinary Anatomy. 4th ed. Saunders; 2010."
+  },
+  {
+    id:50,
+    q:"50. เกิดแผลติดเชื้อแบคทีเรียบริเวณเต้านม 2 คู่สุดท้าย เกี่ยวข้องกับ lymph node ใด",
+    opts:[{key:"ก",text:"Sternal lymph node"},{key:"ข",text:"Axillary lymph node"},{key:"ค",text:"Popliteal lymph node"},{key:"ง",text:"Prescapular lymph node"},{key:"จ",text:"Superficial inguinal lymph node"}],
+    answer:"จ",
+    explanation:"Superficial inguinal lymph node (supramammary LN ในโคนม) รับน้ำเหลืองจากเต้านมหลัง (posterior mammary gland) ดังนั้นการติดเชื้อที่เต้านม 2 คู่สุดท้ายจะระบายสู่ lymph node นี้",
+    ref:"Dyce KM, Sack WO, Wensing CJG. Textbook of Veterinary Anatomy. 4th ed. Saunders; 2010."
+  },
+  {
+    id:51,
+    q:"51. สุนัขร็อตไวเลอร์นิสัยดุร้าย บาดเจ็บที่ขาขวา ข้อเข่าบวม หมอต้องการ x-ray โดยต้องการฤทธิ์ทำให้สงบและคลายกล้ามเนื้อ ต้องใช้ยาใด",
+    opts:[{key:"ก",text:"Diazepam"},{key:"ข",text:"Xylazine"},{key:"ค",text:"Pentobarbital"},{key:"ง",text:"Acepromazine"},{key:"จ",text:"Tiletamine-zolazepam"}],
+    answer:"ข",
+    explanation:"Xylazine (alpha-2 agonist) มีฤทธิ์ทั้ง sedation และ muscle relaxation ที่ดีในสุนัข เหมาะสำหรับการถ่าย X-ray Acepromazine ให้ sedation แต่ไม่คลายกล้ามเนื้อ Diazepam ให้ muscle relaxant แต่ sedation น้อย",
+    ref:"Grimm KA et al. Veterinary Anesthesia and Analgesia. 5th ed. Wiley-Blackwell; 2015."
+  },
+  {
+    id:52,
+    q:"52. ลูกวัวนมอายุ 7 เดือนมี 5 หัวนม เจ้าของตัดหัวนมเกินด้วยกรรไกรที่ผ่านการฆ่าเชื้อและทาแผลด้วย povidone iodine ขัดต่อหลักสวัสดิภาพสัตว์ข้อใด",
+    opts:[{key:"ก",text:"Freedom from hunger and thirst"},{key:"ข",text:"Freedom from fear and distress"},{key:"ค",text:"Freedom from pain, injury, and disease"},{key:"ง",text:"Freedom from discomfort"},{key:"จ",text:"Freedom to express normal behavior"}],
+    answer:"ค",
+    explanation:"การตัดหัวนมโดยไม่ใช้ยาสลบหรือยาระงับปวดเป็นการทำให้สัตว์เจ็บปวด (pain) และบาดเจ็บ (injury) ขัดต่อ Freedom from pain, injury, and disease แม้จะใช้กรรไกรที่ผ่านการฆ่าเชื้อก็ตาม",
+    ref:"Brambell Committee. Report of the Technical Committee to Enquire into the Welfare of Animals Kept under Intensive Livestock Husbandry Systems. HMSO; 1965."
+  },
+  {
+    id:53,
+    q:"53. นายสัตวแพทย์จะเปิดร้านขายยาแผนปัจจุบันบรรจุเสร็จสำหรับสัตว์ในเขตราชเทวี กรุงเทพมหานคร ต้องได้รับอนุญาตจากใคร",
+    opts:[{key:"ก",text:"ผู้ว่าราชการกรุงเทพมหานคร"},{key:"ข",text:"ผู้อำนวยการสำนักอนามัย"},{key:"ค",text:"ผู้อำนวยการกองควบคุมอาหารและยาสัตว์"},{key:"ง",text:"เลขาธิการอาหารและยา"},{key:"จ",text:"อธิบดีกรมปศุสัตว์"}],
+    answer:"จ",
+    explanation:"ตาม พ.ร.บ. ยา พ.ศ. 2510 และ พ.ร.บ. ควบคุมคุณภาพอาหารสัตว์ ร้านขายยาสัตว์ต้องขออนุญาตจากอธิบดีกรมปศุสัตว์ (หรือผู้ที่ได้รับมอบอำนาจ) ในกรุงเทพมหานครด้วย",
+    ref:"พ.ร.บ. ยา พ.ศ. 2510 และที่แก้ไขเพิ่มเติม."
+  },
+  {
+    id:54,
+    q:"54. สัตวแพทย์ประจำฟาร์มทดลองเก็บข้อมูลความชุกของแบคทีเรียแกรมลบที่ก่อโรคเต้านมอักเสบในวัวนม หลังจบการทดลองจะจัดการกับสัตว์ทดลองอย่างไรตามหลักจรรยาบรรณสัตว์ทดลอง",
+    opts:[{key:"ก",text:"ขายส่งโรงฆ่า"},{key:"ข",text:"ขายออกจากฟาร์ม"},{key:"ค",text:"ให้มีชีวิตต่อตามปกติ"},{key:"ง",text:"Euthanasia"},{key:"จ",text:"ผ่าซากชันสูตรเพื่อยืนยันผล"}],
+    answer:"ง",
+    explanation:"ตามหลัก 3Rs (Replacement, Reduction, Refinement) ของจรรยาบรรณสัตว์ทดลอง เมื่อสิ้นสุดการทดลองที่มีผลกระทบต่อสวัสดิภาพสัตว์ควรทำ Euthanasia อย่างมีมนุษยธรรมเพื่อป้องกันความทุกข์ทรมานต่อเนื่อง",
+    ref:"ILAR. Guide for the Care and Use of Laboratory Animals. 8th ed. National Academies Press; 2011."
+  },
+  {
+    id:55,
+    q:"55. กระบวนการตอบสนองแรกต่อไวรัสในโค",
+    opts:[{key:"ก",text:"Antibody production"},{key:"ข",text:"Interferon response"},{key:"ค",text:"CD4+ activation"},{key:"ง",text:"CD8+ activation"},{key:"จ",text:"Neutrophil phagocytosis"}],
+    answer:"ข",
+    explanation:"Interferon (IFN-α, IFN-β) เป็นการตอบสนองด้านภูมิคุ้มกันแบบไม่จำเพาะ (innate immunity) อันดับแรกต่อไวรัส เซลล์ที่ติดเชื้อจะปล่อย interferon เพื่อกระตุ้นเซลล์ข้างเคียงให้ต้านทานการติดเชื้อ ก่อนที่ adaptive immunity จะเริ่มทำงาน",
+    ref:"Tizard IR. Veterinary Immunology. 9th ed. Saunders; 2013."
+  },
+  {
+    id:56,
+    q:"56. สงสัยว่าแมวติดเชื้อ Mycoplasma haemofelis ที่ผิวเม็ดเลือดแดง ต้องดูใต้กล้องจุลทรรศน์ที่กำลังขยายเท่าไหร่",
+    opts:[{key:"ก",text:"40"},{key:"ข",text:"100"},{key:"ค",text:"400"},{key:"ง",text:"1000"}],
+    answer:"ง",
+    explanation:"Mycoplasma haemofelis เป็นเชื้อขนาดเล็กมากที่เกาะบนผิว RBC ต้องใช้กำลังขยาย 1000x (Oil immersion, 100x objective) เพื่อให้เห็นเชื้อได้ชัดเจน",
+    ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 7th ed. Saunders; 2010."
+  },
+  {
+    id:57,
+    q:"57. นกแก้วหนัก 100 g มี bacterial airsacculitis ที่ anterior and posterior airsac ให้ยาปฏิชีวนะทางไหนเหมาะสมที่สุด",
+    opts:[{key:"ก",text:"Peroral route"},{key:"ข",text:"Aerosol route"},{key:"ค",text:"IM"},{key:"ง",text:"IV"},{key:"จ",text:"IP"}],
+    answer:"ข",
+    explanation:"Aerosol (nebulization) ส่งยาปฏิชีวนะเข้าสู่ระบบทางเดินหายใจและถุงลมโดยตรง เหมาะสำหรับ airsacculitis เพราะยาถึงรอยโรคได้โดยตรงในความเข้มข้นสูง",
+    ref:"Tully TN, Dorrestein GM, Jones AK. Handbook of Avian Medicine. 2nd ed. Saunders; 2009."
+  },
+  {
+    id:58,
+    q:"58. ฟาร์มกุ้งกุลาดำ ระยะตัวเต็มวัยพบอาการจุดขาวขนาด 3 มม. บริเวณเปลือก อัตราการตาย 90% ข้อใดเป็นวิธีวินิจฉัยที่เหมาะสมที่สุด",
+    opts:[{key:"ก",text:"PCR"},{key:"ข",text:"Necropsy"},{key:"ค",text:"Water quality"},{key:"ง",text:"Lateral flow chromatography"},{key:"จ",text:"Wet mount light microscope"}],
+    answer:"ก",
+    explanation:"White Spot Syndrome Virus (WSSV) วินิจฉัยได้แม่นยำที่สุดด้วย PCR ซึ่งเป็น gold standard ตามมาตรฐาน OIE สำหรับโรคจุดขาวในกุ้ง อัตราตาย 90% ใน 3-10 วันเป็นลักษณะเฉพาะของ WSSV",
+    ref:"OIE. Manual of Diagnostic Tests for Aquatic Animals. 2019."
+  },
+  {
+    id:59,
+    q:"59. กระบวนการเปลี่ยนไขมันในนมที่ทำให้นมมีกลิ่นผิดปกติ",
+    opts:[{key:"ก",text:"Catalyzation"},{key:"ข",text:"Saponification"},{key:"ค",text:"Lipid autooxidation"},{key:"ง",text:"Hydrolytic rancidity"},{key:"จ",text:"Decarboxylation"}],
+    answer:"ง",
+    explanation:"Hydrolytic rancidity เกิดจาก lipase (จากแบคทีเรีย หรือ lipase ในน้ำนมเอง) ย่อยสลาย triglycerides ให้เป็น free fatty acids ที่มีกลิ่นเหม็นหืน (โดยเฉพาะ butyric acid ในนม)",
+    ref:"Walstra P et al. Dairy Science and Technology. 2nd ed. CRC Press; 2006."
+  },
+  {
+    id:60,
+    q:"60. อวัยวะใดในระบบสืบพันธุ์ของไก่เพศเมียที่เป็น sperm storage site",
+    opts:[{key:"ก",text:"Isthmus"},{key:"ข",text:"Magnum"},{key:"ค",text:"Uterus"},{key:"ง",text:"Vagina"},{key:"จ",text:"Cloaca"}],
+    answer:"ง",
+    explanation:"Vagina (โดยเฉพาะ uterovaginal junction, UVJ) ในสัตว์ปีกเป็น sperm storage tubules (SST) ที่เก็บอสุจิได้นาน 2-3 สัปดาห์ในไก่ ก่อนที่จะปล่อยอสุจิมาปฏิสนธิกับไข่แต่ละฟอง",
+    ref:"Gilbert AB. Egg albumen and its formation. In: Freeman BM (ed). Physiology and Biochemistry of the Domestic Fowl. Academic Press; 1979."
+  },
+  {
+    id:61,
+    q:"61. แพะพบก้อนหนองที่ superficial lymph node ควรตรวจด้วยวิธีใดที่มีความรวดเร็วและง่ายที่สุด",
+    opts:[{key:"ก",text:"ELISA"},{key:"ข",text:"PCR"},{key:"ค",text:"Culture"},{key:"ง",text:"Interferon gamma"},{key:"จ",text:"Agar gel immunodiffusion"}],
+    answer:"ค",
+    explanation:"Caseous lymphadenitis (CLA) ในแพะจาก Corynebacterium pseudotuberculosis วินิจฉัยเบื้องต้นด้วยการเพาะเชื้อ (culture) จากหนอง ซึ่งเร็วและง่ายที่สุด เห็นโคโลนีลักษณะแห้งและดูพิเศษ",
+    ref:"Pugh DG, Baird AN. Sheep and Goat Medicine. 2nd ed. Elsevier; 2012."
+  },
+  {
+    id:62,
+    q:"62. หมาติดเชื้อ Leptospira spp. พบอาการ acute renal failure ให้ 20% mannitol 0.5 g/kg BW เพื่อแก้ไขสภาวะใด",
+    opts:[{key:"ก",text:"Hypokalemia"},{key:"ข",text:"Hypernatremia"},{key:"ค",text:"Hyperglycemia"},{key:"ง",text:"Severe dehydration"},{key:"จ",text:"Decreased urine output"}],
+    answer:"จ",
+    explanation:"Mannitol เป็น osmotic diuretic ใช้เพิ่ม urine output ในภาวะ oliguric/anuric renal failure โดยเพิ่ม osmotic pressure ใน tubular fluid เพื่อป้องกัน tubular obstruction และเพิ่มการไหลของปัสสาวะ",
+    ref:"Plumb DC. Plumb's Veterinary Drug Handbook. 9th ed. Wiley-Blackwell; 2018."
+  },
+  {
+    id:63,
+    q:"63. ปลานิลฮุบอากาศที่ผิวน้ำช่วงเช้า น้ำมีสีเขียวเข้ม มีอัตราการตาย 10% ภายใน 3 วัน ไม่พบรอยโรคที่เกี่ยวข้องกับการติดเชื้อแบคทีเรียและปรสิตภายนอก สาเหตุน่าจะเกิดจากอะไร",
+    opts:[{key:"ก",text:"High ammonia"},{key:"ข",text:"High turbidity"},{key:"ค",text:"Low DO"},{key:"ง",text:"Poisoning toxicity"},{key:"จ",text:"Low pH"}],
+    answer:"ค",
+    explanation:"น้ำสีเขียวเข้ม = algae bloom สูง ช่วงกลางคืน/เช้า algae หายใจใช้ O₂ ทำให้ DO (Dissolved Oxygen) ต่ำมาก ปลาจึงต้องขึ้นมาฮุบอากาศที่ผิวน้ำ (air-gulping behavior) และตายจาก hypoxia",
+    ref:"Boyd CE. Water Quality in Ponds for Aquaculture. Auburn University; 1990."
+  },
+  {
+    id:64,
+    q:"64. พยาธิตัวกลมที่พบบนหนังตาที่ 3 ของไก่",
+    opts:[{key:"ก",text:"Ascaridia galli"},{key:"ข",text:"Syngamus trachea"},{key:"ค",text:"Oxyspirura mansoni"},{key:"ง",text:"Heterakis gallinarum"},{key:"จ",text:"Tetrameres fissipina"}],
+    answer:"ค",
+    explanation:"Oxyspirura mansoni (Manson's eye worm) เป็นพยาธิตัวกลมที่อาศัยอยู่ใต้ nictiating membrane (หนังตาที่ 3) และในช่องตาของไก่และสัตว์ปีก",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:65,
+    q:"65. เพาะเชื้อ Avibacterium paragallinarum ใช้ agar อะไร",
+    opts:[{key:"ก",text:"Blood agar"},{key:"ข",text:"Gassner agar"},{key:"ค",text:"Chocolate agar"},{key:"ง",text:"McConkey agar"},{key:"จ",text:"XLD agar"}],
+    answer:"ค",
+    explanation:"Avibacterium paragallinarum (Haemophilus paragallinarum สาเหตุ Infectious Coryza) เป็น fastidious organism ที่ต้องการ V factor (NAD) จาก chocolate agar หรือ satellite phenomenon บน blood agar",
+    ref:"Saif YM et al. Diseases of Poultry. 12th ed. Blackwell Publishing; 2008."
+  },
+  {
+    id:66,
+    q:"66. ตรวจพบ Salmonella ในอาหารสำเร็จรูปสำหรับปลาดุก ใครเป็นผู้ประกาศต่อประชาชน",
+    opts:[{key:"ก",text:"อธิบดีกรมประมง"},{key:"ข",text:"อธิบดีกรมปศุสัตว์"},{key:"ค",text:"ผู้ว่าราชการจังหวัด"},{key:"ง",text:"ผู้อำนวยการสำนักงานควบคุมอาหารและยาสัตว์"},{key:"จ",text:"รัฐมนตรีกระทรวงเกษตรและสหกรณ์"}],
+    answer:"ก",
+    explanation:"อาหารสัตว์น้ำ (ปลาดุก) อยู่ในความรับผิดชอบของกรมประมง กรณีพบการปนเปื้อนในอาหารสัตว์น้ำ อธิบดีกรมประมงมีอำนาจประกาศเรียกคืนสินค้าและแจ้งต่อประชาชน",
+    ref:"พ.ร.บ. ควบคุมคุณภาพอาหารสัตว์ พ.ศ. 2558."
+  },
+  {
+    id:67,
+    q:"67. เจ้าของลูกสุนัขต้องการเสริมอาหาร solid food supplement ให้ลูกสุนัขเลียกินได้ อายุลูกสุนัข (สัปดาห์) เท่าไหร่ที่สัตวแพทย์ควรแนะนำให้เริ่มเสริมอาหาร",
+    opts:[{key:"ก",text:"1"},{key:"ข",text:"3"},{key:"ค",text:"5"},{key:"ง",text:"7"},{key:"จ",text:"9"}],
+    answer:"ข",
+    explanation:"ลูกสุนัขควรเริ่ม weaning (เสริมอาหารกึ่งแข็ง) ที่อายุ 3-4 สัปดาห์ ช่วงนี้ฟันน้ำนมเริ่มขึ้น และลูกสุนัขเริ่มพัฒนาระบบย่อยอาหารได้พอสมควร",
+    ref:"Peterson ME, Kutzler MA. Small Animal Pediatrics. Saunders; 2011."
+  },
+  {
+    id:68,
+    q:"68. ฟาร์มแพะแห่งหนึ่งให้ต้นข้าวโพดหมักเป็นอาหารหยาบ พ่อพันธุ์อายุ 2 ปี แสดงอาการเดินวน 3 วัน ตรวจทางคลินิกพบ temp 103.5°F, right eye nystagmus, right side facial paralysis, normal appetite with dysphagia, lacerated wound at buccal cavity ข้อใดเป็นสาเหตุของความผิดปกติที่เป็นไปได้มากที่สุด",
+    opts:[{key:"ก",text:"Rabies"},{key:"ข",text:"Listeriosis"},{key:"ค",text:"Aflatoxin"},{key:"ง",text:"Trypanosomiasis"},{key:"จ",text:"Polioencephalomalacia"}],
+    answer:"ข",
+    explanation:"Listeriosis (สาเหตุ Listeria monocytogenes) ในแพะ: อาการ circling disease เดินวน, facial nerve paralysis, nystagmus สัมพันธ์กับการกิน silage (หญ้าหมัก/ข้าวโพดหมัก) ที่ pH ไม่ต่ำพอ",
+    ref:"Pugh DG, Baird AN. Sheep and Goat Medicine. 2nd ed. Elsevier; 2012."
+  },
+  {
+    id:69,
+    q:"69. สุนัขได้รับสารละลาย isotonic solution เพื่อชดเชยภาวะขาดน้ำ แต่ปริมาตรเกินที่ร่างกายต้องการและเกินความสามารถของไตในการขับน้ำส่วนเกิน ส่วนใดของร่างกายที่น้ำส่วนเกินจะสะสมเป็นอันดับแรก",
+    opts:[{key:"ก",text:"Pericardium"},{key:"ข",text:"Thoracic cavity"},{key:"ค",text:"Peritoneum cavity"},{key:"ง",text:"Lung parenchyma"},{key:"จ",text:"Subcutaneous"}],
+    answer:"ง",
+    explanation:"ภาวะ fluid overload ใน isotonic solution: น้ำส่วนเกินจะสะสมที่ปอด (pulmonary edema) ก่อน เนื่องจากความดัน hydrostatic ใน pulmonary capillary เพิ่มขึ้น ปอดจึงได้รับผลกระทบก่อนอวัยวะอื่น",
+    ref:"DiBartola SP. Fluid, Electrolyte, and Acid-Base Disorders in Small Animal Practice. 4th ed. Saunders; 2012."
+  },
+  {
+    id:70,
+    q:"70. คนงานในฟาร์มโคนมป่วย อาการไข้ขึ้นๆ ลงๆ (undulant fever) ปวดตามข้อ หลังจากการเอาน้ำนมดิบไปดื่มเป็นประจำ คนงานติดเชื้อแบคทีเรียชนิดใด",
+    opts:[{key:"ก",text:"E. coli"},{key:"ข",text:"Brucella abortus"},{key:"ค",text:"Staphylococcus spp."},{key:"ง",text:"Streptococcus spp."},{key:"จ",text:"Corynebacterium pseudotuberculosis"}],
+    answer:"ข",
+    explanation:"Brucella abortus ทำให้เกิด Brucellosis ในคน (Malta fever, undulant fever) อาการไข้เป็นคลื่น (undulant fever) ปวดข้อ ติดต่อได้จากน้ำนมดิบ เป็น zoonosis ที่สำคัญ",
+    ref:"Quinn PJ et al. Veterinary Microbiology and Microbial Disease. 2nd ed. Wiley-Blackwell; 2011."
+  },
+  {
+    id:71,
+    q:"71. สุนัขอายุ 4 ปี มีอาการไถก้น สัตวแพทย์ดูก้นพบลักษณะคล้ายพยาธิเม็ดแตงกวา ส่องดูเชื้อด้วยกล้องจุลทรรศน์พบตามภาพ สาเหตุเกิดจากอะไร",
+    opts:[{key:"ก",text:"เห็บกัด"},{key:"ข",text:"ไรกัด"},{key:"ค",text:"กินเห็บ"},{key:"ง",text:"กินหมัด"},{key:"จ",text:"กินสิ่งปนเปื้อนเชื้อจากมูลสัตว์"}],
+    answer:"ง",
+    explanation:"Dipylidium caninum (พยาธิตัวตืดแตงกวา) มีหมัด (Ctenocephalides spp.) เป็น intermediate host สุนัขติดพยาธิโดยกินหมัดที่มี cysticercoid อยู่ข้างใน",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:72,
+    q:"72. อวัยวะทางเดินอาหารส่วนใดไม่พบในม้า",
+    opts:[{key:"ก",text:"Pyloric sphincter"},{key:"ข",text:"Gallbladder"},{key:"ค",text:"Ascending colon"}],
+    answer:"ข",
+    explanation:"ม้าไม่มีถุงน้ำดี (Gallbladder) น้ำดีจะหลั่งต่อเนื่องจากตับเข้าสู่ duodenum โดยตรงตลอดเวลา นอกจากนี้ม้ายังไม่มี tonsils และไม่สามารถอาเจียนได้",
+    ref:"Dyce KM, Sack WO, Wensing CJG. Textbook of Veterinary Anatomy. 4th ed. Saunders; 2010."
+  },
+  {
+    id:73,
+    q:"73. ฟาร์มไก่ต้องการฆ่าเชื้อโรงเรือนโดยใช้ความเข้มข้นสารฆ่าเชื้อคลอรีนแบบผง 200 ppm ถ้าใช้สารปริมาตร 10,000 L จะมีสารอยู่กี่กรัม",
+    opts:[{key:"ก",text:"2"},{key:"ข",text:"20"},{key:"ค",text:"200"},{key:"ง",text:"2,000"},{key:"จ",text:"20,000"}],
+    answer:"ง",
+    explanation:"200 ppm = 200 mg/L; ปริมาณทั้งหมด = 200 mg/L × 10,000 L = 2,000,000 mg = 2,000 g",
+    ref:"Block SS. Disinfection, Sterilization, and Preservation. 5th ed. Lippincott Williams & Wilkins; 2001."
+  },
+  {
+    id:74,
+    q:"74. สุนัขพุดเดิ้ล เพศเมีย อายุ 3 ปี diarrhea vomiting กินได้ปกติ BCS 3/5 muscle weakness, bradycardia, PU/PD, panting, hypothermia, pulse rate เบา, CRT>2s, ไม่พบ abdominal distention ไม่พบ skin lesion สงสัยเป็นโรคอะไร",
+    opts:[{key:"ก",text:"Hypothyroidism"},{key:"ข",text:"Hyperthyroidism"},{key:"ค",text:"Hypoadrenocorticism"},{key:"ง",text:"Hyperadrenocorticism"},{key:"จ",text:"Euthyroid sick syndrome"}],
+    answer:"ค",
+    explanation:"Hypoadrenocorticism (Addison's disease): Na ต่ำ, K สูง, bradycardia, weakness, vomiting, diarrhea, PU/PD เป็นอาการคลาสสิก เรียก 'Great Pretender' เพราะอาการคล้ายโรคอื่นๆ หลายโรค",
+    ref:"Nelson RW, Couto CG. Small Animal Internal Medicine. 5th ed. Mosby; 2014."
+  },
+  {
+    id:75,
+    q:"75. พยาธิใดที่ก่อให้เกิด lizard poisoning ในแมว",
+    opts:[{key:"ก",text:"Toxocara cati"},{key:"ข",text:"Trichuris vulpis"},{key:"ค",text:"Anchylostoma"},{key:"ง",text:"Gnathostoma spinigerum"},{key:"จ",text:"Platynosomum fastosum"}],
+    answer:"จ",
+    explanation:"Platynosomum fastosum (liver fluke ในแมว) มีจิ้งจก (lizard) เป็น second intermediate host แมวติดโดยกินจิ้งจก ทำให้เกิด 'lizard poisoning' หรือ platynosomiasis ในท่อน้ำดี",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:76,
+    q:"76. ข้อใดคือคำแนะนำเพื่อหลีกเลี่ยง feline injection site sarcoma",
+    opts:[{key:"ก",text:"ฉีดเฉพาะบริเวณ hind limb เท่านั้น"},{key:"ข",text:"ฉีดเฉพาะบริเวณ interscapular เท่านั้น"},{key:"ค",text:"ฉีดหลายบริเวณ สับเปลี่ยนกันไป"},{key:"ง",text:"ฉีดเฉพาะบริเวณ lateral abdominal wall เท่านั้น"},{key:"จ",text:"ฉีดเฉพาะบริเวณ lateral thoracic wall เท่านั้น"}],
+    answer:"ก",
+    explanation:"VAFSTF (Vaccine-Associated Feline Sarcoma Task Force) แนะนำให้ฉีดวัคซีนที่ขาหลัง (hind limb) เพื่อให้ตัดขาได้ถ้าเกิด sarcoma หลีกเลี่ยง interscapular area เพราะผ่าตัดได้ยากเมื่อเกิดเนื้องอก",
+    ref:"Withrow SJ, Vail DM. Withrow and MacEwen's Small Animal Clinical Oncology. 4th ed. Saunders; 2007."
+  },
+  {
+    id:77,
+    q:"77. ม้าเพศเมียอายุ 5 เดือน ซึม เบื่ออาหาร ขาหน้าตะกุยพื้น ล้มตัวลงนอนสลับลุกขึ้นยืน เหยียด วินิจฉัยเบื้องต้น",
+    opts:[{key:"ก",text:"Choke"},{key:"ข",text:"Atresia coli"},{key:"ค",text:"Ascarid impaction"},{key:"ง",text:"Meconium retention"},{key:"จ",text:"Pedunculated lipoma"}],
+    answer:"ค",
+    explanation:"ลูกม้าอายุ 5 เดือน อาการ colic (ปวดท้อง) ตะกุยพื้น นอนสลับลุก เป็นอาการ ascarid impaction จาก Parascaris equorum ที่ขวางทางเดินอาหาร พบบ่อยในลูกม้าอายุ 2-6 เดือน",
+    ref:"Auer JA, Stick JA. Equine Surgery. 4th ed. Saunders; 2012."
+  },
+  {
+    id:78,
+    q:"78. ปลาหางนกยูง มีจุดเลือดออกที่ครีบ ว่ายน้ำถูกับตู้ ขูดเมือกส่องกล้องพบ ทรงกลม cilia ล้อมรอบ ด้าน ventral มีลักษณะเป็นเขี้ยว",
+    opts:[{key:"ก",text:"Epistylis"},{key:"ข",text:"Trichodina"},{key:"ค",text:"Tetrahymena"},{key:"ง",text:"Gyrodactylus"},{key:"จ",text:"Piscinoodinium"}],
+    answer:"ข",
+    explanation:"Trichodina spp. เป็นโปรโตซัวรูปทรงกลมมี cilia รอบนอก ลักษณะเด่นคือ adhesive disc ทาง ventral ที่มีโครงสร้างคล้ายฟัน/เขี้ยว (denticulate ring) ใช้ยึดเกาะผิวปลา",
+    ref:"Noga EJ. Fish Disease: Diagnosis and Treatment. 2nd ed. Wiley-Blackwell; 2010."
+  },
+  {
+    id:79,
+    q:"79. ม้า มีอาการมา 1 เดือน มีไข้ พบ petechial hemorrhage at gum, hind limb edema ตรวจเลือดพบ anemia, thrombocytopenia, mild leukocytosis การตรวจ gold standard ของโรคนี้คืออะไร",
+    opts:[{key:"ก",text:"Coggin test"},{key:"ข",text:"Western blot"},{key:"ค",text:"RT-PCR"},{key:"ง",text:"ELISA"},{key:"จ",text:"Animal inoculation"}],
+    answer:"ก",
+    explanation:"Equine Infectious Anemia (EIA): อาการไข้เรื้อรัง petechiae ขาบวม anemia thrombocytopenia Gold standard คือ Coggins test (agar gel immunodiffusion, AGID) ซึ่งเป็น OIE prescribed test",
+    ref:"Sellon DC, Long MT. Equine Infectious Diseases. 2nd ed. Saunders; 2014."
+  },
+  {
+    id:80,
+    q:"80. แมวมี HCT, MCHC ต่ำ MCV สูง พบ agglutination และ spherocyte ควรแก้ไขอย่างไรเป็นอันดับแรก",
+    opts:[{key:"ก",text:"Doxycycline"},{key:"ข",text:"Prednisolone"},{key:"ค",text:"Ferrous sulfate"},{key:"ง",text:"Erythromycin"},{key:"จ",text:"Blood transfusion"}],
+    answer:"ข",
+    explanation:"Spherocytes + agglutination + IMHA (Immune-mediated hemolytic anemia): การรักษาหลักคือ immunosuppression ด้วย Prednisolone เพื่อหยุดการทำลาย RBC โดยระบบภูมิคุ้มกัน",
+    ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 7th ed. Saunders; 2010."
+  },
+  {
+    id:81,
+    q:"81. สัตว์กลุ่มใดที่เข้าข่ายต้องควบคุมการใช้ยาตามมาตรฐานสินค้าทางการเกษตร",
+    opts:[{key:"ก",text:"Companion animal"},{key:"ข",text:"Laboratory animal"},{key:"ค",text:"Exotic animal"},{key:"ง",text:"Food producing animal"},{key:"จ",text:"Aquatic animal"}],
+    answer:"ง",
+    explanation:"Food producing animals (สัตว์เศรษฐกิจ เช่น โค สุกร ไก่) ต้องควบคุมการใช้ยาอย่างเข้มงวดเพื่อป้องกันการตกค้างในผลิตภัณฑ์อาหาร ตาม Codex Alimentarius และมาตรฐาน GAP",
+    ref:"กรมปศุสัตว์. มาตรฐานการใช้ยาในสัตว์เศรษฐกิจ."
+  },
+  {
+    id:82,
+    q:"82. สัตวแพทย์คลำตรวจระบบสืบพันธุ์แม่โคทาง rectum คลำเจอแผ่นบางๆ แต่อยู่ทางด้านซ้ายและขวา โครงสร้างนั้นคือ",
+    opts:[{key:"ก",text:"Mesovarium"},{key:"ข",text:"Mesorectum"},{key:"ค",text:"Mesosalpinx"},{key:"ง",text:"Mesometrium"},{key:"จ",text:"Intercornual ligament"}],
+    answer:"ง",
+    explanation:"Mesometrium เป็นส่วนที่ใหญ่ที่สุดของ broad ligament ยึด uterine horn ทั้งซ้ายและขวากับผนังกระดูกเชิงกราน สัมผัสได้เป็นแผ่นบางๆ ทั้งสองข้างทาง rectal palpation",
+    ref:"Hafez ESE, Hafez B. Reproduction in Farm Animals. 7th ed. Wiley-Blackwell; 2000."
+  },
+  {
+    id:83,
+    q:"83. แมวถูกต้อนจนจนมุมจนแสดงพฤติกรรมดุร้าย ต่อมใดจะหลั่งฮอร์โมนออกมา",
+    opts:[{key:"ก",text:"Pineal gland"},{key:"ข",text:"Adrenal gland"},{key:"ค",text:"Thyroid gland"},{key:"ง",text:"Pituitary gland"},{key:"จ",text:"Parathyroid gland"}],
+    answer:"ข",
+    explanation:"Adrenal gland หลั่ง Epinephrine (adrenaline) จาก adrenal medulla และ Cortisol จาก adrenal cortex เมื่อสัตว์เครียดหรือตกใจ เป็น fight-or-flight response",
+    ref:"Reece WO. Dukes' Physiology of Domestic Animals. 13th ed. Wiley-Blackwell; 2015."
+  },
+  {
+    id:84,
+    q:"84. แมวเปอร์เซีย อายุ 8 สัปดาห์ ไม่เคยได้รับวัคซีนมาก่อน ควรเลือกโปรแกรมวัคซีนใด",
+    opts:[{key:"ก",text:"ไข้หัดหวัดแมวและพาร์โว 2 ครั้ง 8, 12 สัปดาห์"},{key:"ข",text:"FIV 2 ครั้ง 8, 12 สัปดาห์"},{key:"ค",text:"FeLV 2 ครั้ง 8, 12 สัปดาห์"},{key:"ง",text:"ไข้หัดหวัดแมวและพาร์โว 3 ครั้ง 8, 10, 12 สัปดาห์"},{key:"จ",text:"ไข้หัดหวัดแมวและพาร์โว 3 ครั้ง 8, 12, 16 สัปดาห์"}],
+    answer:"ง",
+    explanation:"WSAVA แนะนำ core vaccine ในแมว (FVRCP: Feline herpesvirus, Calicivirus, Panleukopenia) เริ่มที่ 8 สัปดาห์ ทุก 3-4 สัปดาห์ รวม 3 ครั้ง (8, 12, 16 สัปดาห์) หรือ 3 ครั้ง ครั้งสุดท้ายเมื่อ ≥16 สัปดาห์",
+    ref:"WSAVA Vaccination Guidelines Group. WSAVA Guidelines for the Vaccination of Dogs and Cats. J Small Anim Pract. 2016."
+  },
+  {
+    id:85,
+    q:"85. หลอดเลือดในข้อใด เหมาะสำหรับการตรวจวัดชีพจรในโคนม",
+    opts:[{key:"ก",text:"Facial artery"},{key:"ข",text:"Median artery"},{key:"ค",text:"Coccygeal artery"},{key:"ง",text:"Saphenous artery"},{key:"จ",text:"External maxillary artery"}],
+    answer:"ค",
+    explanation:"Coccygeal artery (middle caudal artery) ที่ใต้หางโคเป็นตำแหน่งที่นิยมตรวจชีพจรในโค เข้าถึงง่าย คลำชัดเจน และโคให้ความร่วมมือดีกว่าตำแหน่งอื่น",
+    ref:"Radostits OM et al. Veterinary Medicine. 10th ed. Saunders; 2007."
+  },
+  {
+    id:86,
+    q:"86. แม่โคหลังคลอด 1 เดือน พบหนองไหลออกจากช่องคลอด ตรวจระบบสืบพันธุ์พบปีกมดลูกขวาใหญ่กว่าซ้ายและมีของเหลวอยู่ภายใน รังไข่ขวามี corpus luteum ขนาด 2.5 cm ข้างซ้ายพบ follicle เล็กๆ หลายใบ รักษาอย่างไร",
+    opts:[{key:"ก",text:"GnRH injection"},{key:"ข",text:"Estrogen injection"},{key:"ค",text:"Uterine flushing with saline"},{key:"ง",text:"Prostaglandin F2α injection"},{key:"จ",text:"Uterine infusion with antibiotic"}],
+    answer:"ง",
+    explanation:"Pyometra ในโคที่มี CL (corpus luteum) อยู่: ต้องให้ PGF2α เพื่อ luteolysis สลาย CL ก่อน เมื่อไม่มี progesterone ค้ำ cervix จะเปิดออกและมดลูกสามารถขับหนองออกมาได้",
+    ref:"Radostits OM et al. Veterinary Medicine. 10th ed. Saunders; 2007."
+  },
+  {
+    id:87,
+    q:"87. ฟาร์มสุกรตั้งอยู่ในเขตที่มีการเลี้ยงโคนม พบปัญหาสุกรมีไข้สูง เยื่อเมือกซีด บางตัวพบผื่นแดงคล้ายลมพิษ แท้งกระจายทุกระยะการตั้งท้อง ถามว่าน่าจะมีสาเหตุมาจากข้อใด",
+    opts:[{key:"ก",text:"Parvovirus"},{key:"ข",text:"Brucellosis"},{key:"ค",text:"Leptospira"},{key:"ง",text:"Pseudorabies"},{key:"จ",text:"Trypanosoma"}],
+    answer:"ค",
+    explanation:"Leptospirosis ในสุกร: ไข้สูง ผื่นแดง แท้งทุกระยะ anemia สอดคล้องกับอยู่ใกล้ฟาร์มโคนม (Leptospira pomona พบในโคและสุกร) แพร่ผ่านปัสสาวะปนเปื้อน",
+    ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."
+  },
+  {
+    id:88,
+    q:"88. การระบาดแบบ pandemic ของไข้หวัดใหญ่ในมนุษย์ (H1N1) ที่ระบาดทั่วโลก เมื่อปี 2009 เป็นการเปลี่ยนแปลงทางพันธุกรรมแบบใด",
+    opts:[{key:"ก",text:"Genetic drift"},{key:"ข",text:"Reassortment"},{key:"ค",text:"Reactivation"},{key:"ง",text:"Point mutation"},{key:"จ",text:"Recombination"}],
+    answer:"ข",
+    explanation:"Reassortment คือการแลกเปลี่ยนชิ้นส่วน RNA segments ระหว่างไวรัสไข้หวัดใหญ่ 2 สายพันธุ์ที่อยู่ในเซลล์เดียวกัน H1N1 (2009) เกิดจาก reassortment ระหว่างไวรัสหวัดหมู มนุษย์ และนก",
+    ref:"Taubenberger JK, Morens DM. Pandemic influenza — including a risk assessment of H5N1. Rev Sci Tech. 2009."
+  },
+  {
+    id:89,
+    q:"89. สุกรอายุ 14 สัปดาห์ตรวจพบลำไส้ส่วน ileum หนาตัว ควรใช้ยาใด",
+    opts:[{key:"ก",text:"Tiamulin"},{key:"ข",text:"Amoxicillin"},{key:"ค",text:"Colistin sulfate"},{key:"ง",text:"Ciprofloxacin"},{key:"จ",text:"Tetracycline"}],
+    answer:"ก",
+    explanation:"Proliferative enteropathy (PE) จาก Lawsonia intracellularis ทำให้ ileum หนาตัว (thickening of ileal wall) พบในสุกรอายุ 6-20 สัปดาห์ ยาที่มีประสิทธิภาพสูงสุดคือ Tiamulin",
+    ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."
+  },
+  {
+    id:90,
+    q:"90. เสือโครงเพศผู้อายุ 10 ปี อยู่ในสวนสัตว์มาแล้ว 7 ปี เมื่อปล่อยเข้าสู่ส่วนจัดแสดงที่มีพื้นที่ 10x15 เมตร เสือโครงมักกินและนอนอยู่ใต้ร่มไม้ จากนั้นเดินวนไปวนมาในส่วนจัดแสดง หากต้องการแก้ไขเบื้องต้นควรทำอย่างไร",
+    opts:[{key:"ก",text:"ให้ไก่ปรุงสุกเป็นอาหาร"},{key:"ข",text:"ปล่อยเสือตัวผู้มาอยู่ร่วมกัน"},{key:"ค",text:"เอากรงม้าลายมาไว้ข้างๆ"},{key:"ง",text:"เปิดพื้นที่ปูนซีเมนต์"},{key:"จ",text:"ทำพื้นที่บ่อน้ำเพิ่ม"}],
+    answer:"ค",
+    explanation:"Stereotypic behavior (เดินวนซ้ำ) ในสัตว์กรงขังเป็นสัญญาณของ behavioral frustration/boredom การเพิ่ม environmental enrichment เช่น นำเหยื่อมีชีวิต (scent enrichment) หรือสิ่งกระตุ้นใกล้เคียงธรรมชาติ เช่น กรงม้าลาย (prey scent) ช่วยกระตุ้น natural hunting behavior",
+    ref:"Fowler ME, Miller RE. Zoo and Wild Animal Medicine. 6th ed. Saunders; 2008."
+  },
+  {
+    id:91,
+    q:"91. เจออีโบลาในค้างคาวแม่ไก่ 1 ตัวในประเทศไทย เป็นระบาดแบบใด",
+    opts:[{key:"ก",text:"Epidemic"},{key:"ข",text:"Endemic"},{key:"ค",text:"Pandemic"},{key:"ง",text:"Sporadic"},{key:"จ",text:"Epizootic"}],
+    answer:"ง",
+    explanation:"Sporadic หมายถึงการพบโรคเป็นครั้งคราวแบบไม่มีรูปแบบ เป็นรายเดี่ยว ไม่เชื่อมโยงกัน การพบเชื้ออีโบลาในค้างคาว 1 ตัวในประเทศไทยจัดเป็น sporadic case",
+    ref:"Thrusfield M. Veterinary Epidemiology. 4th ed. Wiley-Blackwell; 2018."
+  },
+  {
+    id:92,
+    q:"92. คนท้องเสียหลังจากการกินเนื้อไก่ไม่สุก เพาะเชื้อได้แกรมลบ Guillain-Barré syndrome เป็นเชื้อใด",
+    opts:[{key:"ก",text:"Staphylococcus aureus"},{key:"ข",text:"Listeria monocytogenes"},{key:"ค",text:"Campylobacter jejuni"},{key:"ง",text:"Shigella dysenteriae"},{key:"จ",text:"Vibrio parahaemolyticus"}],
+    answer:"ค",
+    explanation:"Campylobacter jejuni เป็นสาเหตุ food poisoning จากไก่ดิบ แกรมลบ microaerophilic เป็น molecular mimicry กับ ganglioside ใน peripheral nerve ทำให้เกิด Guillain-Barré syndrome ได้",
+    ref:"Quinn PJ et al. Veterinary Microbiology and Microbial Disease. 2nd ed. Wiley-Blackwell; 2011."
+  },
+  {
+    id:93,
+    q:"93. ผสมโคไป 2 เดือน ตรวจ rectal palpate ควรตรวจเจออะไร",
+    opts:[{key:"ก",text:"Uterine tone"},{key:"ข",text:"Fremitus"},{key:"ค",text:"Placentome"},{key:"ง",text:"Fetal bump"},{key:"จ",text:"Asymmetrical uterine horn"}],
+    answer:"จ",
+    explanation:"ที่ 2 เดือน (60 วัน) การตรวจการตั้งท้องทาง rectal palpation จะพบ asymmetry ของมดลูก (horn ที่มีลูกใหญ่กว่าข้างตรงข้าม) และ uterine enlargement รวมถึงอาจคลำ fetal membrane slipping ได้",
+    ref:"Hafez ESE, Hafez B. Reproduction in Farm Animals. 7th ed. Wiley-Blackwell; 2000."
+  },
+  {
+    id:94,
+    q:"94. ตาด้านขวาพบวิการที่ม่านตาขยายไม่ว่าจะส่องไฟฉายตาซ้ายหรือตาขวา แต่เมื่อฉายไฟที่ตาด้านซ้ายและขวา จะพบว่าม่านตาเกิดการหดตัว ให้ระบุว่าเกิดความผิดปกติที่ตำแหน่งใด",
+    opts:[{key:"ก",text:"Optic chiasm"},{key:"ข",text:"Right optic nerve"},{key:"ค",text:"Left optic nerve"},{key:"ง",text:"Right oculomotor nerve"},{key:"จ",text:"Left oculomotor nerve"}],
+    answer:"ง",
+    explanation:"ม่านตาขวาขยายตลอดเวลา (ไม่หดเมื่อส่องแสงที่ตาขวาหรือซ้าย) แต่ตาซ้ายหดได้ปกติ แสดงว่า efferent pathway (CN III) ฝั่งขวาเสียหาย ทำให้ pupillary constriction ตาขวาไม่ทำงาน = Right oculomotor nerve (CN III) paralysis",
+    ref:"Gelatt KN. Veterinary Ophthalmology. 4th ed. Blackwell; 2007."
+  },
+  {
+    id:95,
+    q:"95. เป็นวิการที่พบในสุกรขุน เกิดจากพยาธิใด",
+    opts:[{key:"ก",text:"Ascarid spp."},{key:"ข",text:"Ascarops spp."},{key:"ค",text:"Metastrongylus spp."},{key:"ง",text:"Strongyloid spp."},{key:"จ",text:"Oesophagostomum spp."}],
+    answer:"ก",
+    explanation:"Ascarid suum (พยาธิกลมในสุกร) ระยะตัวอ่อน migration ผ่านตับทำให้เกิด milk spots (white spots/scarring บนตับ) เป็น pathognomonic lesion ที่พบในสุกรขุนที่ถูกตรวจพบในโรงฆ่า",
+    ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."
+  },
+  {
+    id:96,
+    q:"96. หมูอุจจาระมีสีเลือดปน (hematochezia) จากสาเหตุใด",
+    opts:[{key:"ก",text:"Ascaris spp."},{key:"ข",text:"Isospora spp."},{key:"ค",text:"Trichuris spp."},{key:"ง",text:"Trichinella spp."},{key:"จ",text:"Oesophagostomum spp."}],
+    answer:"ค",
+    explanation:"Trichuris suis (Whipworm) อาศัยอยู่ใน cecum และ colon ของสุกร ทำให้เกิดเลือดออกในลำไส้ใหญ่ ถ่ายเป็นเลือดสด (hematochezia) ต้องแยกจาก Brachyspira (swine dysentery)",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:98,
+    q:"98. ข้อใดเป็นสิ่งมีชีวิตที่พบในลำไส้ส่วน ileum มีรอยโรคเป็นจุดเนื้อตายสีขาวสลับกับจุดเลือดออก",
+    opts:[{key:"ก",text:"Eimeria tenella"},{key:"ข",text:"Eimeria maxima"},{key:"ค",text:"Eimeria mivati"},{key:"ง",text:"Eimeria necatrix"},{key:"จ",text:"Eimeria acervulina"}],
+    answer:"ง",
+    explanation:"Eimeria necatrix พบที่ jejunum และ ileum ทำให้เกิดรอยโรค white necrotic foci (จุดเนื้อตายสีขาว) สลับกับ hemorrhage เป็นลักษณะเฉพาะ มีความรุนแรงสูง",
+    ref:"Saif YM et al. Diseases of Poultry. 12th ed. Blackwell Publishing; 2008."
+  },
+  {
+    id:99,
+    q:"99. ทำการทดลองความสัมพันธ์ของสารอาหารกับน้ำหนักสุกร (normal distribution) ต้องใช้การทดลองแบบใด",
+    opts:[{key:"ก",text:"Paired t test"},{key:"ข",text:"Mann-Whitney U test"},{key:"ค",text:"ANOVA"}],
+    answer:"ค",
+    explanation:"การเปรียบเทียบน้ำหนัก (continuous, normal distribution) ระหว่างกลุ่มสารอาหารมากกว่า 2 กลุ่ม ใช้ ANOVA (parametric) ถ้าข้อมูลไม่ปกติ (non-parametric) ให้ใช้ Kruskal-Wallis test",
+    ref:"Petrie A, Watson P. Statistics for Veterinary and Animal Science. 3rd ed. Wiley-Blackwell; 2013."
+  },
+  {
+    id:100,
+    q:"100. ฟาร์มไก่ไข่ผลผลิตไข่ลดลงอย่างทันทีทันใด ไก่มีกระวนกระวาย อาการอ่อนแรง ล้มลง ผ่าซากพบจุดเนื้อตายที่หลอดลมและจุดเลือดออกที่ proventriculus จากการสอบถามคนงานในฟาร์มพบอาการ conjunctivitis ถามว่าเชื้อคือเชื้ออะไร",
+    opts:[{key:"ก",text:"Coronavirus"},{key:"ข",text:"Adenovirus"},{key:"ค",text:"Herpes virus"},{key:"ง",text:"Picornavirus"},{key:"จ",text:"Paramyxovirus"}],
+    answer:"จ",
+    explanation:"Newcastle Disease Virus (NDV) เป็น Paramyxovirus: ไข่ลดกะทันหัน อ่อนแรง รอยโรคที่หลอดลมและ proventriculus hemorrhage นอกจากนี้ NDV ติดคนได้ทำให้ conjunctivitis ในคนงานฟาร์ม",
+    ref:"Saif YM et al. Diseases of Poultry. 12th ed. Blackwell Publishing; 2008."
+  },
+  {
+    id:101,
+    q:"101. ใช้ยา doxycycline รักษา ehrlichiosis ใช้อย่างน้อยที่สุดกี่วัน",
+    opts:[{key:"ก",text:"7 วัน"},{key:"ข",text:"10 วัน"},{key:"ค",text:"12 วัน"},{key:"ง",text:"14 วัน"},{key:"จ",text:"28 วัน"}],
+    answer:"ง",
+    explanation:"Ehrlichiosis (Ehrlichia canis) รักษาด้วย Doxycycline อย่างน้อย 28 วัน (4 สัปดาห์) เพื่อกำจัดเชื้อที่อยู่ภายในเซลล์ให้หมด การหยุดยาก่อนกำหนดทำให้โรคกลับมาเรื้อรัง",
+    ref:"Greene CE. Infectious Diseases of the Dog and Cat. 4th ed. Saunders; 2012."
+  },
+  {
+    id:102,
+    q:"102. Simple flotation ใช้สารประกอบอะไร",
+    opts:[{key:"ก",text:"Tap water"},{key:"ข",text:"Trypsin/HCl"},{key:"ค",text:"Lugol solution"},{key:"ง",text:"Normal saline solution"},{key:"จ",text:"Saturated saline solution"}],
+    answer:"จ",
+    explanation:"Simple flotation technique ใช้ saturated salt solution (NaCl) ที่มีความถ่วงจำเพาะสูง (~1.2) เพื่อทำให้ไข่พยาธิลอยขึ้นมาที่ผิว แล้วตักด้วย coverslip ไปตรวจ",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:103,
+    q:"103. ฟาร์มไก่เนื้อ เลี้ยงแบบปล่อยพื้น evap 20,000 ตัว ขนาดพื้นที่เลี้ยง 1,000 ตารางเมตร เลี้ยงก่อนส่งโรงฆ่า 42 วัน น้ำหนักก่อนส่งโรงฆ่า 2 กิโลกรัม ฟาร์มนี้น่าจะผิดสวัสดิภาพสัตว์ข้อใด",
+    opts:[{key:"ก",text:"Free from hunger or thirst"},{key:"ข",text:"Free from discomfort"},{key:"ค",text:"Free from pain, injury or disease"},{key:"ง",text:"Free from express normal behavior"},{key:"จ",text:"Free from fear and distress"}],
+    answer:"ข",
+    explanation:"ความหนาแน่น 20,000 ตัว/1,000 ตร.ม. = 20 ตัว/ตร.ม. น้ำหนัก 2 กก./ตัว = 40 kg/ตร.ม. เกิน 35 kg/ตร.ม. ที่กำหนด ทำให้ไก่อยู่ในสภาพแออัด ไม่สบาย (discomfort) ขัด Freedom from discomfort",
+    ref:"ระเบียบกรมปศุสัตว์ว่าด้วยการเลี้ยงไก่เนื้อ พ.ศ. 2554."
+  },
+  {
+    id:104,
+    q:"104. แมวอายุ 2 ปี มีอาการคันตลอดเวลา ผิวหนังอักเสบ มีหมัดจำนวนมาก กินยาใดเพื่อกำจัดสาเหตุของอาการ",
+    opts:[{key:"ก",text:"Amitraz"},{key:"ข",text:"Fipronil"},{key:"ค",text:"Lufenuron"},{key:"ง",text:"Permethrin"},{key:"จ",text:"Ivermectin"}],
+    answer:"ข",
+    explanation:"Fipronil (Frontline) เป็นยากำจัดหมัดที่ใช้ได้ปลอดภัยในแมว ออกฤทธิ์ยับยั้ง GABA-gated chloride channel ของแมลง ข้อควรระวัง: Permethrin (ง) ห้ามใช้ในแมวเพราะเป็นพิษ",
+    ref:"Plumb DC. Plumb's Veterinary Drug Handbook. 9th ed. Wiley-Blackwell; 2018."
+  },
+  {
+    id:105,
+    q:"105. ยีน MCR-1 ใน E. coli ทำให้ดื้อยาใด",
+    opts:[{key:"ก",text:"Colistin"},{key:"ข",text:"Tiamulin"},{key:"ค",text:"Gentamicin"},{key:"ง",text:"Tetracycline"},{key:"จ",text:"Erythromycin"}],
+    answer:"ก",
+    explanation:"MCR-1 (Mobile Colistin Resistance gene-1) เป็น plasmid-mediated resistance gene ที่ทำให้ E. coli ดื้อต่อ Colistin (polymyxin E) ยาสำรองสำคัญในการรักษาแบคทีเรียดื้อยาหลายชนิด",
+    ref:"Liu YY et al. Emergence of plasmid-mediated colistin resistance mechanism MCR-1 in animals and human beings in China. Lancet Infect Dis. 2016."
+  },
+  {
+    id:106,
+    q:"106. ณ วันที่ 1 มีนาคม 62 ตรวจร่างกายม้าพบว่าม้าท้อง 2 เดือน ต้องการทำวัคซีนป้องกันบาดทะยัก แต่ต้องการให้ภูมิคุ้มกันของวัคซีนส่งถึงลูกด้วย ต้องทำวัคซีนเมื่อไหร่ (หมายเหตุ: ม้าตั้งท้องประมาณ 11 เดือน)",
+    opts:[{key:"ก",text:"1 มีนาคม 62"},{key:"ข",text:"1 พฤศจิกายน 62"},{key:"ค",text:"1 ธันวาคม 62"},{key:"ง",text:"1 มกราคม 63"},{key:"จ",text:"1 มีนาคม 63"}],
+    answer:"ข",
+    explanation:"ม้าท้อง 2 เดือน ณ มีนาคม 62 → กำหนดคลอด = มีนาคม 62 + 9 เดือน = ธันวาคม 62 ควรฉีดวัคซีนก่อนคลอด 4-6 สัปดาห์ เพื่อให้ IgG ผ่านน้ำนมน้ำเหลือง (colostrum) ไปสู่ลูก → พฤศจิกายน 62",
+    ref:"Sellon DC, Long MT. Equine Infectious Diseases. 2nd ed. Saunders; 2014."
+  },
+  {
+    id:107,
+    q:"107. ฟาร์มกุ้งสงสัยโรค white spot disease ควรส่งตัวอย่างจากอวัยวะอะไรในการตรวจ",
+    opts:[{key:"ก",text:"Rostrum"},{key:"ข",text:"Midgut"},{key:"ค",text:"Uropod"},{key:"ง",text:"Gill"},{key:"จ",text:"Stomach"}],
+    answer:"ค",
+    explanation:"White Spot Syndrome Virus (WSSV) มีปริมาณไวรัสสูงที่สุดใน uropod (หาง), gill และ lymphoid organ ตัวอย่างที่นิยมส่งตรวจ PCR คือ uropod/pleopod (ตัด noninvasive ง่าย ไม่ต้องฆ่ากุ้ง)",
+    ref:"OIE. Manual of Diagnostic Tests for Aquatic Animals. 2019."
+  },
+  {
+    id:108,
+    q:"108. โคผอมมาก ถูกขนส่งโดยรถมาเป็นเวลา 24 ชั่วโมง โดยที่ไม่ได้กินน้ำเลย พบภาวะ dehydrate เมื่อนำเข้าสู่กระบวนการฆ่า จะพบลักษณะเนื้อแบบไหน",
+    opts:[{key:"ก",text:"Pale soft exudate"},{key:"ข",text:"Dark firm dry"},{key:"ค",text:"Marbling"},{key:"ง",text:"Not found abnormal appearance"},{key:"จ",text:"Bruise"}],
+    answer:"ข",
+    explanation:"DFD (Dark, Firm, Dry) meat เกิดในสัตว์ที่เครียด หิว อดน้ำ หรือถูกขนส่งนาน ทำให้ glycogen หมดก่อนฆ่า lactic acid ลด pH ไม่ลง เนื้อสีเข้ม แน่น แห้ง",
+    ref:"Lawrie RA, Ledward DA. Lawrie's Meat Science. 7th ed. Woodhead Publishing; 2006."
+  },
+  {
+    id:109,
+    q:"109. เปรียบเทียบอาหารหมู 3 แบบที่มีไตรกลีเซอไรด์ต่างกัน ส่งผลกับน้ำหนักตัว แบ่งเป็นสามกลุ่ม (ข้อมูลเป็น normal distribution) ใช้สถิติอะไร",
+    opts:[{key:"ก",text:"ANOVA"},{key:"ข",text:"Mann-Whitney U test"},{key:"ค",text:"Chi-square"},{key:"ง",text:"Kruskal-Wallis test"},{key:"จ",text:"T test for 2 independents"}],
+    answer:"ก",
+    explanation:"ข้อมูล normal distribution, continuous (น้ำหนัก), 3 กลุ่ม → ใช้ One-way ANOVA (parametric) ถ้าข้อมูลไม่ปกติจะใช้ Kruskal-Wallis (non-parametric)",
+    ref:"Petrie A, Watson P. Statistics for Veterinary and Animal Science. 3rd ed. Wiley-Blackwell; 2013."
+  },
+  {
+    id:110,
+    q:"110. เป็ดเทศอายุ 2 สัปดาห์มีเยื่อบุลำไส้อักเสบ เนื้อตายหลุดลอกจากลำไส้เป็นก้อนอุดตันในลำไส้ (intestinal core) ถามเป็ดได้รับเชื้ออะไร",
+    opts:[{key:"ก",text:"Riemerella"},{key:"ข",text:"Parvovirus"},{key:"ค",text:"Pasteurella"},{key:"ง",text:"Herpesvirus"},{key:"จ",text:"Adenovirus"}],
+    answer:"ข",
+    explanation:"Goose Parvovirus (Derzsy's disease) ในเป็ดเทศและห่าน: ลำไส้อักเสบ เนื้อตายหลุดเป็น diphtheritic cast/intestinal core ก้อนอุดลำไส้ อัตราตายสูงในลูกเป็ดอายุน้อย",
+    ref:"Saif YM et al. Diseases of Poultry. 12th ed. Blackwell Publishing; 2008."
+  },
+  {
+    id:111,
+    q:"111. สัตวแพทย์ล้วงตรวจทวารหนักของสุนัข เอานิ้วเข้าไปประมาณ 10 ซม. พบก้อนเป็นพู 2 พู ค่อนข้างแข็ง ด้าน ventral ก้อนนั้นคืออะไร",
+    opts:[{key:"ก",text:"Prostate"},{key:"ข",text:"Kidney"},{key:"ค",text:"Superficial inguinal lymph node"},{key:"ง",text:"Deep inguinal lymph node"},{key:"จ",text:"Anal gland"}],
+    answer:"ก",
+    explanation:"Prostate gland ในสุนัขตัวผู้มี 2 lobes อยู่ทาง ventral ของ rectum ประมาณ 8-10 ซม. จาก anus สามารถคลำได้ทาง rectal palpation",
+    ref:"Fossum TW. Small Animal Surgery. 4th ed. Mosby; 2013."
+  },
+  {
+    id:112,
+    q:"112. สุนัขมีอาการอาเจียน, polydipsia และ tremor หลังจากแอบไปกินผลไม้เป็นจำนวนมากในห้องครัว พบจุลพยาธิวิทยา proximal renal tubular damage เกิดจากผลไม้ชนิดใด",
+    opts:[{key:"ก",text:"ส้ม"},{key:"ข",text:"องุ่น"},{key:"ค",text:"ลูกพลับ"},{key:"ง",text:"สับปะรด"},{key:"จ",text:"มะละกอ"}],
+    answer:"ข",
+    explanation:"Grape/Raisin toxicity ในสุนัข ทำให้เกิด acute kidney injury โดยเฉพาะ proximal tubular necrosis กลไกยังไม่ทราบแน่ชัด แต่มีรายงานว่า tartaric acid น่าจะเป็นสาเหตุ",
+    ref:"Peterson ME, Talcott PA. Small Animal Toxicology. 3rd ed. Saunders; 2013."
+  },
+  {
+    id:113,
+    q:"113. สุนัขเพศเมีย อายุ 6 ปี พบว่าอาเจียน, HR 52 bpm, weak pulse, CRT>2s ปัสสาวะได้ตามปกติ ผลตรวจเลือดพบว่า tCO₂ ต่ำ, Na ต่ำ, K สูง, Cl ต่ำ, Glucose ต่ำ, Creatinine สูง, BUN สูง พอวันที่ 2 หลังจากให้สารน้ำพบว่าค่า BUN กับ creatinine กลับมาปกติ ควรตรวจอะไรเพิ่ม",
+    opts:[{key:"ก",text:"Gastroscopy"},{key:"ข",text:"ECG"},{key:"ค",text:"Abdominal ultrasound"},{key:"ง",text:"Low-dose dexamethasone suppression test"},{key:"จ",text:"Synthetic corticotropin-stimulation test (ACTH stimulation test)"}],
+    answer:"จ",
+    explanation:"Na ต่ำ, K สูง, Bradycardia, Hypoglycemia, Hypotension = Addison's disease (Hypoadrenocorticism) การวินิจฉัยยืนยันต้องใช้ ACTH stimulation test (corticotropin test) ตรวจ cortisol ก่อนและหลังฉีด ACTH",
+    ref:"Nelson RW, Couto CG. Small Animal Internal Medicine. 5th ed. Mosby; 2014."
+  },
+  {
+    id:114,
+    q:"114. สุนัขโดนรถชนมาหนึ่งเดือน พบอาการหายใจลำบาก ยึดคอหายใจ ภาพ x-ray ช่องอกทึบรังสี สัตวแพทย์สงสัยว่ากระบังลมฉีกขาดร่วมกับ hydrothorax ควรตรวจอะไรเพื่อยืนยันการวินิจฉัย",
+    opts:[{key:"ก",text:"Thoracocentesis"},{key:"ข",text:"X-ray with barium"},{key:"ค",text:"Echocardiogram"},{key:"ง",text:"Fluoroscopy"},{key:"จ",text:"Electrocardiography"}],
+    answer:"ก",
+    explanation:"Thoracocentesis เพื่อดูดของเหลวออกจาก pleural cavity ช่วยยืนยัน hydrothorax และนำน้ำไปตรวจทางห้องปฏิบัติการ นอกจากนี้ยังช่วยบรรเทาอาการหายใจลำบากได้ทันที",
+    ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 7th ed. Saunders; 2010."
+  },
+  {
+    id:115,
+    q:"115. แมวทำ blood smear ย้อมสี Wright's stain ได้ดังรูป คือเชื้ออะไร",
+    opts:[{key:"ก",text:"Brugia malayi"},{key:"ข",text:"Dirofilaria immitis"},{key:"ค",text:"Trypanosoma brucei"},{key:"ง",text:"Trypanosoma evansi"},{key:"จ",text:"Wuchereria bancrofti"}],
+    answer:"ง",
+    explanation:"Trypanosoma evansi (Surra) พบใน blood smear เป็น trypomastigote รูปร่างยาว มี flagellum และ undulating membrane อยู่ในพลาสมาเลือด พบในแมวและสัตว์หลายชนิดในเขตร้อน",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:116,
+    q:"116. ข้อใดเป็นอาการจำเพาะในปลาที่ติดเชื้อ Streptococcus spp.",
+    opts:[{key:"ก",text:"Fin rot"},{key:"ข",text:"Mouth rot"},{key:"ค",text:"Gill necrosis"},{key:"ง",text:"Skin ulceration"},{key:"จ",text:"Swim swirling"}],
+    answer:"จ",
+    explanation:"Streptococcosis ในปลา (Streptococcus iniae, S. agalactiae) ทำให้เกิดอาการทางประสาท โดยเฉพาะ spinning/swirling behavior (ว่ายน้ำวน) exophthalmia และ hemorrhage เป็นอาการเฉพาะ",
+    ref:"Noga EJ. Fish Disease: Diagnosis and Treatment. 2nd ed. Wiley-Blackwell; 2010."
+  },
+  {
+    id:117,
+    q:"117. ลักลอบนำเข้าโคจากประเทศเพื่อนบ้าน พบตายเฉียบพลัน มีเลือดออกทางรูเปิดตามร่างกาย คาดว่าเชื้อใดเป็นสาเหตุ",
+    opts:[{key:"ก",text:"Bacillus anthracis"},{key:"ข",text:"Mycobacterium tuberculosis"},{key:"ค",text:"Mycobacterium paratuberculosis"},{key:"ง",text:"Clostridium chauvoei"},{key:"จ",text:"Burkholderia mallei"}],
+    answer:"ก",
+    explanation:"Anthrax (Bacillus anthracis): ตายเฉียบพลัน เลือดดำไม่แข็งตัวไหลออกจากรูเปิดทุกช่อง (epistaxis, rectal bleeding) ซากไม่แข็ง เป็นลักษณะเฉพาะของ anthrax ในโค",
+    ref:"Quinn PJ et al. Veterinary Microbiology and Microbial Disease. 2nd ed. Wiley-Blackwell; 2011."
+  },
+  {
+    id:119,
+    q:"119. ตรวจเพศลูกโคจาก amniotic fluid โดยวิธี PCR เป็นการตรวจหายีนอะไร",
+    opts:[{key:"ก",text:"P450"},{key:"ข",text:"SRY"},{key:"ค",text:"NAT"},{key:"ง",text:"MSH"},{key:"จ",text:"HAL"}],
+    answer:"ข",
+    explanation:"SRY gene (Sex-determining Region Y) เป็นยีนบน Y chromosome ที่กำหนดเพศผู้ การตรวจ SRY gene ด้วย PCR จาก amniotic fluid ช่วยระบุเพศลูกโค ถ้าพบ SRY = เพศผู้",
+    ref:"Hafez ESE, Hafez B. Reproduction in Farm Animals. 7th ed. Wiley-Blackwell; 2000."
+  },
+  {
+    id:120,
+    q:"120. แม่เต่าบก อายุ 3 ปี กินน้อย มีพฤติกรรมขุดดินในบริเวณที่เลี้ยง แต่ไม่วางไข่มาแล้ว 2 วัน จะจัดการในขั้นแรกอย่างไร",
+    opts:[{key:"ก",text:"นำเต่าแช่น้ำอุ่น"},{key:"ข",text:"ล้วงเอาไข่ออกทาง cloaca"},{key:"ค",text:"คลำไข่ผ่านช่องลำตัว"},{key:"ง",text:"ฉีด oxytocin"},{key:"จ",text:"X-ray"}],
+    answer:"จ",
+    explanation:"Dystocia/egg retention ในเต่า การวินิจฉัยขั้นแรกควรถ่าย X-ray เพื่อยืนยันการมีไข่และจำนวนไข่ ประเมินขนาดและตำแหน่งก่อนตัดสินใจรักษา ไม่ควร manipulate โดยไม่รู้ข้อมูลก่อน",
+    ref:"Mader DR. Reptile Medicine and Surgery. 2nd ed. Saunders; 2006."
+  },
+  {
+    id:121,
+    q:"121. ให้ยา furosemide ความเข้มข้น 5% w/v สุนัขหนัก 25 kg ให้ยาขนาด 2 mg/kg ให้ยากี่ ml",
+    opts:[{key:"ก",text:"0.1 ml"},{key:"ข",text:"1 ml"},{key:"ค",text:"10 ml"}],
+    answer:"ข",
+    explanation:"ปริมาณยา = 2 mg/kg × 25 kg = 50 mg; ความเข้มข้น 5% w/v = 5 g/100 ml = 50 mg/ml; ปริมาตร = 50 mg ÷ 50 mg/ml = 1 ml",
+    ref:"Plumb DC. Plumb's Veterinary Drug Handbook. 9th ed. Wiley-Blackwell; 2018."
+  },
+  {
+    id:122,
+    q:"122. ละมั่งตัวผู้อายุ 3 ปี โดนไล่ต้อนขนส่ง มีอาการหอบ ไข้สูง ล้มลงนอน ตายใน 6 ชั่วโมงหลังขนส่ง ต้องเสริมแร่ธาตุอะไรเพื่อป้องกัน",
+    opts:[{key:"ก",text:"เหล็ก"},{key:"ข",text:"ซีลีเนียม"},{key:"ค",text:"สังกะสี"},{key:"ง",text:"แคลเซียม"},{key:"จ",text:"แมงกานีส"}],
+    answer:"ข",
+    explanation:"Capture myopathy (azoturia/exertional rhabdomyolysis) ในสัตว์ป่า: การขาด Selenium และ Vitamin E ทำให้กล้ามเนื้อเสื่อม (White muscle disease) เมื่อถูกเครียดจากการจับ การเสริม Selenium ช่วยป้องกัน",
+    ref:"Fowler ME, Miller RE. Zoo and Wild Animal Medicine. 6th ed. Saunders; 2008."
+  },
+  {
+    id:123,
+    q:"123. ปลาทอง 3 ตัว อยู่ในตู้กับปลาหมอสีในตู้ขนาด 24 นิ้ว ขัดหลักสวัสดิภาพสัตว์ข้อใด",
+    opts:[{key:"ก",text:"Free from discomfort"},{key:"ข",text:"Free from fear and distress"},{key:"ค",text:"Free from hunger or thirst"},{key:"ง",text:"Free from pain, injury or disease"},{key:"จ",text:"Free from express normal behavior"}],
+    answer:"ข",
+    explanation:"ปลาหมอสีมีพฤติกรรมก้าวร้าวและอาณาเขต เมื่ออยู่รวมกับปลาทองในพื้นที่จำกัด ปลาทองจะอยู่ในภาวะกลัวและเครียดตลอดเวลา (fear and distress) ขัดต่อ Freedom from fear and distress",
+    ref:"Brambell Committee. Report of the Technical Committee to Enquire into the Welfare of Animals. HMSO; 1965."
+  },
+  {
+    id:124,
+    q:"124. กระต่ายเลี้ยง ให้กินน้ำประปา เช็ดกรงด้วยน้ำประปาวันละครั้ง ให้กินอาหารเม็ด เสริมฝรั่งและแอปเปิลสัปดาห์ละครั้ง ระบบร่างกายใดที่มีผลกระทบมากที่สุด",
+    opts:[{key:"ก",text:"ระบบทางเดินอาหาร"},{key:"ข",text:"ผิวหนัง"},{key:"ค",text:"ตับ"},{key:"ง",text:"ไต"},{key:"จ",text:"กล้ามเนื้อ"}],
+    answer:"ก",
+    explanation:"กระต่ายต้องการอาหารหยาบ (hay) เป็นหลักเพื่อรักษา gut motility อาหารเม็ดอย่างเดียวโดยไม่มี hay ทำให้เกิด GI stasis, cecal dysbiosis, enteritis ระบบทางเดินอาหารได้รับผลกระทบมากที่สุด",
+    ref:"Quesenberry KE, Carpenter JW. Ferrets, Rabbits, and Rodents. 3rd ed. Saunders; 2012."
+  },
+  {
+    id:125,
+    q:"125. รัศมีการกักกันโรคระบาดชั่วคราวใน พ.ร.บ. โรคระบาดสัตว์ พ.ศ. 2558 (กิโลเมตร)",
+    opts:[{key:"ก",text:"5"},{key:"ข",text:"7"},{key:"ค",text:"9"},{key:"ง",text:"11"},{key:"จ",text:"13"}],
+    answer:"ก",
+    explanation:"ตาม พ.ร.บ. โรคระบาดสัตว์ พ.ศ. 2558 มาตรา 20 กำหนดรัศมีการกักกันสัตว์และซากสัตว์ชั่วคราวในเขตพื้นที่ที่มีโรคระบาด ไม่น้อยกว่า 5 กิโลเมตรจากจุดพบโรค",
+    ref:"พ.ร.บ. โรคระบาดสัตว์ พ.ศ. 2558."
+  },
+  {
+    id:126,
+    q:"126. ลูกหมูอายุ 10 สัปดาห์ ท้องเสียเป็นมูกสีเหลือง อัตราการป่วย 20% พบ fibrinolytic-necrotic enteritis โรคใดมีความเป็นไปได้มากที่สุด",
+    opts:[{key:"ก",text:"Coccidia"},{key:"ข",text:"Salmonellosis"},{key:"ค",text:"PED"},{key:"ง",text:"Transmission gastroenteritis"},{key:"จ",text:"Cryptococcus"}],
+    answer:"ข",
+    explanation:"Salmonellosis ในสุกร (Salmonella choleraesuis): ท้องเสียมูกสีเหลือง fibrinonecrotic enteritis ใน large intestine พบในสุกรอายุ 2-4 เดือน อัตราป่วยและตายปานกลาง",
+    ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."
+  },
+  {
+    id:127,
+    q:"127. สุกรขุนอายุ 60 วัน ท้องเสีย อาหารไม่ย่อย ลำไส้พบเนื้อตายและหนาตัว ไม่พบรอยโรคที่ ileum และ ileocecal valve สาเหตุเกิดจากเชื้ออะไร",
+    opts:[{key:"ก",text:"E. coli"},{key:"ข",text:"B. coli"},{key:"ค",text:"Lawsonia intracellularis"},{key:"ง",text:"Salmonella enteritidis"},{key:"จ",text:"Brachyspira hyodysenteriae"}],
+    answer:"จ",
+    explanation:"Swine Dysentery (Brachyspira hyodysenteriae): ท้องเสียเรื้อรัง มูกเลือด หนาตัวของ large intestine (โดยเฉพาะ cecum และ colon) ไม่มีรอยโรคที่ ileum ต่างจาก Lawsonia ที่พบที่ ileum",
+    ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."
+  },
+  {
+    id:128,
+    q:"128. พยาธิเม็ดเลือดรูปกระสวยในเม็ดเลือดแดง จากข้างต้นคิดว่าไก่ติดมาจากทางใด",
+    opts:[{key:"ก",text:"ถูกไรกัด"},{key:"ข",text:"ถูกริ้นกัด"},{key:"ค",text:"ถูกเห็บกัด"},{key:"ง",text:"ถูกหมัดกัด"},{key:"จ",text:"กินแมลงปีกแข็ง"}],
+    answer:"ข",
+    explanation:"พยาธิเม็ดเลือดรูปกระสวยในไก่คือ Leucocytozoon spp. มี black fly (Simulium spp.) หรือ biting midge (Culicoides) เป็น vector โดยเฉพาะ Simulium (ริ้น) เป็น vector หลักของ Leucocytozoon",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:129,
+    q:"129. สุนัขอายุ 15 ปี ถอนฟันกรามซี่ที่ 2 บน ควรระงับประสาทบริเวณใด",
+    opts:[{key:"ก",text:"Facial nerve"},{key:"ข",text:"Maxillary nerve"},{key:"ค",text:"Mandible nerve"},{key:"ง",text:"Infraorbital nerve"},{key:"จ",text:"Trigeminal nerve"}],
+    answer:"ง",
+    explanation:"Infraorbital nerve block ใช้สำหรับฟันกรามบน (upper molar/premolar) ฉีดที่ infraorbital foramen ระงับความรู้สึกบริเวณ upper dental arcade ด้านหน้า",
+    ref:"Fossum TW. Small Animal Surgery. 4th ed. Mosby; 2013."
+  },
+  {
+    id:130,
+    q:"130. การเก็บตัวอย่างเลือดในปลานิล ควรจะเจาะที่เส้นเลือดใด",
+    opts:[{key:"ก",text:"Fin vein"},{key:"ข",text:"Caudal vein"},{key:"ค",text:"Gill capillary"},{key:"ง",text:"Dorsal aorta"}],
+    answer:"ข",
+    explanation:"Caudal vein (caudal peduncle vein/ventral caudal vein) เป็นตำแหน่งมาตรฐานในการเก็บตัวอย่างเลือดปลา เจาะเข็มบริเวณ ventral midline ของ caudal peduncle ได้ปริมาณเลือดเพียงพอ",
+    ref:"Noga EJ. Fish Disease: Diagnosis and Treatment. 2nd ed. Wiley-Blackwell; 2010."
+  },
+  {
+    id:131,
+    q:"131. วัวมีตุ่มที่กีบ ปาก น้ำลายไหล ฟาร์มแห่งนี้จะต้องใช้สารฆ่าเชื้ออะไรเพื่อป้องกันการแพร่กระจาย",
+    opts:[{key:"ก",text:"Ethanol 70%"},{key:"ข",text:"Chlorhexidine"},{key:"ค",text:"Chloroxylenol"},{key:"ง",text:"Glutaraldehyde"},{key:"จ",text:"Sodium hypochlorite"}],
+    answer:"จ",
+    explanation:"FMD virus เป็น non-enveloped virus ที่ไวต่อ acid/alkaline pH Sodium hypochlorite (คลอรีน) เป็น disinfectant ที่ effective และราคาถูกสำหรับ FMD รวมถึง Sodium carbonate และ Citric acid",
+    ref:"OIE. Terrestrial Animal Health Code. 2019."
+  },
+  {
+    id:132,
+    q:"132. ปลาควงสว่าน ผิวหนังมีปื้นแดง หนองใต้ปากและโคนหาง เก็บตัวอย่างอวัยวะใด",
+    opts:[{key:"ก",text:"ตา"},{key:"ข",text:"สมอง"},{key:"ค",text:"เหงือก"},{key:"ง",text:"ลำไส้"}],
+    answer:"ข",
+    explanation:"ปลาควงสว่าน (spinning behavior) + hemorrhage = Streptococcosis หรือ Flavobacteriosis ที่มีผลต่อระบบประสาท การเก็บสมองเป็นตัวอย่างที่เหมาะสมที่สุดสำหรับ bacterial culture และ histopathology",
+    ref:"Noga EJ. Fish Disease: Diagnosis and Treatment. 2nd ed. Wiley-Blackwell; 2010."
+  },
+  {
+    id:133,
+    q:"133. ข้อใดเป็นกระดูกอ่อนชิ้นแรกที่ได้รับความเสียหายจากการใส่ endotracheal tube ไม่ถูกต้อง",
+    opts:[{key:"ก",text:"Cricoid"},{key:"ข",text:"Thyroid"},{key:"ค",text:"Epiglottis"},{key:"ง",text:"Arytenoid"},{key:"จ",text:"Tracheal ring"}],
+    answer:"ง",
+    explanation:"Arytenoid cartilage อยู่บริเวณ laryngeal inlet เป็นโครงสร้างแรกที่ endotracheal tube จะสัมผัสและอาจบาดเจ็บหากใส่ท่อไม่ถูกต้อง โดยเฉพาะในแมวที่ larynx แคบ",
+    ref:"Grimm KA et al. Veterinary Anesthesia and Analgesia. 5th ed. Wiley-Blackwell; 2015."
+  },
+  {
+    id:134,
+    q:"134. หาความชุกของโรค FMD ของโคเนื้อ โดยมีโคเนื้อ 200 ตัว โคนม 100 ตัว ใน 1 ปี พบโคเนื้อป่วย 30 ตัว โคนม 30 ตัว",
+    opts:[{key:"ก",text:"10%"},{key:"ข",text:"15%"},{key:"ค",text:"20%"},{key:"ง",text:"30%"},{key:"จ",text:"60%"}],
+    answer:"ค",
+    explanation:"ความชุก (Prevalence) = จำนวนป่วย/จำนวนทั้งหมด × 100 = (30+30)/(200+100) × 100 = 60/300 × 100 = 20%",
+    ref:"Thrusfield M. Veterinary Epidemiology. 4th ed. Wiley-Blackwell; 2018."
+  },
+  {
+    id:135,
+    q:"135. การแยกภูมิคุ้มกันจากการติดเชื้อธรรมชาติของ FMD ใช้วิธีใด",
+    opts:[{key:"ก",text:"HA"},{key:"ข",text:"SN"},{key:"ค",text:"IFA"},{key:"ง",text:"LP-ELISA"},{key:"จ",text:"NSP-ELISA"}],
+    answer:"จ",
+    explanation:"NSP-ELISA (Non-structural protein ELISA) ใช้แยกสัตว์ที่ติดเชื้อ FMD ธรรมชาติ (ผลิต Ab ต่อ NSP) ออกจากสัตว์ที่ได้รับวัคซีน (ผลิต Ab ต่อ structural protein เท่านั้น) เป็น DIVA strategy",
+    ref:"OIE. Manual of Diagnostic Tests and Vaccines for Terrestrial Animals. 2019."
+  },
+  {
+    id:136,
+    q:"136. ฟาร์มไก่เนื้อโรงเรือนเปิด กว้าง 15 ม. ยาว 100 ม. ต้องการให้น้ำหนัก 2,000 กรัม/ตัว จะเลี้ยงไก่ได้มากที่สุดกี่ตัว",
+    opts:[{key:"ก",text:"10,000"},{key:"ข",text:"15,000"},{key:"ค",text:"20,000"},{key:"ง",text:"25,000"},{key:"จ",text:"30,000"}],
+    answer:"ข",
+    explanation:"พื้นที่ = 15 × 100 = 1,500 ตร.ม. ความหนาแน่นสูงสุด = 35 kg/ตร.ม. (ระเบียบกรมปศุสัตว์) น้ำหนักสูงสุดรวม = 35 × 1,500 = 52,500 kg จำนวนสูงสุด = 52,500 / 2 kg = 26,250 ตัว ≈ แต่มาตรฐาน GAP กำหนด 10 ตัว/ตร.ม. = 15,000 ตัว",
+    ref:"ระเบียบกรมปศุสัตว์ว่าด้วยการเลี้ยงไก่เนื้อ พ.ศ. 2554."
+  },
+  {
+    id:137,
+    q:"137. การป้องกันการระบาดของ HPAI ที่มีประสิทธิภาพมากที่สุดทั้งในระยะสั้นและยาว",
+    opts:[{key:"ก",text:"Depopulation"},{key:"ข",text:"Pre-vaccination"},{key:"ค",text:"Antiviral therapy"},{key:"ง",text:"Biosecurity measure"},{key:"จ",text:"Antimicrobial medication"}],
+    answer:"ง",
+    explanation:"Biosecurity เป็นมาตรการที่มีประสิทธิภาพสูงสุดทั้งระยะสั้นและยาวในการป้องกัน HPAI ครอบคลุม all-in all-out, cleaning/disinfection, wild bird prevention, personnel movement control",
+    ref:"Swayne DE. Diseases of Poultry. 13th ed. Wiley-Blackwell; 2013."
+  },
+  {
+    id:138,
+    q:"138. ข้อใดเป็นข้อมูลแบบต่อเนื่อง (continuous data)",
+    opts:[{key:"ก",text:"การผสมติดในกระบือ"},{key:"ข",text:"ชนิดของแบคทีเรียที่พบ"},{key:"ค",text:"ปริมาณสูตรโปรตีนในอาหาร"},{key:"ง",text:"เพศของสัตว์ในคอกศึกษาวิจัย"},{key:"จ",text:"จำนวนสัตว์ที่แสดงอาการเต้านมอักเสบ"}],
+    answer:"ค",
+    explanation:"Continuous data คือข้อมูลที่มีค่าต่อเนื่องไม่สิ้นสุดในช่วง เช่น ปริมาณโปรตีน (%) น้ำหนัก ส่วนสูง อุณหภูมิ ส่วนข้อมูลอื่น: ก. nominal, ข. nominal, ง. nominal, จ. count/discrete",
+    ref:"Petrie A, Watson P. Statistics for Veterinary and Animal Science. 3rd ed. Wiley-Blackwell; 2013."
+  },
+  {
+    id:139,
+    q:"139. ขนส่งหมู 12 ชั่วโมงเข้าโรงฆ่าโดยไม่พัก เนื้อจะพบลักษณะอย่างไร",
+    opts:[{key:"ก",text:"Bruise"},{key:"ข",text:"Dark firm dry"},{key:"ค",text:"Blood splatter"},{key:"ง",text:"Pale soft exudate"}],
+    answer:"ง",
+    explanation:"PSE (Pale, Soft, Exudative) เกิดในสุกรที่เครียดเฉียบพลัน (acute stress) ก่อนฆ่า RYR1 gene mutation ทำให้ pH ตกเร็ว (rapid pH drop) เนื้อซีด นิ่ม มีน้ำมาก ต่างจาก DFD ที่เกิดจากความเครียดเรื้อรัง",
+    ref:"Lawrie RA, Ledward DA. Lawrie's Meat Science. 7th ed. Woodhead Publishing; 2006."
+  },
+  {
+    id:140,
+    q:"140. Oxytocin สร้างมาจากอวัยวะใด",
+    opts:[{key:"ก",text:"Uterus"},{key:"ข",text:"Thyroid"},{key:"ค",text:"Hypothalamus"},{key:"ง",text:"Anterior pituitary"},{key:"จ",text:"Mammary gland"}],
+    answer:"ค",
+    explanation:"Oxytocin สังเคราะห์ที่ hypothalamus (paraventricular nucleus และ supraoptic nucleus) แต่เก็บและหลั่งจาก posterior pituitary (neurohypophysis) ไม่ใช่ anterior pituitary",
+    ref:"Reece WO. Dukes' Physiology of Domestic Animals. 13th ed. Wiley-Blackwell; 2015."
+  },
+  {
+    id:141,
+    q:"141. แมวไทยอายุ 10 ปี กินอาหารเยอะแต่น้ำหนักลด ก้าวร้าวดุร้าย PU/PD จะสงสัยอะไรอันดับแรก",
+    opts:[{key:"ก",text:"Cushing's disease"},{key:"ข",text:"Hypothyroidism"},{key:"ค",text:"Hyperthyroidism"},{key:"ง",text:"Pituitary dwarfism"},{key:"จ",text:"Acromegaly"}],
+    answer:"ค",
+    explanation:"Hyperthyroidism ในแมวสูงอายุ: polyphagia แต่น้ำหนักลด (hypermetabolism), PU/PD, ดุร้าย/hyperactive เป็นอาการคลาสสิก พบบ่อยที่สุดในแมวอายุมากกว่า 8 ปี",
+    ref:"Nelson RW, Couto CG. Small Animal Internal Medicine. 5th ed. Mosby; 2014."
+  },
+  {
+    id:142,
+    q:"142. การเกิดโรค FMD ในไทยทุกปีอย่างต่อเนื่อง มีรูปแบบการระบาดแบบใด",
+    opts:[{key:"ก",text:"Periodic"},{key:"ข",text:"Pandemic"},{key:"ค",text:"Epidemic"},{key:"ง",text:"Enzootic"},{key:"จ",text:"Sporadic"}],
+    answer:"ง",
+    explanation:"Enzootic (endemic ในสัตว์) หมายถึงโรคที่มีอยู่ในพื้นที่อย่างต่อเนื่อง มีระดับคงที่ในสัตว์ในท้องถิ่น FMD ในไทยที่เกิดขึ้นทุกปีต่อเนื่องในสัตว์เคี้ยวเอื้องจึงเป็น enzootic",
+    ref:"Thrusfield M. Veterinary Epidemiology. 4th ed. Wiley-Blackwell; 2018."
+  },
+  {
+    id:143,
+    q:"143. Confounding factor หมายถึงอะไร",
+    opts:[{key:"ก",text:"ตัวแปรอิสระของการศึกษา"},{key:"ข",text:"สิ่งที่ไม่เป็นผลต่อตัวแปรอิสระ"},{key:"ค",text:"คุณลักษณะที่เป็นผลจากตัวแปรอิสระ"},{key:"ง",text:"ตัวแปรอิสระที่เป็นจำนวนนับ"},{key:"จ",text:"ปัจจัยที่มีผลต่อการสรุป"}],
+    answer:"จ",
+    explanation:"Confounding factor คือปัจจัยที่มีความสัมพันธ์ทั้งกับตัวแปรอิสระ (exposure) และตัวแปรตาม (outcome) ทำให้ผลการศึกษาคลาดเคลื่อน ต้องควบคุมหรือปรับในการวิเคราะห์",
+    ref:"Thrusfield M. Veterinary Epidemiology. 4th ed. Wiley-Blackwell; 2018."
+  },
+  {
+    id:144,
+    q:"144. ไข่ของ Ancylostoma caninum มีลักษณะอย่างไร",
+    opts:[{key:"ก",text:"เปลือกหนา ขรุขระ"},{key:"ข",text:"เปลือกหนาข้างในมีตัวอ่อนระยะที่ 1"},{key:"ค",text:"เปลือกหนา มี 2 hyaline plug"},{key:"ง",text:"เปลือกบาง รีขนาดกลาง มีตัวอ่อนข้างใน"},{key:"จ",text:"เปลือกบาง รีขนาดกลาง มี 1 จุก"}],
+    answer:"ง",
+    explanation:"ไข่ Ancylostoma caninum (hookworm): เปลือกบาง รูปรี ขนาดกลาง (~60x40 μm) ภายในมีตัวอ่อน (embryo/morula) 4-8 cells ขณะถ่ายออกมา ต่างจาก Toxocara (เปลือกหนา) หรือ Trichuris (bipolar plugs)",
+    ref:"Bowman DD. Georgis' Parasitology for Veterinarians. 10th ed. Saunders; 2014."
+  },
+  {
+    id:145,
+    q:"145. ชาวบ้านที่ไปร่วมงานเลี้ยง มีไข้สูง อาเจียน คอแข็ง ไม่ได้ยิน ประวัติรับประทานลาบหมูดิบ ติดเชื้อใด",
+    opts:[{key:"ก",text:"E. coli"},{key:"ข",text:"Streptococcus suis"},{key:"ค",text:"Clostridium tetani"},{key:"ง",text:"Haemophilus parasuis"},{key:"จ",text:"Actinobacillus pleuropneumonia"}],
+    answer:"ข",
+    explanation:"Streptococcus suis เป็น zoonosis จากการกินเนื้อหมูดิบ ก่อโรคเยื่อหุ้มสมองอักเสบ (meningitis) ในคน อาการไข้สูง คอแข็ง หูหนวก (sensorineural deafness) เป็นอาการเฉพาะ พบบ่อยในผู้ที่กินลาบ/ก้อยหมู",
+    ref:"Wertheim HFL et al. Streptococcus suis: an emerging human pathogen. Clin Infect Dis. 2009."
+  },
+  {
+    id:146,
+    q:"146. กระต่ายมีความพิเศษทางระบบสืบพันธุ์อย่างไร",
+    opts:[{key:"ก",text:"มี os penis"},{key:"ข",text:"ไม่มี bulbourethral gland"},{key:"ค",text:"ไม่มี prostate gland"},{key:"ง",text:"Penis มี urethral process"},{key:"จ",text:"Testis ไม่อยู่ใน scrotal sac ตลอดเวลา"}],
+    answer:"จ",
+    explanation:"กระต่ายมี open inguinal ring ตลอดชีวิต ทำให้ testis สามารถเคลื่อนกลับเข้าช่องท้องได้ ต่างจากสุนัขและแมวที่ inguinal ring ปิดหลังโต testis จึงไม่อยู่ใน scrotum ตลอดเวลาในกระต่ายปกติ",
+    ref:"Quesenberry KE, Carpenter JW. Ferrets, Rabbits, and Rodents. 3rd ed. Saunders; 2012."
+  },
+  {
+    id:147,
+    q:"147. สัตว์ทดลองใดมีความไวต่อ Pasteurella multocida",
+    opts:[{key:"ก",text:"Rat"},{key:"ข",text:"Mouse"},{key:"ค",text:"Rabbit"},{key:"ง",text:"Hamster"},{key:"จ",text:"Guinea pig"}],
+    answer:"ค",
+    explanation:"กระต่าย (Rabbit) มีความไวสูงมากต่อ Pasteurella multocida ทำให้เกิด snuffles (rhinitis), pneumonia, otitis media และ septicemia กระต่ายเป็น natural host ที่สำคัญ",
+    ref:"Harkness JE et al. Harkness and Wagner's Biology and Medicine of Rabbits and Rodents. 5th ed. Blackwell; 2010."
+  },
+  {
+    id:148,
+    q:"148. ชิวาว่าอายุ 3 ปี หนองไหล สงสัยมดลูกอักเสบ อยากทำแม่พันธุ์ต้องรักษาทางอายุรศาสตร์ฉีดฮอร์โมนอะไร",
+    opts:[{key:"ก",text:"PGF2α"},{key:"ข",text:"Estradiol benzoate"},{key:"ค",text:"GnRH agonist"},{key:"ง",text:"Medroxyprogesterone"},{key:"จ",text:"Proligestone"}],
+    answer:"ก",
+    explanation:"PGF2α (Prostaglandin F2α) ใช้รักษา open pyometra/endometritis ในสุนัขที่ต้องการรักษาการเจริญพันธุ์ ช่วย luteolysis สลาย corpus luteum และกระตุ้น myometrial contraction ขับหนองออก",
+    ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 7th ed. Saunders; 2010."
+  },
+  {
+    id:149,
+    q:"149. วัดขนาด mummy ลูกสุกรจากส่วนใด",
+    opts:[{key:"ก",text:"ปลายจมูกจนถึงสะโพก"},{key:"ข",text:"กลางกะโหลกจนถึงสะโพก"},{key:"ค",text:"กลางกะโหลกถึงปลายหาง"},{key:"ง",text:"ความกว้างกะโหลกส่วนที่กว้างที่สุด"},{key:"จ",text:"ความกว้างสะโพกส่วนที่กว้างที่สุด"}],
+    answer:"ข",
+    explanation:"มาตรฐานการวัดขนาด mummified fetus ในสุกรวัดจากจุดกึ่งกลางกะโหลก (crown) ถึงบั้นท้าย (rump) เรียก Crown-Rump Length (CRL) ใช้ประมาณอายุครรภ์ขณะที่ลูกตาย",
+    ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."
+  },
+  {
+    id:150,
+    q:"150. โคลักลอบนำเข้า ตายจำนวนมาก ซากไม่แข็ง มีเลือดออกจากรูเปิด สงสัยติดเชื้อในกระแสเลือด ใช้อะไรย้อม blood smear",
+    opts:[{key:"ก",text:"Gram stain"},{key:"ข",text:"Spore stain"},{key:"ค",text:"Ziehl Neelsen stain"},{key:"ง",text:"Modified Ziehl Neelsen stain"},{key:"จ",text:"Polychrome methylene blue"}],
+    answer:"จ",
+    explanation:"Bacillus anthracis (Anthrax) ใช้ Polychrome methylene blue (McFadyean's stain) ย้อม blood smear จะเห็น encapsulated bacilli สีน้ำเงินล้อมรอบด้วย purple capsule เป็น diagnostic feature",
+    ref:"Quinn PJ et al. Veterinary Microbiology and Microbial Disease. 2nd ed. Wiley-Blackwell; 2011."
+  }
+];
+
+let current = 0;
+const state = { answered: {}, bookmarks: new Set() };
+
+function render() {
+  const q = QUESTIONS[current];
+  const ans = state.answered[current];
+  const isAnswered = ans !== undefined;
+
+  document.getElementById('qNumBadge').textContent = `ข้อ ${q.id}`;
+  const bm = document.getElementById('bookmarkBtn');
+  if (state.bookmarks.has(current)) { bm.textContent = '★ บันทึกแล้ว'; bm.classList.add('active'); }
+  else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
+
+  document.getElementById('qText').textContent = q.q;
+
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-key">${opt.key}.</span><span>${opt.text}</span>`;
+    if (isAnswered) {
+      btn.classList.add('disabled');
+      if (opt.key === q.answer) btn.classList.add('correct');
+      else if (opt.key === ans && ans !== q.answer) btn.classList.add('selected-wrong');
+    } else {
+      btn.addEventListener('click', () => answer(opt.key));
+    }
+    container.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedback');
+  const fbHeader = document.getElementById('fbHeader');
+  if (isAnswered) {
+    const correct = ans === q.answer;
+    fb.className = `feedback show ${correct ? 'correct-fb' : 'wrong-fb'}`;
+    fbHeader.className = `fb-header ${correct ? 'correct-fb' : 'wrong-fb'}`;
+    fbHeader.textContent = correct ? '✓ ถูกต้อง!' : `✗ ไม่ถูกต้อง — คำตอบที่ถูกคือ ข้อ ${q.answer}`;
+    document.getElementById('fbBody').textContent = q.explanation;
+    document.getElementById('fbRef').innerHTML = `<strong>แหล่งอ้างอิง:</strong> ${q.ref}`;
+  } else {
+    fb.className = 'feedback';
+  }
+
+  document.getElementById('prevBtn').disabled = current === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.textContent = current === QUESTIONS.length - 1 ? 'สรุปผล' : 'ถัดไป →';
+  updateSidebar();
+}
+
+function answer(key) { state.answered[current] = key; render(); }
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next < 0 || next > QUESTIONS.length - 1) {
+    if (current === QUESTIONS.length - 1 && dir === 1) showSummary();
+    return;
+  }
+  current = next; render();
+}
+
+function goToQuestion(idx) { current = idx; render(); }
+
+function toggleBookmark() {
+  if (state.bookmarks.has(current)) state.bookmarks.delete(current);
+  else state.bookmarks.add(current);
+  render();
+}
+
+function updateSidebar() {
+  const answered = Object.keys(state.answered).length;
+  const total = QUESTIONS.length;
+  const correct = Object.entries(state.answered).filter(([i,k]) => k === QUESTIONS[i].answer).length;
+  document.getElementById('progressFill').style.width = `${(answered/total)*100}%`;
+  document.getElementById('progressLabel').textContent = `${answered} / ${total}`;
+  document.getElementById('scoreCorrect').textContent = correct;
+  document.getElementById('scoreWrong').textContent = answered - correct;
+  document.getElementById('scoreBookmark').textContent = state.bookmarks.size;
+  const grid = document.getElementById('qNavGrid');
+  grid.innerHTML = '';
+  QUESTIONS.forEach((q, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-nav-btn';
+    btn.textContent = q.id;
+    if (idx === current) btn.classList.add('current');
+    else if (state.answered[idx] !== undefined) {
+      btn.classList.add(state.answered[idx] === QUESTIONS[idx].answer ? 'answered-correct' : 'answered-wrong');
+    }
+    if (state.bookmarks.has(idx)) btn.classList.add('bookmarked');
+    btn.onclick = () => goToQuestion(idx);
+    grid.appendChild(btn);
+  });
+}
+
+function showSummary() {
+  const total = QUESTIONS.length;
+  const answered = Object.keys(state.answered).length;
+  const correct = Object.entries(state.answered).filter(([i,k]) => k === QUESTIONS[i].answer).length;
+  const pct = answered > 0 ? Math.round((correct/answered)*100) : 0;
+  alert(`สรุปผล\n\nตอบแล้ว: ${answered}/${total} ข้อ\nถูก: ${correct} ข้อ\nผิด: ${answered-correct} ข้อ\nคะแนน: ${pct}%`);
+}
+
+function toggleDark() {
+  const dark = document.body.classList.toggle('dark');
+  document.getElementById('themeBtn').textContent = dark ? '☀️ Light' : '🌙 Dark';
+}
+
+render();
+</script>
+</body>
+</html>
