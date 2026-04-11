@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คลัง NL — 2023 ชุด 3</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#f7f5f0;--surface:#ffffff;--surface2:#f0ede6;
+      --accent:#1a472a;--accent2:#2d6a4f;--accent-light:#d8f3dc;
+      --gold:#b5830a;--gold-light:#fff3cd;
+      --text:#1c1c1c;--text2:#555550;--text3:#888880;
+      --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.06);
+      --shadow:0 1px 3px rgba(0,0,0,0.08);
+      --correct:#1a472a;--correct-bg:#d8f3dc;
+      --wrong:#991b1b;--wrong-bg:#fee2e2;--r:10px;
+    }
+    body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh}
+    header{background:var(--surface);border-bottom:0.5px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:50}
+    .hdr-left{display:flex;align-items:center;gap:10px}
+    .back-btn{background:none;border:0.5px solid var(--border);border-radius:7px;padding:6px 12px;font-size:13px;font-family:'Sarabun',sans-serif;color:var(--text2);cursor:pointer;transition:background 0.15s;display:flex;align-items:center;gap:5px}
+    .back-btn:hover{background:var(--surface2)}
+    .hdr-title{font-size:15px;font-weight:600;color:var(--accent)}
+    .hdr-sub{font-size:12px;color:var(--text3);font-family:'IBM Plex Mono',monospace}
+    .dark-btn{background:none;border:0.5px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-family:'Sarabun',sans-serif;color:var(--text2);cursor:pointer;transition:background 0.15s}
+    .dark-btn:hover{background:var(--surface2)}
+    .layout{display:grid;grid-template-columns:1fr 260px;gap:20px;max-width:1100px;margin:0 auto;padding:20px 16px;align-items:start}
+    @media(max-width:768px){.layout{grid-template-columns:1fr}}
+    .sidebar-panel{position:sticky;top:68px}
+    @media(max-width:768px){.sidebar-panel{position:static;order:2}}
+    .q-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:24px 28px;box-shadow:var(--shadow)}
+    .q-meta{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+    .q-num-badge{background:var(--accent);color:white;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px}
+    .q-bookmark{background:none;border:0.5px solid var(--border);border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer;color:var(--text3);transition:all 0.15s;font-family:'Sarabun',sans-serif}
+    .q-bookmark.active{background:var(--gold-light);border-color:var(--gold);color:var(--gold)}
+    .q-text{font-size:16px;line-height:1.8;margin-bottom:20px;color:var(--text);font-weight:500}
+    .options{display:flex;flex-direction:column;gap:8px}
+    .opt{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border:0.5px solid var(--border);border-radius:8px;cursor:pointer;background:var(--bg);transition:all 0.15s;text-align:left;font-family:'Sarabun',sans-serif;font-size:15px;color:var(--text);line-height:1.6;width:100%}
+    .opt:hover:not(.disabled){background:var(--accent-light);border-color:var(--accent2)}
+    .opt.disabled{cursor:default}
+    .opt.correct{background:var(--correct-bg);border-color:var(--correct);color:var(--correct)}
+    .opt.selected-wrong{background:var(--wrong-bg);border-color:var(--wrong);color:var(--wrong)}
+    .opt-key{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:14px;flex-shrink:0;margin-top:1px;min-width:18px}
+    .feedback{margin-top:20px;padding:16px 20px;border-radius:8px;display:none}
+    .feedback.show{display:block}
+    .feedback.correct-fb{background:var(--correct-bg);border:0.5px solid var(--correct)}
+    .feedback.wrong-fb{background:var(--wrong-bg);border:0.5px solid var(--wrong)}
+    .fb-header{font-weight:600;font-size:15px;margin-bottom:8px}
+    .fb-header.correct-fb{color:var(--correct)}
+    .fb-header.wrong-fb{color:var(--wrong)}
+    .fb-body{font-size:14px;line-height:1.8;color:var(--text2)}
+    .fb-ref{margin-top:10px;font-size:12px;color:var(--text3);border-top:0.5px solid rgba(0,0,0,0.1);padding-top:8px}
+    .fb-ref strong{color:var(--text2)}
+    .nav-btns{display:flex;justify-content:space-between;margin-top:20px;gap:12px}
+    .nav-btn{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:10px 20px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.15s;flex:1;text-align:center}
+    .nav-btn:hover:not(:disabled){background:var(--surface2)}
+    .nav-btn:disabled{opacity:0.3;cursor:default}
+    .nav-btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+    .nav-btn.primary:hover{background:var(--accent2)}
+    .sidebar-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:16px}
+    .sidebar-card h3{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px}
+    .progress-bar-wrap{background:var(--bg);border-radius:20px;height:8px;overflow:hidden;margin-bottom:8px}
+    .progress-bar-fill{height:100%;background:var(--accent);border-radius:20px;transition:width 0.3s}
+    .progress-label{font-size:12px;color:var(--text3);font-family:'IBM Plex Mono',monospace;text-align:right}
+    .score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .score-label{font-size:13px;color:var(--text2)}
+    .score-val{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600}
+    .q-nav-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+    .q-nav-btn{background:var(--bg);border:0.5px solid var(--border);border-radius:5px;padding:5px 2px;font-size:11px;font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--text3);cursor:pointer;text-align:center;transition:all 0.15s}
+    .q-nav-btn:hover{background:var(--accent-light);color:var(--accent)}
+    .q-nav-btn.current{background:var(--accent);color:white;border-color:var(--accent)}
+    .q-nav-btn.answered-correct{background:var(--correct-bg);color:var(--correct);border-color:var(--correct)}
+    .q-nav-btn.answered-wrong{background:var(--wrong-bg);color:var(--wrong);border-color:var(--wrong)}
+    .q-nav-btn.bookmarked{box-shadow:0 0 0 1.5px var(--gold)}
+    .summary-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center}
+    .summary-overlay.show{display:flex}
+    .summary-modal{background:var(--surface);border-radius:16px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.2)}
+    .summary-title{font-size:22px;font-weight:700;color:var(--accent);margin-bottom:8px}
+    .summary-pct{font-size:56px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--accent);line-height:1;margin:16px 0}
+    .summary-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+    .stat-box{background:var(--bg);border-radius:8px;padding:12px;border:0.5px solid var(--border)}
+    .stat-val{font-size:24px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+    .stat-label{font-size:12px;color:var(--text3);margin-top:2px}
+    .summary-close{background:var(--accent);color:white;border:none;border-radius:8px;padding:12px 32px;font-size:15px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;margin-top:8px}
+    .summary-close:hover{background:var(--accent2)}
+    body.dark{--bg:#111613;--surface:#1a2020;--surface2:#1f2726;--accent:#52b788;--accent2:#74c69d;--accent-light:#1b3a2a;--gold:#f4c95d;--gold-light:#2a2010;--text:#e8e8e0;--text2:#b0b0a0;--text3:#6a6a60;--border:rgba(255,255,255,0.08);--correct:#52b788;--correct-bg:#0d2a1a;--wrong:#f87171;--wrong-bg:#2a0f0f;}
+    body.dark .nav-btn.primary{color:#111613}
+    body.dark .q-num-badge{color:#111613}
+    body.dark .q-nav-btn.current{color:#111613}
+    body.dark .summary-close{color:#111613}
+  </style>
+</head>
+<body>
+<header>
+  <div class="hdr-left">
+    <button class="back-btn" onclick="window.history.length>1?window.history.back():void(0)">← กลับ</button>
+    <div>
+      <div class="hdr-title">คลัง NL</div>
+      <div class="hdr-sub">2023 · ชุด 3</div>
+    </div>
+  </div>
+  <button class="dark-btn" id="themeBtn" onclick="toggleDark()">🌙 Dark</button>
+</header>
+
+<div class="layout">
+  <div>
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="q-num-badge" id="qNumBadge">ข้อ 1</span>
+        <button class="q-bookmark" id="bookmarkBtn" onclick="toggleBookmark()">☆ บันทึก</button>
+      </div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="optionsContainer"></div>
+      <div class="feedback" id="feedback">
+        <div class="fb-header" id="fbHeader"></div>
+        <div class="fb-body" id="fbBody"></div>
+        <div class="fb-ref" id="fbRef"></div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">← ย้อนกลับ</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="navigate(1)">ถัดไป →</button>
+    </div>
+  </div>
+
+  <aside class="sidebar-panel">
+    <div class="sidebar-card">
+      <h3>ความคืบหน้า</h3>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 0</div>
+    </div>
+    <div class="sidebar-card">
+      <h3>คะแนน</h3>
+      <div class="score-row"><span class="score-label">✓ ถูก</span><span class="score-val" id="scoreCorrect" style="color:var(--correct)">0</span></div>
+      <div class="score-row"><span class="score-label">✗ ผิด</span><span class="score-val" id="scoreWrong" style="color:var(--wrong)">0</span></div>
+      <div class="score-row"><span class="score-label">★ บันทึก</span><span class="score-val" id="scoreBookmark" style="color:var(--gold)">0</span></div>
+    </div>
+    <div class="sidebar-card">
+      <h3>นำทางข้อ</h3>
+      <div class="q-nav-grid" id="qNavGrid"></div>
+    </div>
+  </aside>
+</div>
+
+<div class="summary-overlay" id="summaryOverlay">
+  <div class="summary-modal">
+    <div class="summary-title">สรุปผลการทำข้อสอบ</div>
+    <div class="summary-pct" id="sumPct">0%</div>
+    <div class="summary-stats">
+      <div class="stat-box"><div class="stat-val" id="sumCorrect" style="color:var(--correct)">0</div><div class="stat-label">ถูก</div></div>
+      <div class="stat-box"><div class="stat-val" id="sumWrong" style="color:var(--wrong)">0</div><div class="stat-label">ผิด</div></div>
+      <div class="stat-box"><div class="stat-val" id="sumAnswered">0</div><div class="stat-label">ตอบแล้ว</div></div>
+      <div class="stat-box"><div class="stat-val" id="sumTotal">0</div><div class="stat-label">ทั้งหมด</div></div>
+    </div>
+    <button class="summary-close" onclick="document.getElementById('summaryOverlay').classList.remove('show')">ปิด</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {id:1, q:"1. ม้า ลุกๆ นั่งๆ แสดงอาการปวดท้อง หันไปมองท้องบ่อยๆ ต้องถามประวัติเรื่องอะไรก่อนเป็นลำดับแรก", opts:[{key:"1",text:"การจัดการด้านอาหาร"},{key:"2",text:"การใช้งาน"},{key:"3",text:"สุขาภิบาลภายในฟาร์ม"},{key:"4",text:"ประวัติการถ่ายพยาธิ"}], answer:"1", explanation:"อาการปวดท้อง (Colic) ในม้า สาเหตุที่พบบ่อยที่สุดคือปัญหาด้านอาหารและการจัดการอาหาร เช่น การเปลี่ยนชนิดอาหารอย่างรวดเร็ว, คุณภาพหญ้า, ปริมาณอาหารข้น ดังนั้นควรซักประวัติการจัดการด้านอาหารเป็นลำดับแรก", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:2, q:"2. ม้าท้องกาง ไม่มีมูล ผุดลุกผุดนั่ง หันมองบริเวณสวาบ ต้องซักประวัติอะไรเพิ่มเติม เพื่อการวินิจฉัย", opts:[{key:"1",text:"ประวัติวัคซีน"},{key:"2",text:"การจัดการอาหาร"},{key:"3",text:"โรงเรือน"},{key:"4",text:"การแต่งกีบ"}], answer:"2", explanation:"อาการท้องกาง ไม่มีมูล และ flank watching ชี้ถึง large colon impaction หรือ large intestinal obstruction ประวัติการจัดการอาหาร (ชนิดอาหาร ปริมาณน้ำ) เป็นข้อมูลสำคัญที่สุดสำหรับการวินิจฉัย", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:3, q:"3. ม้าแข่งเกิดกระดูก proximal sesamoid bone แตก ทำการพัน Robert Jones แล้วต้องการใส่ splint ในด้านใดเพื่อส่งต่อในการรักษาต่อไป", opts:[{key:"1",text:"Dorsal"},{key:"2",text:"Medial"},{key:"3",text:"Lateral"},{key:"4",text:"Caudal"},{key:"5",text:"Palmar"}], answer:"5", explanation:"Proximal sesamoid bone fracture ใน forelimb ของม้าต้องการ splint ที่ด้าน palmar เพื่อป้องกัน hyperextension ของ fetlock joint และรองรับ superficial/deep digital flexor tendon ระหว่างการส่งต่อ", ref:"Auer JA, Stick JA. Equine Surgery. 4th ed. Elsevier; 2012."},
+  {id:4, q:"4. จับบังคับม้าแรกเกิดเพื่อตรวจร่างกาย ควรใช้ท่าใดจึงจะเหมาะสมที่สุด", opts:[{key:"1",text:"มือโอบรอบคอและสะโพก"},{key:"2",text:"ให้ยาซึม"},{key:"3",text:"เข้าซอง"},{key:"4",text:"ใส่ขลุมและจูง"}], answer:"1", explanation:"ลูกม้าแรกเกิดควรจับบังคับโดยมือข้างหนึ่งโอบรอบหน้าอก/คอ และอีกข้างโอบรอบสะโพก เพื่อความปลอดภัยและไม่ให้ลูกม้าตกใจ ไม่ควรใช้ยาซึมในลูกม้าแรกเกิดเพราะเสี่ยงต่อการหายใจล้มเหลว", ref:"Reed SM, Bayly WM. Equine Internal Medicine. 4th ed. Saunders; 2018."},
+  {id:5, q:"5. ลูกไก่อายุ 3 วัน แสดงอาการป่วยตั้งแต่วันแรกที่มาถึง มีอาการหอบหายใจ เริ่มทยอยตาย ผ่าซากเจอตุ่มขาวที่ปอดและถุงลม คาดว่าเกิดจากสาเหตุใด", opts:[{key:"1",text:"Aspergillosis"},{key:"2",text:"Candidiasis"},{key:"3",text:"Histomoniasis"},{key:"4",text:"Dermatophytosis"},{key:"5",text:"Coccidiosis"}], answer:"1", explanation:"Aspergillosis (Brooder Pneumonia) เกิดจาก Aspergillus fumigatus ลูกไก่ติดเชื้อจากการสูดสปอร์ในโรงเรือนหรือวัสดุปูรอง พบตุ่มขาว (granuloma) ที่ปอดและถุงลม อาการหอบและตายสูงในลูกไก่อายุน้อย", ref:"Swayne DE et al. Diseases of Poultry. 14th ed. Wiley-Blackwell; 2020."},
+  {id:6, q:"6. ไก่ตรวจภูมิคุ้มกันระดับสูงต่อโรคกัมโบโร มีค่า Geometric mean titer ปกติ %CV สูงผิดปกติ สัตวแพทย์จะแนะนำเจ้าของฟาร์มอย่างไร", opts:[{key:"1",text:"ปรับวิธีให้วัคซีน"},{key:"2",text:"เพิ่มขนาดของวัคซีนที่ให้"},{key:"3",text:"เพิ่มความถี่การให้วัคซีน"},{key:"4",text:"ปรับการให้วัคซีนครั้งแรกให้เร็วขึ้น"},{key:"5",text:"เปลี่ยนเชื้อวัคซีน"}], answer:"1", explanation:"%CV (Coefficient of Variation) สูงผิดปกติแสดงว่าภูมิคุ้มกันในฝูงไม่สม่ำเสมอ (non-uniform immunity) แม้ GMT จะปกติ สาเหตุมักเกิดจากวิธีการให้วัคซีนไม่ได้มาตรฐาน เช่น การให้น้ำวัคซีนกระจายไม่ทั่วถึง ต้องแก้ไขวิธีการให้วัคซีน", ref:"Swayne DE et al. Diseases of Poultry. 14th ed. Wiley-Blackwell; 2020."},
+  {id:7, q:"7. กรดอะมิโนใดมีผลในการสร้างเปลือกไข่", opts:[{key:"1",text:"Lysine"},{key:"2",text:"Methionine"},{key:"3",text:"Taurine"}], answer:"2", explanation:"Methionine มีบทบาทในการสร้างเปลือกไข่ผ่านกระบวนการเมแทบอลิซึมของกำมะถัน (sulfur metabolism) นอกจากนี้ยังมีบทบาทใน protein synthesis และ feather formation", ref:"Leeson S, Summers JD. Poultry Metabolic Disorders and Mycotoxins. University Books; 1997."},
+  {id:8, q:"8. 95% hen day production และ 75% hen house production ถามว่าเกิดจากอะไร", opts:[{key:"1",text:"ไก่ไข่ตายระหว่างการเลี้ยง"},{key:"2",text:"ติดเชื้อ EDS"}], answer:"1", explanation:"Hen day production คำนวณจากไก่ที่มีชีวิตอยู่จริงในวันนั้น ส่วน Hen house production คำนวณจากจำนวนไก่ที่เริ่มต้นเลี้ยง ความแตกต่างที่มากระหว่างสองค่า (95% vs 75%) บ่งชี้ว่ามีไก่ตายสะสมระหว่างการเลี้ยงเป็นจำนวนมาก", ref:"Swayne DE et al. Diseases of Poultry. 14th ed. Wiley-Blackwell; 2020."},
+  {id:9, q:"9. ลูกไก่กล้ามเนื้อจุดเลือดออก ตาย 10% มีการตายสองระยะคือสัปดาห์ 3 และ 5 โดยการตายครั้งที่สองเกิดจากการแพร่ของโรคในทางใด", opts:[{key:"1",text:"Ovarian transmission"},{key:"2",text:"Air borne transmission"},{key:"3",text:"Fecal oral route"},{key:"4",text:"Vector borne"}], answer:"3", explanation:"Infectious Bursal Disease (IBD/Gumboro) มีการตายแบบ bimodal pattern การระบาดครั้งที่สองในสัปดาห์ที่ 5 เกิดจากการแพร่เชื้อผ่าน fecal-oral route เชื้อไวรัสทนทานในสิ่งแวดล้อมและปนเปื้อนในอาหาร น้ำ และอุปกรณ์", ref:"Swayne DE et al. Diseases of Poultry. 14th ed. Wiley-Blackwell; 2020."},
+  {id:10, q:"10. ไก่ถ่ายเป็นเลือดสด คาดว่าเกิดจากเชื้อบิด ควรเก็บตัวอย่างจากที่ใด", opts:[{key:"1",text:"Duodenum"},{key:"2",text:"Jejunum"},{key:"3",text:"Ileum"},{key:"4",text:"Cecum"},{key:"5",text:"Rectum"}], answer:"4", explanation:"Eimeria tenella ซึ่งเป็นสาเหตุหลักของ cecal coccidiosis ที่ทำให้ถ่ายเป็นเลือดสดในไก่ พบรอยโรคที่ cecum เป็นหลัก ควรเก็บตัวอย่างจาก cecum เพื่อตรวจหา oocysts และรอยโรคทางพยาธิวิทยา", ref:"Swayne DE et al. Diseases of Poultry. 14th ed. Wiley-Blackwell; 2020."},
+  {id:11, q:"11. ลูกสุกรดูดนม ผ่าซากให้ภาพมา มีลายสีขาวที่หัวใจ ตาย คาดว่าเกิดจากสาเหตุใด", opts:[{key:"1",text:"Foot and Mouth Disease"},{key:"2",text:"Leptospirosis"},{key:"3",text:"Mulberry heart disease"},{key:"4",text:"Parvovirus infection"}], answer:"1", explanation:"Foot and Mouth Disease (FMD) ในลูกสุกรแรกเกิดทำให้เกิด myocarditis (tiger heart lesion) — เส้นสีขาวหรือสีเหลืองที่กล้ามเนื้อหัวใจ เนื่องจาก virus ทำลาย cardiomyocytes โดยตรง", ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."},
+  {id:12, q:"12. พ่อสุกรภายในฟาร์ม ทำการตรวจ ELISA ต่อโรค Pseudorabies พบว่าให้ผลบวกต่อ gE (gI) ต้องจัดการอย่างไรกับพ่อสุกร", opts:[{key:"1",text:"คัดทิ้งพ่อสุกร"},{key:"2",text:"พักการใช้งานเป็นเวลา 2-4 สัปดาห์"},{key:"3",text:"ใช้งานได้ตามปกติ"},{key:"4",text:"ทำวัคซีน Pseudorabies พ่อสุกรตัวนี้"},{key:"5",text:"ให้ยาปฏิชีวนะรักษาพ่อสุกร"}], answer:"1", explanation:"วัคซีน Pseudorabies ที่ใช้ในปัจจุบันเป็น gE-deleted vaccine ดังนั้นถ้าตรวจพบ antibody ต่อ gE แสดงว่าสัตว์ติดเชื้อจริง (ไม่ใช่จากวัคซีน) ต้องคัดทิ้งสัตว์ที่ให้ผล gE positive ตามมาตรการ eradication program", ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."},
+  {id:13, q:"13. ลูกสุกรแยกตัว พอไล่ส่งเสียงร้อง ข้อขาหน้าและขาหลังบวม พอสงบลงนอนเหมือนเดิม ต้องตรวจร่างกายลูกสุกรตัวนี้อย่างไรเป็นลำดับถัดไป", opts:[{key:"1",text:"Inspection"},{key:"2",text:"Palpation"},{key:"3",text:"Auscultation"},{key:"4",text:"Percussion"},{key:"5",text:"Ballottement"}], answer:"2", explanation:"หลังจาก Inspection (ดูอาการ) แล้ว ขั้นตอนถัดไปคือ Palpation คลำบริเวณข้อที่บวมเพื่อประเมิน ความเจ็บปวด ความร้อน ความผิดปกติของข้อ เป็นขั้นตอนสำคัญในการวินิจฉัย septic arthritis ในลูกสุกร", ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."},
+  {id:14, q:"14. แม่หมูท้องเสีย 80% ลูกหมูดูดนมตาย 100% ผ่าซากลูกหมูพบความผิดปกติที่ลำไส้", opts:[{key:"1",text:"Swine dysentery"},{key:"2",text:"Colibacillosis"},{key:"3",text:"Porcine epidemic diarrhea"},{key:"4",text:"Salmonellosis"},{key:"5",text:"Rotavirus"}], answer:"3", explanation:"Porcine Epidemic Diarrhea (PEDV) ทำให้แม่สุกรท้องเสียและลูกสุกรแรกเกิดตาย 100% เนื่องจาก villous atrophy ขั้นรุนแรง ทำให้ลำไส้ดูดซึมไม่ได้ สูญเสียน้ำและอิเล็กโตรไลต์อย่างรวดเร็ว", ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."},
+  {id:15, q:"15. ต้องการจับบังคับแม่สุกร เพื่อเก็บเลือดในสุกรตั้งท้อง ต้องจับบังคับท่าใด", opts:[{key:"1",text:"นอนตะแคงมัดขา 4 ขา"},{key:"2",text:"เข้าซองจับบังคับ"},{key:"3",text:"ใช้ snare จมูก"},{key:"4",text:"ยืนในซองอาหาร"}], answer:"1", explanation:"แม่สุกรตั้งท้องที่ต้องเก็บเลือดจาก jugular vein หรือ cranial vena cava ควรจับบังคับโดยให้นอนตะแคงและมัดขา 4 ขา เพื่อความปลอดภัยของสัตว์และผู้ปฏิบัติงาน และให้เข้าถึงตำแหน่งเก็บเลือดได้สะดวก", ref:"Zimmerman JJ et al. Diseases of Swine. 10th ed. Wiley-Blackwell; 2012."},
+  {id:16, q:"16. ตรวจภาวะโลหิตเป็นพิษในปลานิล ตรวจอะไร", opts:[{key:"1",text:"สมอง"},{key:"2",text:"หัวใจ"},{key:"3",text:"ลำไส้"},{key:"4",text:"ม้าม"},{key:"5",text:"เหงือก"}], answer:"4", explanation:"การตรวจภาวะ septicemia (โลหิตเป็นพิษ) ในปลานิล ม้ามเป็นอวัยวะที่มีความผิดปกติชัดเจนที่สุด พบม้ามบวมโต (splenomegaly) และมีจุดเลือดออก เป็น indicator ของการติดเชื้อแบคทีเรียในกระแสเลือด", ref:"Roberts RJ. Fish Pathology. 4th ed. Wiley-Blackwell; 2012."},
+  {id:17, q:"17. ถ้าสงสัยภาวะเลือดเป็นพิษในปลานิล ควรเก็บอวัยวะใดเพื่อไปเพาะเชื้อ", opts:[{key:"1",text:"สมอง"},{key:"2",text:"ลำไส้"},{key:"3",text:"ม้าม"},{key:"4",text:"หัวใจ"},{key:"5",text:"เหงือก"}], answer:"3", explanation:"ม้ามเป็นอวัยวะที่เหมาะสมที่สุดในการเพาะเชื้อแบคทีเรียในกรณี septicemia ของปลา เนื่องจากมีเชื้อความเข้มข้นสูงและปนเปื้อนน้อยกว่าลำไส้ การเพาะเชื้อจากม้ามให้ผลแม่นยำสูง", ref:"Roberts RJ. Fish Pathology. 4th ed. Wiley-Blackwell; 2012."},
+  {id:18, q:"18. ให้ภาพหมาทำการตัดเต้านม unilateral mastectomy แล้วขอบแผลห่างกันมากต้องใช้การเย็บแผลผ่าตัดแบบใด", opts:[{key:"1",text:"Connell suture"},{key:"2",text:"Lembert suture"},{key:"3",text:"Walking suture"},{key:"4",text:"Ford interlocking"},{key:"5",text:"Purse string"}], answer:"3", explanation:"Walking suture (subcutaneous tension-relieving suture) ใช้เพื่อลด dead space และลดแรงตึงบนขอบแผลเมื่อขอบแผลห่างกันมาก โดยดึงชั้น subcutaneous tissue เข้าหากันก่อนเย็บผิวหนัง ลดโอกาสแผล裂หลังผ่าตัด", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:19, q:"19. ทำการผ่าตัดม้า เปิด Oxygen flow meter 5 L/min ลูกลอยที่เครื่องต้องอยู่ที่ระดับใดของเส้น", opts:[{key:"1",text:"ขอบบน แบบบอเรล"},{key:"2",text:"ขอบระหว่างกลาง-บน"},{key:"3",text:"ขอบกลาง แบบกลม"},{key:"4",text:"ขอบระหว่างกลาง-ล่าง"},{key:"5",text:"ขอบล่าง"}], answer:"3", explanation:"การอ่านค่า flowmeter แบบลูกลอย: สำหรับ float ที่เป็นทรงกลม (sphere) ให้อ่านที่ขอบกลาง (midpoint) ของลูกลอย สำหรับ float ที่เป็นทรงบอเรล (spool) ให้อ่านที่ขอบบน", ref:"Grimm KA et al. Veterinary Anesthesia and Analgesia. 5th ed. Wiley-Blackwell; 2015."},
+  {id:20, q:"20. ลูกวัวอายุ 3 เดือน น้ำหนัก 80 กิโลกรัม เป็นไส้เลื่อนบริเวณสะดือ จะต้องการผ่าตัดแก้ไขต้องจับบังคับท่าใด", opts:[{key:"1",text:"นอนตะแคงมัดขา 4 ขารวบกัน"},{key:"2",text:"นอนตะแคง มัดขาหน้าแยกจากขาหลัง"},{key:"3",text:"เอาเข้าซอง"},{key:"4",text:"นอนตะแคง"}], answer:"1", explanation:"การผ่าตัด umbilical hernia ในลูกวัวต้องจับให้นอนหงาย (dorsal recumbency) หรือนอนตะแคงและมัดขาทั้ง 4 รวบกัน เพื่อให้เข้าถึงบริเวณสะดือด้านท้องได้สะดวก และป้องกันการดิ้นระหว่างผ่าตัด", ref:"Turner AS, McIlwraith CW. Techniques in Large Animal Surgery. Lea & Febiger; 1989."},
+  {id:21, q:"21. ข้อใดเป็นการผ่าตัดในม้าที่เป็น clean contaminated", opts:[{key:"1",text:"Pelvic flexure enterotomy"},{key:"2",text:"Castration"},{key:"3",text:"Arthroscopy"},{key:"4",text:"Colic surgery with bowel resection"}], answer:"1", explanation:"Pelvic flexure enterotomy เป็น clean-contaminated surgery เนื่องจากเปิดเข้าสู่ GI tract ที่มีเชื้ออยู่ (large colon) แต่ควบคุมได้ดี ไม่มีการรั่วซึมออกมา ส่วน resection anastomosis มักเป็น contaminated หากมีการรั่ว", ref:"Auer JA, Stick JA. Equine Surgery. 4th ed. Elsevier; 2012."},
+  {id:22, q:"22. แมวเพศเมีย อายุ 5 ปี พบก้อนเนื้อขนาดเล็กหลายก้อนที่ Left caudal thoracic mammary gland ก้อนเนื้อมีลักษณะ firm consistency และจากการถ่ายภาพรังสียังไม่พบการกระจายไปยังปอด จะต้องตัดเต้านมแบบไหน", opts:[{key:"1",text:"Left lumpectomy"},{key:"2",text:"Left radical mastectomy"},{key:"3",text:"Left simple lobar mastectomy"},{key:"4",text:"Left unilateral mastectomy"},{key:"5",text:"Left regional caudal mastectomy"}], answer:"4", explanation:"ก้อนเนื้อหลายก้อนที่ caudal thoracic mammary gland ในแมว ควรทำ unilateral mastectomy (ตัดเต้านมทั้งข้างซ้ายออก) เพื่อลดโอกาสการกลับมาเป็นซ้ำ เนื่องจากต่อมน้ำเหลืองในฝั่งเดียวกันมีการระบายร่วมกัน", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:23, q:"23. สุนัขถูกของมีคมบาดประมาณ 1 ชั่วโมงที่แล้ว สัตวแพทย์พบผิวหนังฉีกขาด ต้องการจะเย็บแผล จะต้องล้างแผลด้วยอะไร", opts:[{key:"1",text:"NSS"},{key:"2",text:"95% alcohol"},{key:"3",text:"70% alcohol"},{key:"4",text:"Hydrogen peroxide"}], answer:"1", explanation:"Normal Saline Solution (NSS) เป็น isotonic solution ที่เหมาะสมที่สุดสำหรับการล้างแผล ไม่ทำลาย fibroblast หรือ granulation tissue แอลกอฮอล์และ hydrogen peroxide เป็น cytotoxic ต่อ healing tissue", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:24, q:"24. สุนัขพันธุ์ Chihuahua เพศเมียอายุ 3 ปี มาผ่าตัดทำหมัน วางยาด้วย acepromazine, morphine, tiletamine/zolazepam ระหว่างวางยาสลบ พบ HR 52 BP 112/58(76) RR 8 EtCO2 42 mmHg SpO2 98% ควรแก้ปัญหาที่เกิดขึ้นอย่างไร", opts:[{key:"1",text:"ปรับความเร็วของสารน้ำเพิ่มขึ้น"},{key:"2",text:"ให้ colloid"},{key:"3",text:"ให้ dopamine"},{key:"4",text:"ให้ atropine"},{key:"5",text:"ให้ adrenaline"}], answer:"4", explanation:"HR 52 bpm คือ bradycardia ในสุนัข ซึ่งเกิดจาก opioid (morphine) ที่เพิ่ม vagal tone การรักษาคือให้ atropine (anticholinergic) เพื่อเพิ่ม heart rate BP อยู่ในเกณฑ์ปกติ ไม่มีสัญญาณ shock จึงไม่จำเป็นต้องให้ vasopressor", ref:"Grimm KA et al. Veterinary Anesthesia and Analgesia. 5th ed. Wiley-Blackwell; 2015."},
+  {id:25, q:"25. อุปกรณ์อะไรใช้รีด content ในลำไส้ก่อนการตัดต่อลำไส้", opts:[{key:"1",text:"Atraumatic forceps"},{key:"2",text:"Allis tissue forceps"},{key:"3",text:"Tooth forceps"},{key:"4",text:"Mosquito forceps"},{key:"5",text:"Hemostatic forceps"}], answer:"1", explanation:"Atraumatic forceps (เช่น Doyen intestinal forceps) ใช้หนีบลำไส้เพื่อรีด intestinal content ออกจากบริเวณที่จะตัด โดยไม่ทำลาย intestinal wall เนื่องจากมีพื้นผิวที่ไม่มีฟัน", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:26, q:"26. ไหมเย็บที่ใช้สำหรับเย็บชั้นผิวหนัง", opts:[{key:"1",text:"Polydioxanone"},{key:"2",text:"Polyglactin 910"},{key:"3",text:"Polyglycolic"},{key:"4",text:"Polypropylene"},{key:"5",text:"Cat gut"}], answer:"4", explanation:"Polypropylene (Prolene) เป็น non-absorbable, monofilament suture ที่เหมาะสมสำหรับเย็บชั้น skin เนื่องจากมี minimal tissue reaction, ง่ายต่อการถอด, และมี knot security ดี ส่วน absorbable sutures ไม่เหมาะสมสำหรับ skin closure เพราะสลายก่อนที่แผลจะหายสนิท", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:27, q:"27. สุนัขถูกวินิจฉัยให้เป็น Ectropion eyelid ข้อใดคือการผ่าตัดแก้ไขอย่างถาวร", opts:[{key:"1",text:"Modified Hotz-Celsus"},{key:"2",text:"Medial canthotomy"},{key:"3",text:"Lateral canthotomy"},{key:"4",text:"V-Y blepharoplasty"},{key:"5",text:"Eyelid tacking"}], answer:"4", explanation:"V-Y blepharoplasty ใช้แก้ไข ectropion (eyelid ม้วนออก) อย่างถาวร โดยสร้างแผลรูป V แล้วเย็บปิดแบบ Y เพื่อดึงเปลือกตาขึ้น ส่วน Modified Hotz-Celsus ใช้แก้ entropion (เปลือกตาม้วนเข้า)", ref:"Gelatt KN. Veterinary Ophthalmology. 5th ed. Wiley-Blackwell; 2013."},
+  {id:28, q:"28. จากภาพเป็น suture ใด", opts:[{key:"1",text:"Lembert"},{key:"2",text:"Connell"},{key:"3",text:"Far far near near"},{key:"4",text:"Far near near far"},{key:"5",text:"Gambee"}], answer:"3", explanation:"Far-Far-Near-Near (FFNN) suture pattern เป็น tension suture ที่ใช้ลด dead space และ appose tissue layers ในกรณีที่มีแรงตึงสูง โดยผ่านเข้าห่างจากขอบแผล (far) ทั้งสองด้านก่อน แล้วจึงผ่านใกล้ขอบแผล (near)", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:29, q:"29. สุนัขอายุ 10 ปี ได้รับการวินิจฉัยว่าเป็น MMVD stage B2 มี VHS 12 และต้องการผ่าตัดทำหมัน สัตวแพทย์ให้ผลการประเมิน ASA score เท่าใด", opts:[{key:"1",text:"ASA 1"},{key:"2",text:"ASA 2"},{key:"3",text:"ASA 3"},{key:"4",text:"ASA 4"},{key:"5",text:"ASA 5"}], answer:"3", explanation:"ASA 3 = สัตว์ที่มีโรคประจำตัวรุนแรงปานกลาง MMVD stage B2 (cardiomegaly, VHS > 10.5) ถือเป็นโรคหัวใจที่มีนัยสำคัญแต่ยังไม่มี heart failure (ยังไม่เป็น C หรือ D) จัดเป็น ASA 3", ref:"Grimm KA et al. Veterinary Anesthesia and Analgesia. 5th ed. Wiley-Blackwell; 2015."},
+  {id:30, q:"30. สุนัขมาโรงพยาบาลด้วย Hiatal hernia ทำการแก้ไขดึงกระเพาะอาหารกลับมาแล้ว ต้องเย็บกระเพาะส่วนใดกับผนังช่องท้องเพื่อป้องกันการกลับมาเป็นซ้ำ", opts:[{key:"1",text:"Cardia"},{key:"2",text:"Fundus"},{key:"3",text:"Pyloric antrum"},{key:"4",text:"Body"},{key:"5",text:"Proximal intestine"}], answer:"2", explanation:"ในการผ่าตัดแก้ไข hiatal hernia ต้องทำ gastropexy โดยเย็บ gastric fundus ติดกับ diaphragm หรือผนังช่องท้อง เพื่อป้องกันไม่ให้กระเพาะเลื่อนกลับผ่าน hiatus อีก", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:31, q:"31. สุนัขถูกกัดมีการหายใจลำบาก เมื่อทำการ x-ray แล้วพบลมในช่องอก คาดว่าเกิดจากอะไร", opts:[{key:"1",text:"Pneumothorax"},{key:"2",text:"Plural effusion"},{key:"3",text:"Subcutaneous emphysema"},{key:"4",text:"Cardiomegaly"},{key:"5",text:"Diaphragmatic hernia"}], answer:"1", explanation:"การถูกกัดบริเวณทรวงอกและพบลมในช่องอกจาก x-ray บ่งชี้ถึง Pneumothorax ซึ่งเกิดจากการเจาะทะลุของผนังทรวงอกหรือปอดแตก ทำให้ลมเข้าสู่ pleural space", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:32, q:"32. สุนัขเพศผู้ยังไม่ทำหมัน อายุ 10 ปี ปวดเบ่งมานานมาก คลำพบก้อนที่ข้างก้น x-ray พบความผิดปกติบริเวณ perineum คาดว่าเกิดจากอะไร", opts:[{key:"1",text:"Perineal hernia"},{key:"2",text:"Mass"},{key:"3",text:"Abscess"},{key:"4",text:"Hematoma"},{key:"5",text:"Tumor"}], answer:"1", explanation:"สุนัขเพศผู้ ไม่ทำหมัน อายุมาก มีอาการปวดเบ่ง (tenesmus) และคลำพบก้อนข้างก้น x-ray พบ perineal bulge คือลักษณะของ Perineal hernia ซึ่งพบบ่อยในสุนัขเพศผู้สูงอายุที่ไม่ทำหมัน เกิดจาก perineal musculature อ่อนแรง", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:33, q:"33. สุนัขมีอาการเวลาเดินหัวสะบัดและมีกลิ่นสาบออกจากหูสองข้าง ทำการถ่ายวินิจฉัยด้วยภาพรังสีท่าใด", opts:[{key:"1",text:"Ventrodorsal"},{key:"2",text:"Intraoral dorsoventral"},{key:"3",text:"Mediolateral open mouth"},{key:"4",text:"Oblique mediolateral"},{key:"5",text:"Rostrocaudal open mouth"}], answer:"5", explanation:"Rostrocaudal open mouth (RCOMO) view เป็นท่าที่เหมาะสมที่สุดสำหรับตรวจ tympanic bullae ทั้งสองข้าง สามารถเห็น bulla ได้ชัดเจน เหมาะสำหรับวินิจฉัย otitis media/interna", ref:"Thrall DE. Textbook of Veterinary Diagnostic Radiology. 7th ed. Elsevier; 2018."},
+  {id:34, q:"34. โคนม เพศเมีย อายุ 5 ปี ถ่ายเหลวติดต่อกันมานานกว่า 2 เดือน ผ่าซากพบ enlarged mesenteric LN กับ thickened and prominent transverse fold of intestine ควรเก็บตัวอย่างมาย้อมสีอะไร", opts:[{key:"1",text:"Ziehl-Neelsen"},{key:"2",text:"Toluidine blue"},{key:"3",text:"Methylene blue"},{key:"4",text:"Lactophenol cotton blue"},{key:"5",text:"Warthin Starry"}], answer:"1", explanation:"รอยโรคที่บ่งชี้ Paratuberculosis (Johne's disease) เกิดจาก Mycobacterium avium subsp. paratuberculosis ซึ่งเป็น acid-fast bacteria ต้องย้อมด้วย Ziehl-Neelsen stain (acid-fast stain) เพื่อยืนยันการวินิจฉัย", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:35, q:"35. ตรวจซากสุกร เจอจุดเลือดออกที่ submucosa ของลำไส้เล็ก จุดขาวที่ตับ ไม่พบวิการที่อื่น จัดการยังไง", opts:[{key:"1",text:"ทิ้งซากทั้งหมด"},{key:"2",text:"ทิ้งเฉพาะลำไส้และตับที่เป็นรอยโรค"},{key:"3",text:"บริโภคได้"},{key:"4",text:"บริโภคได้ถ้าผ่านความร้อน"}], answer:"2", explanation:"Partial condemnation ใช้เมื่อรอยโรคเฉพาะอวัยวะบางส่วน ส่วนอื่นของซากปกติดี สามารถตัดทิ้งเฉพาะส่วนที่เป็นรอยโรค (ลำไส้และตับ) และปล่อยให้เนื้อส่วนอื่นผ่านการตรวจเพื่อบริโภคได้", ref:"Gracey JF et al. Meat Hygiene. 10th ed. Baillière Tindall; 1999."},
+  {id:36, q:"36. สุนัขตรวจพบก้อนเนื้ออยู่ชั้นใต้ผิวหนัง เก็บตัวอย่างด้วยวิธี FNA มาย้อมสี Diff-quick พบ Eosinophil, round cell with questionable granule in cytoplasm สัตวแพทย์ต้องนำไปย้อมสีใดเพื่อยืนยันผลของก้อนเนื้อชนิดนี้", opts:[{key:"1",text:"Modified Wright-Giemsa"},{key:"2",text:"Toluidine blue"},{key:"3",text:"Methylene blue"},{key:"4",text:"Indian ink"},{key:"5",text:"Gram's stain"}], answer:"2", explanation:"Toluidine blue ใช้ยืนยัน Mast cell tumor โดยทำให้ metachromatic granules ใน cytoplasm ของ mast cell ติดสีแดงม่วง (metachromasia) ชัดเจนขึ้น เมื่อ Diff-quick ไม่ชัดพอ", ref:"Cowell RL, Valenciano AC. Diagnostic Cytology and Hematology of the Dog and Cat. 4th ed. Mosby; 2013."},
+  {id:37, q:"37. สุนัขมาด้วยก้อนเนื้อบริเวณจมูก ผิวไม่เรียบ ตรวจด้วยวิธี impression smear พบ round cell, round nucleus, prominent nucleoli, prominent cytoplasmic vacuole คาดว่าก้อนเนื้อนี้มีสาเหตุจากอะไร", opts:[{key:"1",text:"Mastocytoma"},{key:"2",text:"Lymphoma"},{key:"3",text:"Squamous cell carcinoma"},{key:"4",text:"Transmissible venereal tumor"},{key:"5",text:"Histiocytoma"}], answer:"4", explanation:"TVT (Transmissible Venereal Tumor) มีลักษณะ cytology คือ round cells, round-to-oval nucleus, prominent single nucleolus, และ cytoplasmic vacuoles (discrete clear vacuoles) ซึ่งเป็นลักษณะจำเพาะ สามารถพบที่บริเวณจมูก ปาก รวมถึงอวัยวะสืบพันธุ์", ref:"Cowell RL, Valenciano AC. Diagnostic Cytology and Hematology of the Dog and Cat. 4th ed. Mosby; 2013."},
+  {id:38, q:"38. มะเร็งชนิดใดสามารถวินิจฉัยด้วยวิธี impression smear ได้", opts:[{key:"1",text:"Mastocytoma"},{key:"2",text:"Lymphoma"},{key:"3",text:"Squamous cell carcinoma"},{key:"4",text:"Transmissible venereal tumor"},{key:"5",text:"Histiocytoma"}], answer:"4", explanation:"TVT เป็น round cell tumor ที่ exfoliate ได้ดีมาก impression smear ให้เซลล์ที่มีลักษณะจำเพาะชัดเจน (round cells with cytoplasmic vacuoles) ทำให้วินิจฉัยได้แม่นยำด้วย cytology เพียงอย่างเดียว", ref:"Cowell RL, Valenciano AC. Diagnostic Cytology and Hematology of the Dog and Cat. 4th ed. Mosby; 2013."},
+  {id:39, q:"39. พยาธิสัตวแพทย์อ่านผลก้อนเนื้องอกพบว่า Round cell tumor with metachromatic granule คาดว่าก้อนเนื้อนี้เกิดจากมะเร็งชนิดใด", opts:[{key:"1",text:"Mastocytoma"},{key:"2",text:"Lymphoma"},{key:"3",text:"Squamous cell carcinoma"},{key:"4",text:"Transmissible venereal tumor"},{key:"5",text:"Histiocytoma"}], answer:"1", explanation:"Metachromatic granules เป็นลักษณะจำเพาะของ Mast cell tumor (Mastocytoma) granules จะติดสีแดงม่วง (metachromasia) เมื่อย้อมด้วย Toluidine blue หรือ Giemsa stain เป็น pathognomonic feature", ref:"Cowell RL, Valenciano AC. Diagnostic Cytology and Hematology of the Dog and Cat. 4th ed. Mosby; 2013."},
+  {id:40, q:"40. ตรวจปัสสาวะในแมวเจอนิ่วแบบนี้ นิ่วอะไร (crystals ลักษณะ coffin-lid shape)", opts:[{key:"1",text:"Struvite"},{key:"2",text:"Ammonium phosphate monohydrate"},{key:"3",text:"Ammonium phosphate dihydrate"},{key:"4",text:"Calcium oxalate"},{key:"5",text:"Urate"}], answer:"1", explanation:"Struvite crystals (magnesium ammonium phosphate) มีลักษณะเป็น coffin-lid shape (rectangular prism with beveled ends) หรือ three-to-six sided prism เป็นนิ่วที่พบบ่อยในแมว มักเกิดในปัสสาวะ alkaline", ref:"Osborne CA, Finco DR. Canine and Feline Nephrology and Urology. Williams & Wilkins; 1995."},
+  {id:41, q:"41. สุนัขหลังจากการถ่ายเลือด จู่ๆ มีอาการ ตรวจ Coomb's test positive เกิดจาก hypersensitivity type ใด", opts:[{key:"1",text:"Hypersensitivity I"},{key:"2",text:"Hypersensitivity II"},{key:"3",text:"Hypersensitivity III"},{key:"4",text:"Hypersensitivity IV"}], answer:"2", explanation:"Type II hypersensitivity (antibody-mediated cytotoxicity) เกิดขึ้นเมื่อ antibody จับกับ antigen บนผิว RBC ทำให้เกิด hemolysis ผ่าน complement activation หรือ phagocytosis Coomb's test (direct antiglobulin test) ใช้ตรวจ antibody ที่เคลือบผิว RBC", ref:"Tizard IR. Veterinary Immunology. 10th ed. Elsevier; 2017."},
+  {id:42, q:"42. ผ่าซากแมวพบน้ำในช่องอกสีขาวนมปนเหลือง คิดว่าเกิดจากสาเหตุใด", opts:[{key:"1",text:"Chylothorax"},{key:"2",text:"Hemothorax"},{key:"3",text:"Pyothorax"},{key:"4",text:"Pneumothorax"},{key:"5",text:"Hydrothorax"}], answer:"1", explanation:"Chylothorax มีลักษณะน้ำในช่องอกเป็นสีขาวนม (milky white) เนื่องจากมี chylomicrons (ไขมัน) ปนอยู่ เกิดจากการรั่วของ thoracic duct หรือ lymphatic vessels ในช่องอก", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:43, q:"43. ผ่าซากกระเพาะพักของไก่ พบปื้นสีขาว เอาไปส่องเจอ Hyphae", opts:[{key:"1",text:"Aspergillosis"},{key:"2",text:"Candidiasis"},{key:"3",text:"Histomoniasis"},{key:"4",text:"Dermatophytosis"},{key:"5",text:"Coccidiosis"}], answer:"2", explanation:"Candidiasis (Thrush) เกิดจาก Candida albicans พบปื้นขาว (white plaques) บน mucosa ของ crop (กระเพาะพัก) เมื่อนำไปตรวจด้วย microscopy พบ hyphae และ budding yeast cells ลักษณะดังกล่าวจำเพาะต่อ Candida", ref:"Swayne DE et al. Diseases of Poultry. 14th ed. Wiley-Blackwell; 2020."},
+  {id:44, q:"44. หากต้องการจะเปิดใช้งานโรงเชือดสุกรอีกครั้ง หลังจากเจอเชื้อ ASF ไป ต้องตรวจอะไรก่อน", opts:[{key:"1",text:"สวอปผู้ปฏิบัติงาน"},{key:"2",text:"สวอปไลน์ผลิตกับพื้นคอกพัก"},{key:"3",text:"ตรวจเลือดหมูที่มาเชือด"},{key:"4",text:"ตรวจเลือดหมูในฟาร์มระยะ 5 กิโลเมตร"},{key:"5",text:"ตรวจจากเศษหมูที่มาเชือดก่อนหน้า"}], answer:"2", explanation:"ก่อนเปิดโรงเชือดอีกครั้งหลัง ASF ต้องทำความสะอาดและฆ่าเชื้ออย่างละเอียด จากนั้นเก็บ environmental swab จากสายการผลิต (production line) และพื้นคอกพักสัตว์ เพื่อยืนยันว่าไม่มีเชื้อ ASF เหลืออยู่", ref:"OIE. African Swine Fever. Technical Disease Cards; 2019."},
+  {id:45, q:"45. ตรวจซากโค เจอ Haemonchus contortus ในกระเพาะอาหาร ต้องตัดสินซากนี้อย่างไร", opts:[{key:"1",text:"Partial condemnation"},{key:"2",text:"Total condemnation"},{key:"3",text:"Pass"},{key:"4",text:"Pass with heat"},{key:"5",text:"Pass with lab"}], answer:"1", explanation:"Haemonchus contortus เป็น blood-sucking nematode ใน abomasum ของโค ไม่ติดต่อสู่คน ไม่เป็นอันตรายต่อผู้บริโภค ซากได้รับการ partial condemnation โดยทิ้งเฉพาะกระเพาะ/ส่วนที่มีพยาธิ ส่วนอื่นผ่านได้", ref:"Gracey JF et al. Meat Hygiene. 10th ed. Baillière Tindall; 1999."},
+  {id:46, q:"46. ฟาร์มโคนม ตรวจพบ SCC ในน้ำนมเกิน 700,000 cells/ml มาตรการเร่งด่วนใดที่ต้องจัดการ เพื่อให้ส่งนมได้", opts:[{key:"1",text:"สุขศาสตร์การรีดนม"},{key:"2",text:"ตรวจ CMT ก่อนรีดนมทุกครั้ง"},{key:"3",text:"สอดเต้าด้วยยาปฏิชีวนะ"},{key:"4",text:"ให้ยาแก้อักเสบ"},{key:"5",text:"รักษาเต้านมอักเสบ"}], answer:"2", explanation:"CMT (California Mastitis Test) เป็นการทดสอบด่วนก่อนรีดนมเพื่อคัดแยกน้ำนมจากเต้าที่อักเสบออก ลดการปนเปื้อน SCC ในน้ำนมรวม เป็นมาตรการเร่งด่วนที่ทำได้ทันที", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:47, q:"47. การตรวจการปนเปื้อนเชื้อในชิ้นเนื้อไม่เกิน 2×10⁵ – 8×10⁵ ถือเป็นการจัดการความเสี่ยงแบบใด", opts:[{key:"1",text:"Hazard identification"},{key:"2",text:"Risk characterization"},{key:"3",text:"Risk management"},{key:"4",text:"Risk communication"}], answer:"3", explanation:"Risk management คือการกำหนดมาตรการและขอบเขตที่ยอมรับได้ (acceptable limit) เพื่อควบคุมความเสี่ยง การกำหนดค่าสูงสุดของเชื้อในชิ้นเนื้อ (2×10⁵ – 8×10⁵) เป็นตัวอย่างของ risk management measure", ref:"Thrusfield M. Veterinary Epidemiology. 4th ed. Wiley-Blackwell; 2018."},
+  {id:48, q:"48. โรงเชือดพบไก่มีรอยโรคก้อนหนองบริเวณกระดูกอก และจุดเลือดออกที่ตับ", opts:[{key:"1",text:"Total condemnation"},{key:"2",text:"Partial condemnation"},{key:"3",text:"Approved without conditions"},{key:"4",text:"Approved with confirmed lab test"}], answer:"1", explanation:"ก้อนหนองที่กระดูกอก (sternal bursitis/abscess) ร่วมกับจุดเลือดออกที่ตับ บ่งชี้การติดเชื้อแบคทีเรียแบบ systemic ซากทั้งหมดต้องถูกทิ้ง (total condemnation) เนื่องจากอาจมีการกระจายของเชื้อไปทั่วร่างกาย", ref:"Gracey JF et al. Meat Hygiene. 10th ed. Baillière Tindall; 1999."},
+  {id:49, q:"49. ชายแก่ชอบกินเนื้อวัวดิบ ซอยจุ้ลาบหลู้ แล้วมีอาการ hemorrhagic uremic syndrome คาดว่าเกิดจากเชื้ออะไร", opts:[{key:"1",text:"E. coli"},{key:"2",text:"Listeria monocytogenes"},{key:"3",text:"Clostridium botulinum"},{key:"4",text:"Salmonella typhimurium"}], answer:"1", explanation:"Enterohemorrhagic E. coli (EHEC) โดยเฉพาะ O157:H7 ผลิต Shiga-like toxin ทำให้เกิด hemorrhagic colitis และ Hemolytic Uremic Syndrome (HUS) ติดต่อจากเนื้อวัวดิบหรือปรุงไม่สุก เป็นสาเหตุสำคัญของ HUS", ref:"Doyle MP, Buchanan RL. Food Microbiology: Fundamentals and Frontiers. 4th ed. ASM Press; 2013."},
+  {id:50, q:"50. สัตวแพทย์ประเมินความเสี่ยงของการนำเชื้อไข้หวัดนกเข้ามาจากต่างประเทศ การสัมผัสเชื้อของสัตว์ปีกในประเทศและผลที่จะตามมา ถามว่าการประเมินข้างต้นเป็นขั้นตอนใดในการประเมินความเสี่ยง", opts:[{key:"1",text:"Hazard identification"},{key:"2",text:"Risk estimation"},{key:"3",text:"Entry assessment"},{key:"4",text:"Exposure assessment"},{key:"5",text:"Consequence assessment"}], answer:"2", explanation:"Risk estimation รวม entry assessment + exposure assessment + consequence assessment เข้าด้วยกัน คำถามกล่าวถึงทั้งสามส่วนนี้พร้อมกัน จึงเป็น risk estimation ซึ่งเป็นการประเมินความเสี่ยงโดยรวม", ref:"Thrusfield M. Veterinary Epidemiology. 4th ed. Wiley-Blackwell; 2018."},
+  {id:51, q:"51. สัตวแพทย์ตรวจซากหลังผ่าไก่ พบข้อบวมอักเสบมีหนองคั่งทั้ง 2 ข้อ และมีแผ่นหนองปกคลุมหัวใจ ต้องทำอย่างไรกับซาก", opts:[{key:"1",text:"Total condemnation"},{key:"2",text:"Partial condemnation"},{key:"3",text:"Approved without conditions"},{key:"4",text:"Approved with confirmed"},{key:"5",text:"Retention for further inspection"}], answer:"1", explanation:"การติดเชื้อแบบ systemic ที่มีรอยโรคทั้ง polyarthritis และ pericarditis บ่งชี้การกระจายของเชื้อทั่วร่างกาย ไม่สามารถทำ partial condemnation ได้ ต้องทิ้งซากทั้งหมด (total condemnation)", ref:"Gracey JF et al. Meat Hygiene. 10th ed. Baillière Tindall; 1999."},
+  {id:52, q:"52. มีการพยากรณ์ว่าอากาศหนาว อาจจะทำให้สัตว์ป่วยได้ง่ายยิ่งขึ้น จะสื่อสารความเสี่ยงได้อย่างไร", opts:[{key:"1",text:"Crisis communication"},{key:"2",text:"Outrage communication"},{key:"3",text:"Public relations"},{key:"4",text:"Precautionary advocacy"}], answer:"4", explanation:"Precautionary advocacy คือการสื่อสารเพื่อแนะนำให้ดำเนินการป้องกันล่วงหน้า แม้ยังไม่มีเหตุการณ์เกิดขึ้นจริง เป็นการสื่อสารบนพื้นฐานของการคาดการณ์ความเสี่ยง เหมาะสมกับสถานการณ์ที่พยากรณ์ว่าอากาศหนาวอาจทำให้สัตว์ป่วย", ref:"Thrusfield M. Veterinary Epidemiology. 4th ed. Wiley-Blackwell; 2018."},
+  {id:53, q:"53. สุนัขเกิดอุบัติเหตุ ถ่ายภาพรังสีเจอกระดูกหัก ควรรักษาอย่างไร (comminuted fracture mid-diaphysis femur)", opts:[{key:"1",text:"Cross pin"},{key:"2",text:"ESF type 2"},{key:"3",text:"IM pin + cerclage wire"},{key:"4",text:"Interlocking nail"},{key:"5",text:"Plate and screw"}], answer:"5", explanation:"Comminuted fracture ที่ femur diaphysis ต้องการ stability สูง Bone plate and screw (ORIF) ให้ความมั่นคงสูงสุด รองรับแรงบิดและการกด เหมาะสำหรับ comminuted fractures ที่ใช้ IM pin อย่างเดียวไม่เพียงพอ", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:54, q:"54. สุนัขพันธุ์บีเกิ้ล 15 กิโลกรัม ไม่ยอมลงน้ำหนักที่ขาหลังซ้าย หลังโดนรถชน คิดว่า ligament ใดมีปัญหามากที่สุด", opts:[{key:"1",text:"Lateral collateral ligament"},{key:"2",text:"Caudal cruciate ligament"},{key:"3",text:"Patella ligament"},{key:"4",text:"Medial collateral ligament"},{key:"5",text:"Cranial cruciate ligament"}], answer:"5", explanation:"Cranial cruciate ligament (CrCL) rupture เป็นสาเหตุพบบ่อยที่สุดของ hind limb lameness ในสุนัข อาจเกิดจากอุบัติเหตุหรือ degeneration การที่ไม่ยอมลงน้ำหนักขาหลังหลังอุบัติเหตุบ่งชี้ CrCL rupture จนกว่าจะพิสูจน์เป็นอย่างอื่น", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:55, q:"55. สุนัขมีความผิดปกติอะไร (ภาพ x-ray แสดง medullary cavity มี patchy increased opacity ที่ long bones ในสุนัขอายุน้อย)", opts:[{key:"1",text:"Panosteitis"},{key:"2",text:"Osteomalacia"},{key:"3",text:"Hypertrophic osteodystrophy"},{key:"4",text:"Retained endochondral cartilage core"},{key:"5",text:"Juvenile osteoporosis"}], answer:"1", explanation:"Panosteitis ใน x-ray แสดง patchy increased medullary opacity (endosteal proliferation) ใน diaphysis ของ long bones ของสุนัขวัยรุ่นพันธุ์ใหญ่ (อาการปวดขาย้ายข้าง) เป็นโรคที่หายเองได้", ref:"Thrall DE. Textbook of Veterinary Diagnostic Radiology. 7th ed. Elsevier; 2018."},
+  {id:56, q:"56. สุนัขมีอาการเจ็บขา มีอาการบวมที่ข้อขา ทำการตรวจทางรังสีพบภาพดังนี้ สัตวแพทย์สามารถวินิจฉัยเบื้องต้นว่าสุนัขตัวนี้เป็นอะไร (ภาพแสดง periosteal reaction และ soft tissue swelling รอบข้อ)", opts:[{key:"1",text:"Hypertrophic osteodystrophy"},{key:"2",text:"Hypertrophic osteopathy"},{key:"3",text:"Panosteitis"},{key:"4",text:"Osteochondrosis"},{key:"5",text:"Retained endochondral cartilaginous core"}], answer:"1", explanation:"Hypertrophic Osteodystrophy (HOD) พบในสุนัขพันธุ์ใหญ่อายุน้อย x-ray แสดง radiolucent zone ใต้ growth plate (metaphyseal zone) และ periosteal new bone formation รอบ metaphysis ของ long bones ร่วมกับ soft tissue swelling", ref:"Thrall DE. Textbook of Veterinary Diagnostic Radiology. 7th ed. Elsevier; 2018."},
+  {id:57, q:"57. เปลือกไข่สร้างมาจากส่วนใด", opts:[{key:"1",text:"Ampulla"},{key:"2",text:"Infundibulum"},{key:"3",text:"Isthmus"},{key:"4",text:"Uterus"}], answer:"4", explanation:"เปลือกไข่ (eggshell) ประกอบด้วย calcium carbonate สร้างขึ้นใน Uterus (Shell gland/Uterus) ซึ่งใช้เวลาประมาณ 20 ชั่วโมง Isthmus สร้าง shell membrane ส่วน Infundibulum เป็นที่เกิด fertilization", ref:"Johnson AL. Reproduction in the Female. In: Scanes CG (ed). Sturkie's Avian Physiology. 6th ed. Elsevier; 2015."},
+  {id:58, q:"58. สารแก้พิษของ organophosphate คือ", opts:[{key:"1",text:"Yohimbine"},{key:"2",text:"Naloxone"},{key:"3",text:"Atropine sulphate"},{key:"4",text:"2-PAM (Pralidoxime)"},{key:"5",text:"Vitamin K"}], answer:"3", explanation:"Atropine sulphate เป็น antidote หลักสำหรับพิษ organophosphate ออกฤทธิ์โดยแข่งขันกับ acetylcholine ที่ muscarinic receptors ลด SLUDGE signs (Salivation, Lacrimation, Urination, Defecation, GI upset, Emesis) สามารถใช้ร่วมกับ 2-PAM เพื่อ reactivate cholinesterase", ref:"Plumb DC. Plumb's Veterinary Drug Handbook. 9th ed. Wiley-Blackwell; 2018."},
+  {id:59, q:"59. ส่วนใดมีส่วนผสมของ hydrocyanic acid (cyanogenic glycoside)", opts:[{key:"1",text:"มันสำปะหลัง"},{key:"2",text:"ใบกะถิน"},{key:"3",text:"กากเมล็ดฝ้าย"},{key:"4",text:"ข้าวฟ่าง"},{key:"5",text:"ข้าวโพด"},{key:"6",text:"พืชตระกูลถั่ว"}], answer:"1", explanation:"มันสำปะหลัง (Cassava/Manihot esculenta) มี cyanogenic glycosides โดยเฉพาะ linamarin ซึ่งเมื่อ hydrolysis จะปลดปล่อย hydrocyanic acid (HCN) มันสำปะหลังพันธุ์ขมมีปริมาณสูงกว่าพันธุ์หวาน", ref:"Cheeke PR. Natural Toxicants in Feeds, Forages, and Poisonous Plants. 2nd ed. Interstate Publishers; 1998."},
+  {id:60, q:"60. สุนัขอุจจาระออกมาเป็นปล้องสุกสีขาว ต้องป้องกันพาหะของพยาธิชนิดนี้ด้วยอะไร", opts:[{key:"1",text:"Fipronil"},{key:"2",text:"Praziquantel"},{key:"3",text:"Albendazole"},{key:"4",text:"Metronidazole"},{key:"5",text:"Pyrantel"}], answer:"1", explanation:"พยาธิตัวตืดที่มีปล้องสุกสีขาว (Dipylidium caninum) ใช้หมัด (Ctenocephalides) เป็น intermediate host ดังนั้นการป้องกัน/กำจัดหมัดด้วย Fipronil (antiparasitic ฆ่าหมัด) จะป้องกันการติดเชื้อ D. caninum ส่วน Praziquantel ใช้รักษา", ref:"Taylor MA et al. Veterinary Parasitology. 4th ed. Wiley-Blackwell; 2015."},
+  {id:61, q:"61. เจ้าของร้านขายสัตว์เลี้ยงนำสัตว์เข้ามา จากนั้นกระต่ายตายเกลี้ยง แล้วหนูแฮมเตอร์ตายตามไปอีก 5 ตัว จะให้คำปรึกษาว่าอย่างไร", opts:[{key:"1",text:"นำสัตว์ที่เหลือมารักษา"},{key:"2",text:"ให้รีบทำวัคซีน"},{key:"3",text:"ทำลายซาก"},{key:"4",text:"แจ้งปศุสัตว์ในพื้นที่"},{key:"5",text:"ชันสูตรซากสัตว์ที่ตาย"}], answer:"5", explanation:"เมื่อสัตว์หลายชนิดตายโดยไม่ทราบสาเหตุ ขั้นตอนแรกที่สำคัญที่สุดคือการชันสูตรซาก เพื่อหาสาเหตุการตาย ก่อนที่จะดำเนินการอื่น การทราบสาเหตุจะนำไปสู่การจัดการที่เหมาะสม", ref:"OIE. Manual of Diagnostic Tests and Vaccines for Terrestrial Animals. 8th ed; 2018."},
+  {id:62, q:"62. ช่วยหายใจในภาวะ cardiac pulmonary arrest เท่าไหร่", opts:[{key:"1",text:"10 ครั้ง/นาที"},{key:"2",text:"15 ครั้ง/นาที"},{key:"3",text:"20 ครั้ง/นาที"},{key:"4",text:"25 ครั้ง/นาที"},{key:"5",text:"30 ครั้ง/นาที"}], answer:"1", explanation:"ตาม RECOVER guidelines (2012) การช่วยหายใจในสัตว์ที่มีภาวะ cardiopulmonary arrest ควรทำที่อัตรา 10 ครั้ง/นาที (ทุก 6 วินาที) ร่วมกับการทำ chest compression อัตรา 100-120 ครั้ง/นาที", ref:"Fletcher DJ et al. RECOVER evidence and knowledge gap analysis on veterinary CPR. J Vet Emerg Crit Care. 2012."},
+  {id:63, q:"63. สุนัขปอมเมอเรเนียน เพศผู้ยังไม่ทำหมัน ขนค่อยๆ ร่วง เป็นระยะเวลา 2-3 เดือน ไม่คัน ผิวหนังสีดำ คาดว่าเกิดจากสาเหตุใด", opts:[{key:"1",text:"Food allergy"},{key:"2",text:"Flea bite allergy"},{key:"3",text:"Sex-linked gene hormonal imbalance"},{key:"4",text:"Dermatophytosis"},{key:"5",text:"Atopic dermatitis"}], answer:"3", explanation:"Alopecia X (Sex hormone-related alopecia / Growth hormone-responsive alopecia) พบบ่อยในสุนัขพันธุ์ Nordic เช่น Pomeranian ขนร่วงแบบ progressive bilateral symmetric non-pruritic ผิวหนังดำ (hyperpigmentation) เกิดจากความไม่สมดุลของ sex hormone", ref:"Scott DW et al. Muller & Kirk's Small Animal Dermatology. 6th ed. Elsevier; 2001."},
+  {id:64, q:"64. แมวตัวผู้มีอาการไม่ปัสสาวะมา 3 วัน ตรวจพบ severe urinary distention สัตวแพทย์ไม่สามารถช่วยบีบและสอดท่อปัสสาวะได้ ทำการช่วยเหลือเบื้องต้นอย่างไร", opts:[{key:"1",text:"Oxygen therapy"},{key:"2",text:"Acid base correction"},{key:"3",text:"Cystotomy"},{key:"4",text:"Cystocentesis"},{key:"5",text:"Penile urethrostomy"}], answer:"4", explanation:"Cystocentesis คือการแทงเข็มดูดปัสสาวะออกจาก urinary bladder โดยตรงผ่านผนังช่องท้อง เป็นวิธีช่วยเหลือเบื้องต้นที่รวดเร็วและปลอดภัยเมื่อ urethral catheterization ทำไม่ได้ ลดความดันใน bladder และป้องกัน bladder rupture", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:65, q:"65. แมวอายุ 10 ปี มีอาการ HR 240 กว่า BP สูงมาก ดุร้าย กินข้าวปกติน้ำหนักลด ตรวจอะไรต่อดี", opts:[{key:"1",text:"ต่อมทอนซิล"},{key:"2",text:"ต่อมไทรอยด์"},{key:"3",text:"ต่อมน้ำเหลืองระหว่างขาหนีบ"},{key:"4",text:"ต่อมน้ำเหลืองระหว่างข้อพับ"},{key:"5",text:"อวัยวะสืบพันธุ์"}], answer:"2", explanation:"อาการ tachycardia, hypertension, น้ำหนักลด, กินอาหารมาก, พฤติกรรมก้าวร้าว ในแมวสูงอายุ บ่งชี้ Hyperthyroidism ต่อมไทรอยด์โต (goiter) มักคลำได้บริเวณคอ เป็น investigation step ต่อไปที่สำคัญที่สุด", ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 8th ed. Elsevier; 2017."},
+  {id:66, q:"66. สุนัขเป็นมะเร็งเต้านมเต้านมคู่ที่ 5 สัตวแพทย์ทำการผ่าตัดแบบ Modified radical mastectomy จะต้องทำการเก็บต่อมน้ำเหลืองบริเวณใดไปด้วยเพื่อดูการลุกลาม", opts:[{key:"1",text:"Axillary lymph node"},{key:"2",text:"Superficial inguinal lymph node"},{key:"3",text:"Popliteal lymph node"},{key:"4",text:"Medial iliac lymph node"},{key:"5",text:"Cervical lymph node"}], answer:"2", explanation:"เต้านมคู่ที่ 5 (caudal inguinal) มีการระบาย lymph ไปที่ superficial inguinal lymph node เป็นหลัก ในการผ่าตัด modified radical mastectomy จึงต้องเก็บ superficial inguinal lymph node ไปด้วยเพื่อตรวจการลุกลาม", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:67, q:"67. สุนัขมีอาการเดินไม่ได้เฉียบพลัน เมื่อทำการตรวจ proprioceptive พบว่าขาหลังมีอาการอ่อนแรง reflex ขาหน้าปกติ patella reflex และ flexure reflex ปกติ คาดว่ามีความผิดปกติจากตำแหน่งใด", opts:[{key:"1",text:"C1-C5"},{key:"2",text:"C6-T2"},{key:"3",text:"T3-L3"},{key:"4",text:"L4-S1"},{key:"5",text:"S1-S3"}], answer:"3", explanation:"UMN signs ที่ขาหลัง (อ่อนแรง, proprioceptive deficit) พร้อมกับ normal forelimb reflexes และ normal patellar/flexor reflex ตำแหน่ง T3-L3 ทำให้เกิด UMN paraparesis ที่ขาหลัง โดยไม่กระทบขาหน้า", ref:"Lorenz MD, Coates JR. Handbook of Veterinary Neurology. 5th ed. Elsevier; 2011."},
+  {id:68, q:"68. แมวอายุ 1 ปี น้ำหนัก 3 kg 7% dehydration ต้องให้ fluid ทดแทน deficit volume เท่าไหร่", opts:[{key:"1",text:"100 mL"},{key:"2",text:"150 mL"},{key:"3",text:"210 mL"},{key:"4",text:"420 mL"},{key:"5",text:"300 mL"}], answer:"3", explanation:"Fluid deficit = BW (kg) × % dehydration × 1000 mL = 3 × 0.07 × 1000 = 210 mL", ref:"DiBartola SP. Fluid, Electrolyte, and Acid-Base Disorders in Small Animal Practice. 4th ed. Elsevier; 2012."},
+  {id:69, q:"69. สุนัขพบเนื้องอกบริเวณ tarsal joint ควรตรวจ lymph node ใด", opts:[{key:"1",text:"Popliteal LN"},{key:"2",text:"Mandibular LN"},{key:"3",text:"Mediastinal LN"},{key:"4",text:"Axillary LN"},{key:"5",text:"Superficial cervical LN"}], answer:"1", explanation:"Popliteal lymph node รับ lymphatic drainage จากบริเวณขาหลังส่วนปลาย รวมถึง tarsal joint เป็น sentinel lymph node ที่ต้องตรวจเมื่อสงสัย neoplasia ที่ขาหลัง", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:70, q:"70. แมวตาเจ็บ ย้อมสี fluorescent stain พบ dendritic ulcer บน cornea คิดว่าเกิดจากการติดเชื้ออะไร", opts:[{key:"1",text:"FHV (Feline Herpesvirus)"},{key:"2",text:"FIV"},{key:"3",text:"Feline coronavirus"},{key:"4",text:"FeLV"},{key:"5",text:"FPV"}], answer:"1", explanation:"Dendritic ulcer (corneal ulcer ลักษณะเป็นกิ่งก้าน) เป็น pathognomonic lesion ของ Feline Herpesvirus-1 (FHV-1) infection FHV-1 มีความชอบในการทำลาย corneal epithelium ทำให้เกิด characteristic dendritic pattern", ref:"Gelatt KN. Veterinary Ophthalmology. 5th ed. Wiley-Blackwell; 2013."},
+  {id:71, q:"71. สุนัขพันธุ์ไทยหลังอาน 15 ปี มาหาสัตวแพทย์ด้วย jugular distension สัตวแพทย์สงสัยภาวะลิ้นหัวใจรั่ว ตำแหน่งใดต่อไปนี้ที่จะฟังเสียง murmur ได้ชัดที่สุด", opts:[{key:"1",text:"7th right intercostal space"},{key:"2",text:"3rd left intercostal space"},{key:"3",text:"5th right intercostal space"},{key:"4",text:"7th left intercostal space"},{key:"5",text:"5th left intercostal space"}], answer:"3", explanation:"Tricuspid valve (right AV valve) auscultation point อยู่ที่ right 4th-5th intercostal space Jugular distension บ่งชี้ right heart failure ที่เกิดจาก tricuspid regurgitation ฟังได้ชัดที่ 5th right ICS", ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 8th ed. Elsevier; 2017."},
+  {id:72, q:"72. ลูกหมาหลังจากฉีด ABO แล้ว 1 วัน พบอาการผิดปกติ นำมาตรวจ Coomb's test แล้วให้ผลเป็นบวก เป็น hypersensitivity type ไหน", opts:[{key:"1",text:"I"},{key:"2",text:"II"},{key:"3",text:"III"},{key:"4",text:"IV"}], answer:"2", explanation:"การถ่ายเลือดที่ไม่ match blood group ทำให้เกิด hemolytic transfusion reaction ผ่าน Type II hypersensitivity (antibody-mediated cytotoxicity) antibody จับกับ RBC antigen → complement activation → hemolysis Coomb's test positive", ref:"Tizard IR. Veterinary Immunology. 10th ed. Elsevier; 2017."},
+  {id:73, q:"73. แมวตรวจตาเป็นรูปแบบ dendritic pattern บน cornea มีการติดเชื้อใด", opts:[{key:"1",text:"Feline calicivirus"},{key:"2",text:"Feline herpes virus"},{key:"3",text:"Feline panleukopenia"},{key:"4",text:"FIP"}], answer:"2", explanation:"Feline Herpesvirus-1 (FHV-1) ทำให้เกิด dendritic corneal ulcer ซึ่งเป็น pathognomonic lesion สามารถยืนยันได้ด้วย fluorescein staining ที่แสดงรูปแบบเป็นกิ่งก้าน (branching pattern)", ref:"Gelatt KN. Veterinary Ophthalmology. 5th ed. Wiley-Blackwell; 2013."},
+  {id:74, q:"74. การช่วยหายใจที่เหมาะสมในสัตว์ที่มีภาวะ cardiac arrest ควรมีอัตราเท่าใด", opts:[{key:"1",text:"10 ครั้ง/นาที"},{key:"2",text:"15 ครั้ง/นาที"},{key:"3",text:"20 ครั้ง/นาที"},{key:"4",text:"25 ครั้ง/นาที"},{key:"5",text:"30 ครั้ง/นาที"}], answer:"1", explanation:"ตาม RECOVER CPR guidelines อัตราการช่วยหายใจที่เหมาะสมในสัตว์ที่มี cardiac arrest คือ 10 ครั้ง/นาที (1 breath ทุก 6 วินาที) การช่วยหายใจมากเกินไปทำให้ intrathoracic pressure สูง ลด cardiac output", ref:"Fletcher DJ et al. RECOVER evidence and knowledge gap analysis on veterinary CPR. J Vet Emerg Crit Care. 2012."},
+  {id:75, q:"75. การแก้ไขภาวะ severe pneumothorax ควรทำอะไรเป็นอย่างแรก", opts:[{key:"1",text:"Thoracocentesis"},{key:"2",text:"Oxygen therapy"}], answer:"1", explanation:"Thoracocentesis (การแทงเข็มดูดลมออกจาก pleural space) เป็น definitive treatment สำหรับ severe pneumothorax ทำก่อนเพื่อลดความดันใน pleural space และช่วยให้ปอดขยายได้ ส่วน oxygen therapy เป็น supportive care", ref:"Fossum TW. Small Animal Surgery. 5th ed. Elsevier; 2018."},
+  {id:76, q:"76. ภาวะในข้อใดมีโอกาสทำให้เกิด hypoglycemia มากที่สุด", opts:[{key:"1",text:"Chronic kidney disease"},{key:"2",text:"Diabetes mellitus"},{key:"3",text:"Hepatic dysfunction"},{key:"4",text:"Congestive heart failure"}], answer:"3", explanation:"Hepatic dysfunction ทำให้เกิด hypoglycemia เนื่องจากตับมีบทบาทหลักใน glycogenolysis และ gluconeogenesis เมื่อตับทำงานบกพร่อง การสังเคราะห์และปลดปล่อย glucose จะลดลง", ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 8th ed. Elsevier; 2017."},
+  {id:77, q:"77. หมาชิวาวาไอ ฟังเสียงหัวใจได้ยิน murmur ที่ right 4th ICS คาดว่าผิดปกติที่ลิ้นหัวใจใด", opts:[{key:"1",text:"Mitral valve"},{key:"2",text:"Aortic valve"},{key:"3",text:"Pulmonic valve"},{key:"4",text:"Tricuspid valve"}], answer:"4", explanation:"Tricuspid valve อยู่ที่ right side of heart auscultation point คือ right 3rd-5th ICS murmur ที่ right 4th ICS บ่งชี้ tricuspid valve insufficiency/regurgitation", ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 8th ed. Elsevier; 2017."},
+  {id:78, q:"78. แมวได้รับการวินิจฉัยว่าเป็น Diabetes mellitus ได้ทำการจำกัดอาหารกลุ่ม digestible carbohydrate แล้วต้องเพิ่มอาหารใดให้แมวกลุ่มนี้", opts:[{key:"1",text:"Fiber"},{key:"2",text:"Protein"},{key:"3",text:"Mineral"},{key:"4",text:"Carbohydrate"},{key:"5",text:"Vitamin"}], answer:"2", explanation:"แมวเป็น obligate carnivore ต้องการ protein สูง ในแมวเป็น DM การเพิ่ม protein และลด digestible carbohydrate ช่วยควบคุม postprandial hyperglycemia ได้ดี protein ให้ความรู้สึกอิ่ม และใช้เป็นพลังงานแทน glucose", ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 8th ed. Elsevier; 2017."},
+  {id:79, q:"79. สุนัขตรวจพบ serum folate ต่ำกว่าปกติ คาดว่าเกิดจากความผิดปกติที่ลำไส้ส่วนใด", opts:[{key:"1",text:"Duodenum"},{key:"2",text:"Jejunum"},{key:"3",text:"Ileum"},{key:"4",text:"Ascending colon"},{key:"5",text:"Descending colon"}], answer:"2", explanation:"Folate ถูกดูดซึมที่ proximal small intestine โดยเฉพาะ jejunum ค่า serum folate ต่ำบ่งชี้ malabsorption ที่ jejunum ในขณะที่ cobalamin (B12) ถูกดูดซึมที่ ileum ส่วน duodenum เป็นตำแหน่งย่อยอาหาร", ref:"Ettinger SJ, Feldman EC. Textbook of Veterinary Internal Medicine. 8th ed. Elsevier; 2017."},
+  {id:80, q:"80. แมวรถชน หายใจหอบ อ้าปากหายใจ ตรวจร่างกายพบ cyanosis จากการคลำช่องอกพบ emphysema ถามว่าควรทำอะไรเพื่อแก้ไขปัญหาเร่งด่วนที่สุด", opts:[{key:"1",text:"Thoracocentesis"},{key:"2",text:"Thoracic bandage"},{key:"3",text:"IV fluid administration"},{key:"4",text:"Respiratory stimulating administration"},{key:"5",text:"Oxygen therapy"}], answer:"5", explanation:"ในสัตว์ที่มี cyanosis และ respiratory distress เร่งด่วน การให้ oxygen supplementation เป็นสิ่งแรกที่ต้องทำเพื่อแก้ภาวะ hypoxia ก่อนที่จะดำเนินการวินิจฉัยและรักษาต่อ subcutaneous emphysema ไม่ใช่ภาวะฉุกเฉินถึงชีวิต", ref:"Hackett TB. Emergencies of the Thoracic Cavity. Vet Clin North Am Small Anim Pract. 2009."},
+  {id:81, q:"81. ช่วงเวลาให้ลูกครั้งแรกของโคสาว (เดือน) ที่ทำให้มี lifetime production สูงที่สุด", opts:[{key:"1",text:"36"},{key:"2",text:"32"},{key:"3",text:"28"},{key:"4",text:"24"},{key:"5",text:"20"}], answer:"4", explanation:"การให้ลูกครั้งแรก (Age at first calving) ที่ 24 เดือน (2 ปี) เป็นช่วงที่เหมาะสมที่สุดสำหรับ lifetime milk production โดยรวม ลดต้นทุนการเลี้ยงในช่วงที่ยังไม่ให้นม และมีปีการให้นมมากกว่า", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:82, q:"82. Hormone ที่มีใน CIDR ในวัวคืออะไร", opts:[{key:"1",text:"Prostaglandin"},{key:"2",text:"Progesterone"},{key:"3",text:"Estrogen"},{key:"4",text:"GnRH"},{key:"5",text:"hCG"}], answer:"2", explanation:"CIDR (Controlled Internal Drug Release) เป็นอุปกรณ์ที่ใส่ใน vagina บรรจุ Progesterone ใช้สำหรับ synchronize estrus ในโค ควาย และสัตว์เคี้ยวเอื้องอื่น โดย progesterone จะปล่อยออกมาอย่างช้าๆ", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:83, q:"83. BCS (5 score) ที่เหมาะสมในโคที่ 60-120 วันหลังคลอด", opts:[{key:"1",text:"2.00"},{key:"2",text:"3.00"},{key:"3",text:"3.50"},{key:"4",text:"4.00"},{key:"5",text:"4.50"}], answer:"2", explanation:"ในช่วง 60-120 วันหลังคลอด (peak lactation) โคควรมี BCS ประมาณ 3.00 (scale 1-5) เป็นช่วงที่โคมักสูญเสีย body condition เนื่องจาก negative energy balance BCS 3.0 ถือว่าเหมาะสม ไม่ผอมเกินไป", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:84, q:"84. คนงานในฟาร์มแพะมีอาการ ไข้ขึ้นๆ ลงๆ ปวดตามข้อ ต้องส่งอะไรตรวจจากแพะ", opts:[{key:"1",text:"Feces"},{key:"2",text:"Urine"},{key:"3",text:"Vaginal discharge"},{key:"4",text:"Serum"},{key:"5",text:"Whole blood"}], answer:"4", explanation:"อาการไข้เป็นๆ หายๆ (undulant fever) และปวดข้อในคนงานฟาร์มแพะบ่งชี้ Brucellosis (Brucella melitensis) ต้องส่ง serum ของแพะเพื่อตรวจ antibody titer ด้วย RBPT, SAT หรือ ELISA", ref:"OIE. Manual of Diagnostic Tests and Vaccines for Terrestrial Animals. 8th ed; 2018."},
+  {id:85, q:"85. ฟาร์มโคนมตรวจพบไขมันในนมต่ำ สามารถแก้ไขได้โดย", opts:[{key:"1",text:"เพิ่มอาหารข้น"},{key:"2",text:"เพิ่มอาหารหยาบ"},{key:"3",text:"เพิ่มแร่ธาตุในอาหาร"},{key:"4",text:"เพิ่มการปล่อยแปลง"},{key:"5",text:"ลดจำนวนวันแห้งนม"}], answer:"2", explanation:"Fat percentage ในน้ำนมสัมพันธ์โดยตรงกับ roughage (อาหารหยาบ) ในอาหาร อาหารหยาบให้ acetate จาก rumen fermentation ซึ่งเป็น precursor ของ milk fat ถ้า roughage น้อยเกินไป (concentrate สูง) จะทำให้ milk fat ต่ำ", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:86, q:"86. ลูกวัวแรกเกิด ควรได้รับการถ่ายพยาธิตัวกลมครั้งแรกที่อายุเท่าไหร่ (สัปดาห์)", opts:[{key:"1",text:"1"},{key:"2",text:"3"},{key:"3",text:"9"},{key:"4",text:"16"},{key:"5",text:"20"}], answer:"2", explanation:"ลูกวัวควรได้รับการถ่ายพยาธิตัวกลมครั้งแรกที่อายุประมาณ 3 สัปดาห์ เนื่องจากพยาธิ (เช่น Strongyloides) สามารถติดต่อตั้งแต่แรกเกิดผ่านน้ำนม และเริ่มพัฒนาเป็นตัวแก่ในระยะเวลานี้", ref:"Taylor MA et al. Veterinary Parasitology. 4th ed. Wiley-Blackwell; 2015."},
+  {id:87, q:"87. ฟาร์มโคเนื้อพบปัญหา Sole ulcer และ Laminitis บ่อยครั้ง ควรเก็บตัวอย่างใดเพื่อตรวจดู", opts:[{key:"1",text:"Ruminal content"},{key:"2",text:"Urine"},{key:"3",text:"Feces"},{key:"4",text:"Saliva"},{key:"5",text:"Whole blood"}], answer:"1", explanation:"Sole ulcer และ Laminitis ในโคเนื้อมักเกิดจาก subacute ruminal acidosis (SARA) ซึ่งทำให้ pH ใน rumen ต่ำกว่า 5.5 เป็นเวลานาน ทำให้ LPS จาก gram-negative bacteria ซึมเข้ากระแสเลือด → laminitis ควรเก็บ rumen content มาตรวจ pH", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:88, q:"88. เครื่องรีดนมส่วนไหนที่มีโอกาสทำให้น้ำนมดิบมีการปนเปื้อนเชื้อแบคทีเรียมากที่สุด", opts:[{key:"1",text:"Pulsator"},{key:"2",text:"Interceptor"},{key:"3",text:"Liner"},{key:"4",text:"Vacuum pump"},{key:"5",text:"Regulator"}], answer:"3", explanation:"Liner (inflation/teat cup liner) สัมผัสโดยตรงกับ teat ของโค เป็นส่วนที่เสื่อมสภาพเร็วและทำความสะอาดยาก รอยแตกหรือรูพรุน (microcrack) บน liner เป็นแหล่งสะสมเชื้อแบคทีเรียและทำให้ปนเปื้อนน้ำนม", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:89, q:"89. สัตวแพทย์ต้องการฉีดวัคซีนให้วัวท้อง 3 เดือน จำนวน 20 ตัว ต้องจับบังคับอย่างไร", opts:[{key:"1",text:"ไม่มีการจับบังคับ"},{key:"2",text:"คลองด้วยเชือกแล้วดึงให้ล้ม"},{key:"3",text:"เข้าซองจับบังคับ"},{key:"4",text:"เข้าคางเรือ"},{key:"5",text:"มัดขาแบบข้าวต้มมัด"}], answer:"3", explanation:"วัวท้อง 3 เดือน ควรจับบังคับโดยใช้ซองจับบังคับ (chute/crush) เพื่อความปลอดภัยทั้งสัตว์และผู้ปฏิบัติงาน ไม่ควรทำให้สัตว์ตั้งท้องล้มหรือเครียดมากเกินไป ซองจับบังคับช่วยจำกัดการเคลื่อนไหวโดยไม่ต้องล้มสัตว์", ref:"Turner AS, McIlwraith CW. Techniques in Large Animal Surgery. Lea & Febiger; 1989."},
+  {id:90, q:"90. โคเนื้ออายุ 5 ปี มีแผลที่หางจนเห็นกระดูก จากเพื่อนที่เหยียบ สัตวแพทย์ต้องการทำการตัดหางออกบางส่วน ข้อใด คือการวางยาเพื่อระงับความเจ็บปวดที่เหมาะสมที่สุด", opts:[{key:"1",text:"L-invert"},{key:"2",text:"Proximal paravertebral anesthesia"},{key:"3",text:"General anesthesia"},{key:"4",text:"Sacrococcygeal anesthesia"},{key:"5",text:"Lumbosacral anesthesia"}], answer:"4", explanation:"Sacrococcygeal epidural anesthesia (injection ระหว่าง sacrum และ first coccygeal vertebra) เป็นวิธีที่เหมาะสมที่สุดสำหรับการระงับความเจ็บปวดบริเวณหางและ perineum เพื่อทำ tail amputation ในโค", ref:"Turner AS, McIlwraith CW. Techniques in Large Animal Surgery. Lea & Febiger; 1989."},
+  {id:91, q:"91. ลูกโคเพศเมีย ตรวจ ELISA พบผลเป็น positive ต่อ Neospora caninum สัตวแพทย์แนะนำให้คัดทิ้ง อธิบายเหตุผลให้เกษตรกรว่าอย่างไร", opts:[{key:"1",text:"ลูกโคโตไปจะให้นมน้อย"},{key:"2",text:"ลูกโคมีโอกาสรอดต่ำ"},{key:"3",text:"ลูกโคโตไปจะแท้ง"},{key:"4",text:"ลูกโคโตไปจะเป็นพาหะ"},{key:"5",text:"ลูกวัวมีโอกาสแพร่โรคในฝูง"}], answer:"3", explanation:"Neospora caninum ทำให้เกิด congenital infection ในลูกโค และ vertical transmission (แม่สู่ลูก) เป็นเส้นทางหลัก โคที่ติดเชื้อเมื่อโตเป็นแม่จะแท้งหรือคลอดลูกที่ติดเชื้อ เป็นสาเหตุหลักของการแท้งในฝูงโคนม", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:92, q:"92. พ่อวัวอัณฑะบวม ต้องสอบถามอาการอะไรเพิ่ม", opts:[{key:"1",text:"การจัดการอาหาร"},{key:"2",text:"ประวัติการทำ vaccine"},{key:"3",text:"ประวัติการแท้งภายในฟาร์ม"},{key:"4",text:"สุขาภิบาลภายในฟาร์ม"},{key:"5",text:"สิ่งแวดล้อมภายในฟาร์ม"}], answer:"3", explanation:"อัณฑะบวม (orchitis) ในพ่อวัวอาจเกิดจาก Brucella abortus ซึ่งทำให้เกิดทั้ง orchitis ในตัวผู้และการแท้งในตัวเมีย ควรสอบถามประวัติการแท้งในฝูงเพื่อประเมินโอกาสการติดเชื้อ Brucella", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:93, q:"93. แพะในฟาร์มพบว่าแม่เจ็บขา และลูกมีอาการชัก เกร็ง ควรจัดการลูกแพะเพื่อป้องกันติดต่อจากแม่อย่างไร", opts:[{key:"1",text:"ฉีดธาตุเหล็ก"},{key:"2",text:"ฉีดยาปฏิชีวนะ"},{key:"3",text:"ฉีด Vitamin E, selenium"},{key:"4",text:"ลดแคลเซียมในอาหาร"},{key:"5",text:"ป้อนนมที่ผ่านการพาสเจอร์ไรส์"}], answer:"5", explanation:"Caprine Arthritis Encephalitis (CAE) เกิดจาก CAEV (lentivirus) ถ่ายทอดผ่านนมน้ำเหลืองและนม แม่มีอาการเจ็บข้อ ลูกมีอาการทางระบบประสาท (encephalitis) การป้องกันคือแยกลูกทันทีและป้อนนมที่ผ่านการ pasteurize หรือนมทดแทน", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:94, q:"94. สาเหตุสำคัญที่ทำให้เกิดปัญหา milk fat ต่ำในโคนม", opts:[{key:"1",text:"Laminitis"},{key:"2",text:"Mastitis"},{key:"3",text:"ระยะเวลารีดนมนาน"},{key:"4",text:"อัตราการผสมติดต่ำ"},{key:"5",text:"อัตราส่วนอาหารหยาบน้อย"}], answer:"5", explanation:"สาเหตุหลักของ low milk fat คืออัตราส่วนอาหารหยาบต่ำ (low forage:concentrate ratio) ทำให้ rumen pH ต่ำ (SARA) ลด acetate production ซึ่งเป็น precursor ของ milk fat สัดส่วนอาหารหยาบควรไม่น้อยกว่า 40-50% ของ dry matter", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:95, q:"95. เจ้าของฟาร์มโคเนื้อทราบข่าวว่ามีฟาร์มควายห่างออกไป 3 km พบโรค hemorrhagic septicemia ระบาด ดังนั้นควรให้คำแนะนำเจ้าของฟาร์มโคอย่างไร", opts:[{key:"1",text:"ไม่ให้นำควายเข้าฟาร์ม"},{key:"2",text:"กระตุ้นวัคซีนทันที"},{key:"3",text:"พ่นฆ่าเชื้อรอบฟาร์ม"},{key:"4",text:"คัดโคทิ้งในฟาร์ม"},{key:"5",text:"ให้ยาปฏิชีวนะ"}], answer:"2", explanation:"Hemorrhagic Septicemia (HS) เกิดจาก Pasteurella multocida type B:2 ระบาดในโคและควาย เมื่อมีการระบาดใกล้เคียง ควรกระตุ้นวัคซีน HS ทันทีเพื่อสร้างภูมิคุ้มกันก่อนที่เชื้อจะแพร่มายังฟาร์ม", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:96, q:"96. Suture pattern สำหรับเย็บแก้ไขมดลูกทะลักในแพะ", opts:[{key:"1",text:"Purse string"},{key:"2",text:"Simple interrupted"},{key:"3",text:"Cross mattress"},{key:"4",text:"Vertical mattress"},{key:"5",text:"Cushing pattern"}], answer:"1", explanation:"Purse string suture ใช้เย็บปิด vulva ชั่วคราวหลังจากดัน uterine prolapse กลับเข้าไปแล้ว เพื่อป้องกันการทะลักซ้ำ วิธีนี้เหมาะสำหรับป้องกันการเกิดซ้ำในระยะสั้นหลังการแก้ไข", ref:"Turner AS, McIlwraith CW. Techniques in Large Animal Surgery. Lea & Febiger; 1989."},
+  {id:97, q:"97. วัวซึม ไม่ลุก กินลดลง เจ้าของเห็นวัวกินลวดที่อยู่ในอาหารสัตว์ ถามว่าจะตรวจอย่างไรต่อไป", opts:[{key:"1",text:"Wither test"},{key:"2",text:"เคาะฟังจาก Elbow ถึง tuber coxae ข้างซ้าย"},{key:"3",text:"เคาะฟังจาก Elbow ถึง tuber coxae ข้างขวา"},{key:"4",text:"ดูช่องปาก"},{key:"5",text:"ล้วงตรวจทวาร"}], answer:"1", explanation:"Wither test (Withers pinch test) ใช้วินิจฉัย Traumatic Reticuloperitonitis (TRP/Hardware disease) โดยการบีบ withers แล้วดูว่าวัวงอหลังหรือครวญร้อง บ่งชี้ความเจ็บปวดบริเวณ reticulum", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:98, q:"98. วัวหลังท้องมีอาการกล้ามเนื้ออ่อนแรง คาดว่าเกิดจากกล้ามเนื้อที่สลาย ต้องใช้ที่เก็บเลือดอะไร", opts:[{key:"1",text:"EDTA"},{key:"2",text:"Heparin"},{key:"3",text:"Citrate"},{key:"4",text:"Plain tube"}], answer:"4", explanation:"Plain tube (no anticoagulant, red-top) ใช้สำหรับเก็บ serum เพื่อตรวจ CK (Creatine Kinase), AST ซึ่งเป็น markers ของ muscle damage/myopathy EDTA และ heparin ใช้สำหรับ CBC และ coagulation tests ตามลำดับ", ref:"Kaneko JJ et al. Clinical Biochemistry of Domestic Animals. 6th ed. Elsevier; 2008."},
+  {id:99, q:"99. โคเนื้ออายุสามปี เบื่ออาหาร ท้องอืดเรื้อรัง ขับถ่ายลดลง คาดว่ามีสิ่งแปลกปลอมใน rumen สัตวแพทย์มีแผนทำ rumenotomy ต้อง block อะไร", opts:[{key:"1",text:"Paravertebral nerve block"},{key:"2",text:"Epidural nerve block"},{key:"3",text:"L invert"},{key:"4",text:"Linear nerve block"},{key:"5",text:"General anesthesia"}], answer:"1", explanation:"Paravertebral nerve block (proximal หรือ distal) ใช้สำหรับ flank surgery ในโค รวมถึง rumenotomy โดย block เส้นประสาท T13, L1, L2 ทำให้บริเวณ paralumbar fossa ชาสำหรับการผ่าตัด", ref:"Turner AS, McIlwraith CW. Techniques in Large Animal Surgery. Lea & Febiger; 1989."},
+  {id:100, q:"100. ฟาร์มโคนมพบปัญหาไข้น้ำนมบ่อยครั้ง เกษตรกรจัดการโคแห้งนมด้วยการพักรีด 2 เดือนก่อนคลอด ให้อาหารหยาบคุณภาพปานกลาง สัดส่วนอาหารข้น:หยาบ 40:60 เสริมแคลเซียมในอาหาร และให้ vitamin ADE ก่อนคลอด ควรจัดการปัญหานี้อย่างไร", opts:[{key:"1",text:"เพิ่มเป็นอาหารหยาบคุณภาพสูง"},{key:"2",text:"เพิ่มอัตราส่วนข้นต่อหยาบ"},{key:"3",text:"ยกเลิกการให้วิตามิน ADE"},{key:"4",text:"ลดแคลเซียมในอาหาร"},{key:"5",text:"เพิ่มระยะเวลาแห้งนม"}], answer:"4", explanation:"Milk fever (hypocalcemia post-calving) ป้องกันได้โดยการลดแคลเซียมในอาหารช่วง dry period (DCAD diet) เพื่อกระตุ้น bone calcium mobilization ก่อนคลอด การเสริม Ca สูงก่อนคลอดทำให้ระบบควบคุม Ca ขี้เกียจ → hypocalcemia หลังคลอด", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
+  {id:101, q:"101. ตรวจเจอสัตว์ตายด้วย Anthrax ต้องแจ้งใครตามพรบ.โรคระบาดสัตว์ 2558", opts:[{key:"1",text:"สำนักงานปศุสัตว์ในพื้นที่"},{key:"2",text:"องค์การบริหารส่วนตำบล"},{key:"3",text:"สาธารณสุขจังหวัด"},{key:"4",text:"องค์การอาหารและยา"},{key:"5",text:"โรงพยาบาลสัตว์"}], answer:"1", explanation:"ตามพระราชบัญญัติโรคระบาดสัตว์ พ.ศ. 2558 เมื่อพบสัตว์ป่วยหรือตายด้วยโรคระบาดอันตราย (เช่น Anthrax) ต้องแจ้ง 'พนักงานเจ้าหน้าที่' คือสัตวแพทย์หรือเจ้าหน้าที่ปศุสัตว์ในพื้นที่ (สำนักงานปศุสัตว์จังหวัด/อำเภอ) ทันที", ref:"พระราชบัญญัติโรคระบาดสัตว์ พ.ศ. 2558 มาตรา 15-16."}
+];
+
+let current = 0;
+const state = { answered: {}, bookmarks: new Set() };
+
+function render() {
+  const q = QUESTIONS[current];
+  const ans = state.answered[current];
+  const isAnswered = ans !== undefined;
+  document.getElementById('qNumBadge').textContent = `ข้อ ${q.id}`;
+  const bm = document.getElementById('bookmarkBtn');
+  if (state.bookmarks.has(current)) { bm.textContent = '★ บันทึกแล้ว'; bm.classList.add('active'); }
+  else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
+  document.getElementById('qText').textContent = q.q;
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-key">${opt.key}.</span><span>${opt.text}</span>`;
+    if (isAnswered) {
+      btn.classList.add('disabled');
+      if (opt.key === q.answer) btn.classList.add('correct');
+      else if (opt.key === ans && ans !== q.answer) btn.classList.add('selected-wrong');
+    } else {
+      btn.addEventListener('click', () => answer(opt.key));
+    }
+    container.appendChild(btn);
+  });
+  const fb = document.getElementById('feedback');
+  const fbHeader = document.getElementById('fbHeader');
+  if (isAnswered) {
+    const correct = ans === q.answer;
+    fb.className = `feedback show ${correct ? 'correct-fb' : 'wrong-fb'}`;
+    fbHeader.className = `fb-header ${correct ? 'correct-fb' : 'wrong-fb'}`;
+    fbHeader.textContent = correct ? '✓ ถูกต้อง!' : `✗ ไม่ถูกต้อง — คำตอบที่ถูกคือ ข้อ ${q.answer}`;
+    document.getElementById('fbBody').textContent = q.explanation;
+    document.getElementById('fbRef').innerHTML = `<strong>แหล่งอ้างอิง:</strong> ${q.ref}`;
+  } else {
+    fb.className = 'feedback';
+  }
+  document.getElementById('prevBtn').disabled = current === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.textContent = current === QUESTIONS.length - 1 ? 'สรุปผล' : 'ถัดไป →';
+  updateSidebar();
+}
+
+function answer(key) { state.answered[current] = key; render(); }
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next < 0) return;
+  if (next >= QUESTIONS.length) { showSummary(); return; }
+  current = next; render();
+}
+
+function goToQuestion(idx) { current = idx; render(); }
+
+function toggleBookmark() {
+  if (state.bookmarks.has(current)) state.bookmarks.delete(current);
+  else state.bookmarks.add(current);
+  render();
+}
+
+function updateSidebar() {
+  const answered = Object.keys(state.answered).length;
+  const total = QUESTIONS.length;
+  const correct = Object.entries(state.answered).filter(([i,k]) => k === QUESTIONS[i].answer).length;
+  document.getElementById('progressFill').style.width = `${(answered/total)*100}%`;
+  document.getElementById('progressLabel').textContent = `${answered} / ${total}`;
+  document.getElementById('scoreCorrect').textContent = correct;
+  document.getElementById('scoreWrong').textContent = answered - correct;
+  document.getElementById('scoreBookmark').textContent = state.bookmarks.size;
+  const grid = document.getElementById('qNavGrid');
+  grid.innerHTML = '';
+  QUESTIONS.forEach((q, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-nav-btn';
+    btn.textContent = q.id;
+    if (idx === current) btn.classList.add('current');
+    else if (state.answered[idx] !== undefined) {
+      btn.classList.add(state.answered[idx] === QUESTIONS[idx].answer ? 'answered-correct' : 'answered-wrong');
+    }
+    if (state.bookmarks.has(idx)) btn.classList.add('bookmarked');
+    btn.onclick = () => goToQuestion(idx);
+    grid.appendChild(btn);
+  });
+}
+
+function showSummary() {
+  const total = QUESTIONS.length;
+  const answered = Object.keys(state.answered).length;
+  const correct = Object.entries(state.answered).filter(([i,k]) => k === QUESTIONS[i].answer).length;
+  const pct = answered > 0 ? Math.round((correct/answered)*100) : 0;
+  document.getElementById('sumPct').textContent = `${pct}%`;
+  document.getElementById('sumCorrect').textContent = correct;
+  document.getElementById('sumWrong').textContent = answered - correct;
+  document.getElementById('sumAnswered').textContent = answered;
+  document.getElementById('sumTotal').textContent = total;
+  document.getElementById('summaryOverlay').classList.add('show');
+}
+
+function toggleDark() {
+  const dark = document.body.classList.toggle('dark');
+  document.getElementById('themeBtn').textContent = dark ? '☀️ Light' : '🌙 Dark';
+}
+
+render();
+</script>
+</body>
+</html>
