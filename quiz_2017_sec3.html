@@ -1113,13 +1113,13 @@ const QUESTIONS = [
   }
 ]; 
 const imageMap = {
-  9: "./images/2017/sec3/q9.png”,
-  113: "./images/2017/sec3/q113.png”,
-  114: "./images/2017/sec3/q114.png”,
-  119: "./images/2017/sec3/q119.png”,
-  122: "./images/2017/sec3/q122.png”,
-  137: "./images/2017/sec3/q137.png”,
-  138: "./images/2017/sec3/q138.png”,
+  9: "/NL-Exam/images/2017/sec3/q9.png",
+  113: "/NL-Exam/images/2017/sec3/q113.png",
+  114: "/NL-Exam/images/2017/sec3/q114.png",
+  119: "/NL-Exam/images/2017/sec3/q119.png",
+  122: "/NL-Exam/images/2017/sec3/q122.png",
+  137: "/NL-Exam/images/2017/sec3/q137.png",
+  138: "/NL-Exam/images/2017/sec3/q138.png",
 };
 
 QUESTIONS.forEach((q, i) => {
@@ -1141,8 +1141,12 @@ function render() {
   else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
 
   document.getElementById('qText').textContent = q.q;
-  const imgC = document.getElementById('qImgContainer');
-  imgC.innerHTML = '';
+const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
 
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
