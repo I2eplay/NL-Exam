@@ -99,6 +99,7 @@
         <button class="q-bookmark" id="bookmarkBtn" onclick="toggleBookmark()">☆ บันทึก</button>
       </div>
       <div class="q-text" id="qText"></div>
+      <div id="qImgContainer"></div>
       <div class="options" id="optionsContainer"></div>
       <div class="feedback" id="feedback">
         <div class="fb-header" id="fbHeader"></div>
@@ -282,26 +283,26 @@ const QUESTIONS = [
   {id:150,q:"150. ม้ามีอาการคัน เอาลำตัวส่วนท้ายถูคอก สงสัยว่าเป็นพยาธิ จะตรวจอย่างไร",opts:[{key:"ก",text:"ขูดผิวหนังหาไร"},{key:"ข",text:"ล้วงเก็บอุจจาระจาก rectum เพื่อหาไข่พยาธิ"},{key:"ค",text:"Scotch tape แปะรูกนหาไข่พยาธิ"},{key:"ง",text:"Biopsy skin หาตัวอ่อนพยาธิ"},{key:"จ",text:"เจาะเลือดหาตัวอ่อนพยาธิ"}],answer:"ค",explanation:"Oxyuris equi (Pinworm) ในม้าทำให้คันบริเวณรูทวาร ม้าถูกับวัตถุ ตรวจโดย Scotch tape test แปะรอบรูทวารตอนเช้าก่อนอาบน้ำเพื่อเก็บไข่พยาธิ",ref:"Taylor MA et al. Veterinary Parasitology. 3rd ed. Blackwell; 2007."}
 ]; 
 const imageMap = {
-  5: "./images/2019/sec3/q5.png”,
-  6: "./images/2019/sec3/q6.png”,
-  7: "./images/2019/sec3/q7.png”,
-  18: "./images/2019/sec3/q18.png”,
-  27: "./images/2019/sec3/q27.png”,
-  37: "./images/2019/sec3/q37.png”,
-  49: "./images/2019/sec3/q49.png”,
-  50: "./images/2019/sec3/q50.png”,
-  58: "./images/2019/sec3/q58.png”,
-  67: "./images/2019/sec3/q67.png”,
-  69: "./images/2019/sec3/q69.png”,
-  74: "./images/2019/sec3/q74.png”,
-  100: "./images/2019/sec3/q100.png”,
-  102: "./images/2019/sec3/q102.png”,
-  103: "./images/2019/sec3/q103.png”,
-  108: "./images/2019/sec3/q108.png”,
-  111: "./images/2019/sec3/q111.png”,
-  135: "./images/2019/sec3/q135.png”,
-  148: "./images/2019/sec3/q148.png”,
-  149: "./images/2019/sec3/q149.png”,
+  5: "/NL-Exam/images/2019/sec3/q5.png",
+  6: "/NL-Exam/images/2019/sec3/q6.png",
+  7: "/NL-Exam/images/2019/sec3/q7.png",
+  18: "/NL-Exam/images/2019/sec3/q18.png",
+  27: "/NL-Exam/images/2019/sec3/q27.png",
+  37: "/NL-Exam/images/2019/sec3/q37.png",
+  49: "/NL-Exam/images/2019/sec3/q49.png",
+  50: "/NL-Exam/images/2019/sec3/q50.png",
+  58: "/NL-Exam/images/2019/sec3/q58.png",
+  67: "/NL-Exam/images/2019/sec3/q67.png",
+  69: "/NL-Exam/images/2019/sec3/q69.png",
+  74: "/NL-Exam/images/2019/sec3/q74.png",
+  100: "/NL-Exam/images/2019/sec3/q100.png",
+  102: "/NL-Exam/images/2019/sec3/q102.png",
+  103: "/NL-Exam/images/2019/sec3/q103.png",
+  108: "/NL-Exam/images/2019/sec3/q108.png",
+  111: "/NL-Exam/images/2019/sec3/q111.png",
+  135: "/NL-Exam/images/2019/sec3/q135.png",
+  148: "/NL-Exam/images/2019/sec3/q148.png",
+  149: "/NL-Exam/images/2019/sec3/q149.png",
 };
 
 QUESTIONS.forEach((q, i) => {
@@ -323,6 +324,12 @@ function render() {
   else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
 
   document.getElementById('qText').textContent = q.q;
+  const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
 
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
