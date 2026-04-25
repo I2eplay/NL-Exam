@@ -971,7 +971,14 @@ const QUESTIONS = [
     explanation:"One sample t-test ใช้เปรียบเทียบค่าเฉลี่ยของกลุ่มตัวอย่าง 1 กลุ่ม กับค่าคงที่ที่กำหนดไว้ (ค่าปกติ/ค่าอ้างอิง) ในที่นี้ต้องการเปรียบเทียบว่า อุณหภูมิร่างกายหลังให้ยา A แตกต่างจากค่าปกติ (เช่น 38.5°C) หรือไม่ ต่างจาก Paired t-test ที่เปรียบเทียบก่อน-หลังในกลุ่มเดียวกัน",
     ref:"Thrusfield M. Veterinary Epidemiology. 4th ed. Wiley-Blackwell; 2018."
   }
-];
+]; const imageMap = {
+  26: "./images/2016/sec2/q26.png”,
+  31: "./images/2016/sec2/q31.png”,
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
