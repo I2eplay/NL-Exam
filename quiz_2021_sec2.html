@@ -114,6 +114,7 @@
         <button class="q-bookmark" id="bookmarkBtn" onclick="toggleBookmark()">☆ บันทึก</button>
       </div>
       <div class="q-text" id="qText"></div>
+      <div id="qImgContainer"></div>
       <div class="options" id="optionsContainer"></div>
       <div class="feedback" id="feedback">
         <div class="fb-header" id="fbHeader"></div>
@@ -292,10 +293,10 @@ const QUESTIONS = [
   {id:150,q:"150. สุนัขพันธุ์ชิสุห อายุ 3 เดือน ไม่ได้ทำวัคซีน ซึม ไข้ อาเจียน ถ่ายพุ่งเป็นสาย กลิ่นเหม็นคาว ในคอกเดียวกันตาย 3 ตัว คาดว่าเกิดจากเชื้อชนิดใด",opts:[{key:"ก",text:"CDV"},{key:"ข",text:"CPV"},{key:"ค",text:"Canine parainfluenza virus"},{key:"ง",text:"Leptospirosis"},{key:"จ",text:"Rabies"}],answer:"ข",explanation:"CPV-2 ทำให้เกิด hemorrhagic gastroenteritis ถ่ายเหลวเป็นเลือด กลิ่นเหม็นมาก อาเจียน ตายสูงในลูกสุนัขไม่ได้วัคซีน",ref:"Merck Veterinary Manual. Parvoviral Enteritis in Dogs."}
 ]; 
 const imageMap = {
-  76: "./images/2021/sec2/q76.png”,
-  77: "./images/2021/sec2/q77.png”,
-  119: "./images/2021/sec2/q119.png”,
-  127: "./images/2021/sec2/q127.png”,
+  76: "/NL-Exam/images/2021/sec2/q76.png",
+  77: "/NL-Exam/images/2021/sec2/q77.png",
+  119: "/NL-Exam/images/2021/sec2/q119.png",
+  127: "/NL-Exam/images/2021/sec2/q127.png",
 };
 
 QUESTIONS.forEach((q, i) => {
@@ -314,6 +315,12 @@ function render() {
   if (state.bookmarks.has(current)) {bm.textContent='★ บันทึกแล้ว';bm.classList.add('active');}
   else {bm.textContent='☆ บันทึก';bm.classList.remove('active');}
   document.getElementById('qText').textContent = q.q;
+  const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
   q.opts.forEach(opt => {
