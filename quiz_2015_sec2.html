@@ -999,7 +999,15 @@ const QUESTIONS = [
     explanation:"Implantation (การฝังตัวของตัวอ่อน) ถือเป็นจุดเริ่มต้นของการตั้งท้อง (pregnancy) อย่างเป็นทางการ เพราะเป็นจุดที่มีการเชื่อมต่อระหว่าง embryo และ endometrium ของแม่ ทำให้เกิด maternal recognition of pregnancy และ progesterone ถูกหลั่งต่อเนื่อง",
     ref:"Hafez ESE, Hafez B. Reproduction in Farm Animals. 7th ed. Wiley-Blackwell; 2000."
   }
-];
+]; const imageMap = {
+  2: "./images/2015/sec2/q2.jpg",
+  57: "./images/2015/sec2/q57.jpg",
+  116: "./images/2015/sec2/q116.jpg",
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
