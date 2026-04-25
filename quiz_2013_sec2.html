@@ -924,7 +924,13 @@ const QUESTIONS = [
     explanation:"Skip a day feeding หรือ Every other day (EOD) feeding ในไก่พ่อแม่พันธุ์ เป็นวิธีจำกัดอาหารเพื่อควบคุม body weight ไม่ให้อ้วนเกินไป หลักการคือ ให้อาหารรวม 2 วัน รวมกันในวันเดียว คือ 100 × 2 = 200 กรัม/ตัว/วันที่ให้ แล้วเว้นอีก 1 วัน เพื่อให้ค่าเฉลี่ยอาหารต่อวันยังคง 100 กรัม แต่ไก่ได้กินในปริมาณที่เหมาะสมต่อมื้อและลดการแย่งกันกิน",
     ref:"NRC. Nutrient Requirements of Poultry. 9th ed. National Academies Press; 1994. | Leeson S, Summers JD. Commercial Poultry Nutrition. 3rd ed. University Books; 2005."
   }
-];
+]; const imageMap = {
+  97: "./images/2013/sec2/q97.jpg",
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 
 // ============================================================
 // STATE
