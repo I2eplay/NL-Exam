@@ -584,7 +584,14 @@ const QUESTIONS = [
     explanation:"Five Freedoms ของสวัสดิภาพสัตว์ ข้อ 1 คือ Freedom from hunger and thirst (อิสรจากความหิวและกระหายน้ำ) การขังสุนัขนาน 12 ชั่วโมง (8.00-20.00) โดยไม่มีน้ำและอาหาร เป็นการละเมิด Freedom from hunger and thirst โดยตรง แม้จะมีเหตุผลในเรื่องความสะอาด แต่ความต้องการพื้นฐานของสัตว์ต้องได้รับการตอบสนอง",
     ref:"FAWC. Farm Animal Welfare Council: Five Freedoms. 1979 (updated 1992). | OIE Terrestrial Animal Health Code. Chapter 7.1: Introduction to the Recommendations for Animal Welfare; 2023."
   }
-];
+]; const imageMap = {
+  9: "./images/2013/sec2/q9.jpg",
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
+
 
 // ============================================================
 // STATE
