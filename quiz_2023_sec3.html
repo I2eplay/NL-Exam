@@ -261,7 +261,23 @@ const QUESTIONS = [
   {id:99, q:"99. โคเนื้ออายุสามปี เบื่ออาหาร ท้องอืดเรื้อรัง ขับถ่ายลดลง คาดว่ามีสิ่งแปลกปลอมใน rumen สัตวแพทย์มีแผนทำ rumenotomy ต้อง block อะไร", opts:[{key:"1",text:"Paravertebral nerve block"},{key:"2",text:"Epidural nerve block"},{key:"3",text:"L invert"},{key:"4",text:"Linear nerve block"},{key:"5",text:"General anesthesia"}], answer:"1", explanation:"Paravertebral nerve block (proximal หรือ distal) ใช้สำหรับ flank surgery ในโค รวมถึง rumenotomy โดย block เส้นประสาท T13, L1, L2 ทำให้บริเวณ paralumbar fossa ชาสำหรับการผ่าตัด", ref:"Turner AS, McIlwraith CW. Techniques in Large Animal Surgery. Lea & Febiger; 1989."},
   {id:100, q:"100. ฟาร์มโคนมพบปัญหาไข้น้ำนมบ่อยครั้ง เกษตรกรจัดการโคแห้งนมด้วยการพักรีด 2 เดือนก่อนคลอด ให้อาหารหยาบคุณภาพปานกลาง สัดส่วนอาหารข้น:หยาบ 40:60 เสริมแคลเซียมในอาหาร และให้ vitamin ADE ก่อนคลอด ควรจัดการปัญหานี้อย่างไร", opts:[{key:"1",text:"เพิ่มเป็นอาหารหยาบคุณภาพสูง"},{key:"2",text:"เพิ่มอัตราส่วนข้นต่อหยาบ"},{key:"3",text:"ยกเลิกการให้วิตามิน ADE"},{key:"4",text:"ลดแคลเซียมในอาหาร"},{key:"5",text:"เพิ่มระยะเวลาแห้งนม"}], answer:"4", explanation:"Milk fever (hypocalcemia post-calving) ป้องกันได้โดยการลดแคลเซียมในอาหารช่วง dry period (DCAD diet) เพื่อกระตุ้น bone calcium mobilization ก่อนคลอด การเสริม Ca สูงก่อนคลอดทำให้ระบบควบคุม Ca ขี้เกียจ → hypocalcemia หลังคลอด", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
   {id:101, q:"101. ตรวจเจอสัตว์ตายด้วย Anthrax ต้องแจ้งใครตามพรบ.โรคระบาดสัตว์ 2558", opts:[{key:"1",text:"สำนักงานปศุสัตว์ในพื้นที่"},{key:"2",text:"องค์การบริหารส่วนตำบล"},{key:"3",text:"สาธารณสุขจังหวัด"},{key:"4",text:"องค์การอาหารและยา"},{key:"5",text:"โรงพยาบาลสัตว์"}], answer:"1", explanation:"ตามพระราชบัญญัติโรคระบาดสัตว์ พ.ศ. 2558 เมื่อพบสัตว์ป่วยหรือตายด้วยโรคระบาดอันตราย (เช่น Anthrax) ต้องแจ้ง 'พนักงานเจ้าหน้าที่' คือสัตวแพทย์หรือเจ้าหน้าที่ปศุสัตว์ในพื้นที่ (สำนักงานปศุสัตว์จังหวัด/อำเภอ) ทันที", ref:"พระราชบัญญัติโรคระบาดสัตว์ พ.ศ. 2558 มาตรา 15-16."}
-];
+]; const imageMap = {
+  14: "./images/2023/sec3/q14.png”,
+  28: "./images/2023/sec3/q28.png”,
+  31: "./images/2022/sec3/q31.png”,
+  32: "./images/2022/sec3/q32.png”,
+  40: "./images/2022/sec3/q40.png”,
+  53: "./images/2022/sec3/q53.png”, 
+  54: "./images/2022/sec3/q54.png”,
+  55: "./images/2022/sec3/q55.png”,
+  56: "./images/2022/sec3/q56.png”,
+  73: "./images/2022/sec3/q73.png”,
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
+
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
