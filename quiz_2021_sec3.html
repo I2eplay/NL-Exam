@@ -292,7 +292,19 @@ const QUESTIONS = [
   {id:148,q:"148. วัวรุ่น 20 ตัว เลี้ยงแบบปล่อย มีปัญหา Body condition score ต่ำ (1.5-3.5) ทั้งที่ขับถ่ายและเคี้ยวเอื้องปกติ คาดว่าปัญหาเกิดจากสาเหตุใด",opts:[{key:"ก",text:"ได้รับอาหารข้นน้อยเกินไป"},{key:"ข",text:"ได้รับอาหารข้นมากเกินไป"},{key:"ค",text:"ได้อาหารหยาบน้อยเกินไป"},{key:"ง",text:"มีการต่อสู้แย่งอาหารกัน"},{key:"จ",text:"ความถี่ในการให้อาหาร"}],answer:"ง",explanation:"วัวรุ่นเลี้ยงปล่อย มีการเคี้ยวเอื้องและขับถ่ายปกติแต่ร่างกายซูบผอม มักเกิดจากปัญหาพฤติกรรมการจัดการฝูง ที่สัตว์อันดับต่ำ (Subordinate) ถูกแย่งอาหาร",ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."},
   {id:149,q:"149. ถ้าต้องการตรวจค่าปริมาณรังสีที่ปล่อยออกมาในห้องเอ็กซเรย์ที่คนทำงานจะได้รับ ควรขอใช้เครื่องตรวจจากหน่วยงานใด",opts:[{key:"ก",text:"กรมปศุสัตว์"},{key:"ข",text:"กรมวิทยาศาสตร์การแพทย์ กระทรวงสาธารณสุข"},{key:"ค",text:"สำนักงานเขต เทศบาล และ อบต."},{key:"ง",text:"สำนักงานปรมาณูเพื่อสันติ"},{key:"จ",text:"กระทรวงอุตสาหกรรม"}],answer:"ข",explanation:"กองรังสีและเครื่องมือแพทย์ กรมวิทยาศาสตร์การแพทย์ กระทรวงสาธารณสุข ให้บริการประเมินปริมาณรังสีประจำบุคคลสำหรับผู้ทำงานกับรังสีในสถานพยาบาล",ref:"กรมวิทยาศาสตร์การแพทย์. คู่มือแนวทางการให้บริการประเมินปริมาณรังสีประจำบุคคล."},
   {id:150,q:"150. ต้องการตรวจระบบโครงสร้าง (สะโพก) ในสุนัขพันธุ์ German Shepherd อายุ 1 ปี ควรเลือกใช้การตรวจวิธีใด",opts:[{key:"ก",text:"Elbow flexion"},{key:"ข",text:"Ortolani test"},{key:"ค",text:"Drawer test"},{key:"ง",text:"Tibial compression test"},{key:"จ",text:"Shoulder abduction"}],answer:"ข",explanation:"Ortolani test เป็นการทดสอบมาตรฐานสำหรับวินิจฉัย Hip dysplasia ในสุนัข โดยการดึงขาและ abduct เพื่อฟังเสียง 'click' เมื่อ femoral head กลับเข้า acetabulum",ref:"Brinker, Piermattei and Flo's Handbook of Small Animal Orthopedics. 5th ed. Elsevier; 2016."}
-];
+]; const imageMap = {
+  23: "./images/2021/sec3/q23.png”,
+  51: "./images/2021/sec3/q51.png”,
+  52: "./images/2021/sec3/q52.png”,
+  66: "./images/2021/sec3/q66.png”,
+  100: "./images/2021/sec3/q100.png”,
+  112: "./images/2021/sec3/q112.png”, 
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
+
 
 let current = 0;
 const state = {answered:{}, bookmarks:new Set()};
