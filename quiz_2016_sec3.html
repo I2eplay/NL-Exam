@@ -916,6 +916,13 @@ const QUESTIONS = [
     ref:"McKinnon AO, et al. Equine Reproduction. 2nd ed. Wiley-Blackwell; 2011."
   }
 ]; 
+const imageMap = {
+  88: "./images/2016/sec3/q88.png”,
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
 
@@ -930,8 +937,12 @@ function render() {
   else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
 
   document.getElementById('qText').textContent = q.q;
-  const imgC = document.getElementById('qImgContainer');
-  imgC.innerHTML = '';
+const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
 
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
