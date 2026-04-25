@@ -1120,11 +1120,11 @@ const QUESTIONS = [
   {id:150, q:"150. ลูกวัว 2 เดือน หนัก 40 กิโลกรัม โฮลสไตน์ฟรีเชียน เจ้าของให้นมวันละ 3 เวลา พบท้องซ้ายโป่ง ซึม ไม่กินอาหาร แสดงอาการมา 2 วัน เกิดจากความผิดปกติที่ใด", opts:[{key:"ก",text:"Ruminal papillae"},{key:"ข",text:"Reticular papillae"},{key:"ค",text:"Omasal canal"},{key:"ง",text:"Abomasal microvilli"},{key:"จ",text:"Esophageal groove"}], answer:"จ", explanation:"Esophageal groove (reticular groove) reflex ปกติจะปิดเมื่อลูกวัวดูดนม เพื่อให้นมผ่านตรงไป abomasum เมื่อ groove reflex ล้มเหลว (เช่น ให้นมจากถัง ไม่ได้ดูด) นมจะไหลเข้า rumen → fermentation → bloat (ท้องซ้ายโป่ง)", ref:"Constable PD et al. Veterinary Medicine. 11th ed. Saunders; 2016."}
 ]; 
 const imageMap = {
-  65: "./images/2018/sec2/q65.png”,
-  126: "./images/2018/sec2/q126.png”,
-  141: "./images/2018/sec2/q141.png”,
-  142: "./images/2018/sec2/q142.png”,
-  145: "./images/2018/sec2/q145.png”,
+  65: "NL-Exam/images/2018/sec2/q65.png",
+  126: "NL-Exam/images/2018/sec2/q126.png",
+  141: "NL-Exam/images/2018/sec2/q141.png",
+  142: "NL-Exam/images/2018/sec2/q142.png",
+  145: "NL-Exam/images/2018/sec2/q145.png",
 };
 
 QUESTIONS.forEach((q, i) => {
@@ -1145,6 +1145,12 @@ function render() {
   else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
 
   document.getElementById('qText').textContent = q.q;
+  const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
 
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
