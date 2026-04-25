@@ -1306,7 +1306,19 @@ const QUESTIONS = [
     explanation:"Bacillus anthracis (Anthrax) ใช้ Polychrome methylene blue (McFadyean's stain) ย้อม blood smear จะเห็น encapsulated bacilli สีน้ำเงินล้อมรอบด้วย purple capsule เป็น diagnostic feature",
     ref:"Quinn PJ et al. Veterinary Microbiology and Microbial Disease. 2nd ed. Wiley-Blackwell; 2011."
   }
-];
+]; const imageMap = {
+  1: "./images/2019/sec2/q1.png”,
+  42: "./images/2019/sec2/q42.png”,
+  71: "./images/2019/sec2/q71.png”,
+  95: "./images/2019/sec2/q95.png”,
+  114: "./images/2019/sec2/q114.png”,
+  115: "./images/2019/sec2/q115.png”,
+  128: "./images/2019/sec2/q128.png”,
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
