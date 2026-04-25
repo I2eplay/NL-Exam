@@ -1258,7 +1258,17 @@ const QUESTIONS = [
     explanation:"ตามระเบียบกรมปศุสัตว์ว่าด้วยการเลี้ยงไก่เนื้อ พ.ศ. 2554 กำหนดความหนาแน่นสูงสุดของน้ำหนักไก่เนื้อรวมต่อพื้นที่ไม่เกิน 35 kg/m²",
     ref:"ระเบียบกรมปศุสัตว์ว่าด้วยการเลี้ยงไก่เนื้อ พ.ศ. 2554."
   }
-];
+]; const imageMap = {
+  66: "./images/2020/sec2/q5.png”,
+  97: "./images/2020/sec2/q6.png”,
+  98: "./images/2020/sec2/q7.png”,
+  99: "./images/2020/sec2/q18.png”,
+  125: "./images/2020/sec2/q27.png”,
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
