@@ -978,7 +978,13 @@ const QUESTIONS = [
     explanation:"Dexmedetomidine เป็น alpha-2 agonist ที่ให้ sedation และ analgesia สำหรับการผ่าตัด dystocia ในสุนัขพันธุ์ brachycephalic เช่น ปั๊ก ซึ่งมีความเสี่ยงด้านทางเดินหายใจสูง Dexmedetomidine ให้ sedation ที่ควบคุมได้และ reversible ด้วย atipamezole Propofol ก็ใช้ได้แต่ต้องการ intubation",
     ref:"Grimm KA, et al. Veterinary Anesthesia and Analgesia. 5th ed. Wiley-Blackwell; 2015."
   }
-];
+]; const imageMap = {
+  48: "./images/2015/sec3/q48.png”,
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
