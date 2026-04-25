@@ -257,7 +257,20 @@ const QUESTIONS = [
   {id:98, q:"98. กลไกที่ถูกรบกวนด้วยยา Amphotericin B จากการรักษา Cryptococcosis", opts:[{key:"1",text:"Cell wall synthesis of fungi"},{key:"2",text:"Cell membrane structure of fungi"},{key:"3",text:"Microtubule synthesis of fungi"},{key:"4",text:"Fungi nucleic acid structure"},{key:"5",text:"Ergosterol structure"}], answer:"2", explanation:"Amphotericin B จับกับ ergosterol ใน cell membrane ของเชื้อรา ทำให้เกิด pore formation และ membrane permeability เพิ่มขึ้น ion leaks ออกจากเซลล์ → cell death ออกฤทธิ์ที่ cell membrane structure (ergosterol-containing membrane)", ref:"Plumb DC. Plumb's Veterinary Drug Handbook. 9th ed. Wiley-Blackwell; 2018."},
   {id:99, q:"99. การวินิจฉัยภาวะลูกแฝดในม้าสามารถทำได้ด้วยวิธีใด", opts:[{key:"1",text:"Rectal palpation"},{key:"2",text:"Doppler US"},{key:"3",text:"Transrectal US"},{key:"4",text:"Serum progesterone"}], answer:"3", explanation:"Transrectal ultrasonography เป็น gold standard ในการตรวจหา twin pregnancy ในม้า สามารถตรวจพบได้ตั้งแต่ day 14-16 หลัง ovulation มีความแม่นยำสูงและ non-invasive ควรทำในช่วง day 14-16 เพื่อ reduction", ref:"McKinnon AO, Squires EL. Equine Reproduction. 2nd ed. Wiley-Blackwell; 2011."},
   {id:100, q:"100. สุนัขอายุ 3 ปี มีพฤติกรรมกัดหางตัวเอง มีอาการคัน ผิวหนังอักเสบบริเวณสะโพก ท้อง และหาง คาดว่าเกิดจากสาเหตุใดมากที่สุด", opts:[{key:"1",text:"Flea bite hypersensitivity"},{key:"2",text:"Hypothyroidism"},{key:"3",text:"Ichthyosis"},{key:"4",text:"Dermatophytosis"},{key:"5",text:"Atopic dermatitis"}], answer:"1", explanation:"Flea Allergy Dermatitis (FAD) มักแสดงอาการคัน ผิวหนังอักเสบ และ self-trauma บริเวณ dorsal lumbosacral area, perianal, tail base, caudal thighs และท้อง ซึ่งตรงกับการกระจายของรอยโรคในโจทย์", ref:"Scott DW, Miller WH, Griffin CE. Muller & Kirk's Small Animal Dermatology. 6th ed. Elsevier; 2001."}
-];
+]; const imageMap = {
+  12: "./images/2023/sec3/q12.png”,
+  16: "./images/2023/sec3/q16.png”,
+  29: "./images/2022/sec3/q29.png”,
+  46: "./images/2022/sec3/q46.png”,
+  57: "./images/2022/sec3/q57.png”,
+  74: "./images/2022/sec3/q74.png”, 
+  89: "./images/2022/sec3/q89.png”,
+  92: "./images/2022/sec3/q92.png”,
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
