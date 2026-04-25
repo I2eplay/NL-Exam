@@ -1013,7 +1013,16 @@ const QUESTIONS = [
     explanation:"Hydropropulsion คือการดันนิ่วกลับเข้าไปใน bladder โดยใช้แรงดันน้ำ ผ่านสาย urinary catheter เป็นขั้นตอนแรกที่ควรลองก่อนผ่าตัด เพราะทำได้รวดเร็ว บาดเจ็บน้อย ถ้าสำเร็จสามารถสวนปัสสาวะได้ปกติ หากไม่สำเร็จจึงพิจารณา perineal urethrostomy",
     ref:"Fossum TW. Small Animal Surgery. 4th ed. Elsevier; 2013."
   }
-];
+]; const imageMap = {
+  40: "./images/2017/sec2/q40.png”,
+  46: "./images/2017/sec2/q46.png”,
+  48: "./images/2017/sec2/q48.png”,
+  69: "./images/2017/sec2/q69.png”,
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
