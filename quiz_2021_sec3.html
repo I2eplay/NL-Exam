@@ -114,6 +114,7 @@
         <button class="q-bookmark" id="bookmarkBtn" onclick="toggleBookmark()">☆ บันทึก</button>
       </div>
       <div class="q-text" id="qText"></div>
+      <div id="qImgContainer"></div>
       <div class="options" id="optionsContainer"></div>
       <div class="feedback" id="feedback">
         <div class="fb-header" id="fbHeader"></div>
@@ -294,12 +295,12 @@ const QUESTIONS = [
   {id:150,q:"150. ต้องการตรวจระบบโครงสร้าง (สะโพก) ในสุนัขพันธุ์ German Shepherd อายุ 1 ปี ควรเลือกใช้การตรวจวิธีใด",opts:[{key:"ก",text:"Elbow flexion"},{key:"ข",text:"Ortolani test"},{key:"ค",text:"Drawer test"},{key:"ง",text:"Tibial compression test"},{key:"จ",text:"Shoulder abduction"}],answer:"ข",explanation:"Ortolani test เป็นการทดสอบมาตรฐานสำหรับวินิจฉัย Hip dysplasia ในสุนัข โดยการดึงขาและ abduct เพื่อฟังเสียง 'click' เมื่อ femoral head กลับเข้า acetabulum",ref:"Brinker, Piermattei and Flo's Handbook of Small Animal Orthopedics. 5th ed. Elsevier; 2016."}
 ]; 
 const imageMap = {
-  23: "./images/2021/sec3/q23.png”,
-  51: "./images/2021/sec3/q51.png”,
-  52: "./images/2021/sec3/q52.png”,
-  66: "./images/2021/sec3/q66.png”,
-  100: "./images/2021/sec3/q100.png”,
-  112: "./images/2021/sec3/q112.png”, 
+  23: "NL-Exam/images/2021/sec3/q23.png",
+  51: "NL-Exam/images/2021/sec3/q51.png",
+  52: "NL-Exam/images/2021/sec3/q52.png",
+  66: "NL-Exam/images/2021/sec3/q66.png",
+  100: "NL-Exam/images/2021/sec3/q100.png",
+  112: "NL-Exam/images/2021/sec3/q112.png", 
 };
 
 QUESTIONS.forEach((q, i) => {
@@ -319,6 +320,12 @@ function render() {
   if (state.bookmarks.has(current)) {bm.textContent='★ บันทึกแล้ว';bm.classList.add('active');}
   else {bm.textContent='☆ บันทึก';bm.classList.remove('active');}
   document.getElementById('qText').textContent = q.q;
+  const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
   q.opts.forEach(opt => {
