@@ -1111,7 +1111,20 @@ const QUESTIONS = [
     explanation:"อาการหงอนซีด ขี้เขียว ไข่ลด hepatomegaly + splenomegaly with dark/black discoloration สงสัย Fowl cholera (Pasteurella multocida), Avian Influenza หรือ Newcastle Disease EDTA blood เหมาะสำหรับตรวจ PCR ไวรัส (AI, NDV) เพราะรักษา nucleic acid และเซลล์ไว้ได้ดี",
     ref:"Swayne DE, et al. Diseases of Poultry. 13th ed. Wiley-Blackwell; 2013."
   }
-];
+]; const imageMap = {
+  9: "./images/2017/sec3/q9.png”,
+  113: "./images/2017/sec3/q113.png”,
+  114: "./images/2017/sec3/q114.png”,
+  119: "./images/2017/sec3/q119.png”,
+  122: "./images/2017/sec3/q122.png”,
+  137: "./images/2017/sec3/q137.png”,
+  138: "./images/2017/sec3/q138.png”,
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
+
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
