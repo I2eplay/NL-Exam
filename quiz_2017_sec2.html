@@ -1015,10 +1015,10 @@ const QUESTIONS = [
   }
 ]; 
 const imageMap = {
-  40: "./images/2017/sec2/q40.png”,
-  46: "./images/2017/sec2/q46.png”,
-  48: "./images/2017/sec2/q48.png”,
-  69: "./images/2017/sec2/q69.png”,
+  40: "/NL-Exam/images/2017/sec2/q40.png",
+  46: "/NL-Exam/images/2017/sec2/q46.png",
+  48: "/NL-Exam/images/2017/sec2/q48.png",
+  69: "/NL-Exam/images/2017/sec2/q69.png",
 };
 
 QUESTIONS.forEach((q, i) => {
@@ -1039,8 +1039,12 @@ function render() {
   else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
 
   document.getElementById('qText').textContent = q.q;
-  const imgC = document.getElementById('qImgContainer');
-  imgC.innerHTML = q.img ? `<img src="${q.img}" alt="ภาพประกอบ" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">` : '';
+  const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
 
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
