@@ -1181,7 +1181,16 @@ const QUESTIONS = [
     explanation:"แม่สุกรหนัก 120 กก. อยู่ในคอกขนาด 1.5×2.5 = 3.75 ตร.ม. ซึ่งน้อยกว่าเกณฑ์ EU Directive (อย่างน้อย 2.25 ตร.ม.) พฤติกรรมที่พบ: ร้องดังเวลาให้อาหาร (frustration), ดันคอกเหล็ก (stereotypy/bar-biting) และแทะก๊อกน้ำ ล้วนเป็นสัญญาณของ stereotypic behavior อันเกิดจากพื้นที่คับแคบและความเครียดเรื้อรัง",
     ref:"Broom DM, Fraser AF. Domestic Animal Behaviour and Welfare. 5th ed. CAB International; 2015."
   }
-];
+]; const imageMap = {
+  11: "./images/2014/sec2/q11.jpg",
+  47: "./images/2014/sec2/q47.jpg",
+  61: "./images/2014/sec2/q61.jpg",
+  62: "./images/2014/sec2/q62.jpg",
+};
+
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+});
 
 let current = 0;
 const state = { answered: {}, bookmarks: new Set() };
