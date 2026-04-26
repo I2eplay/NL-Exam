@@ -112,6 +112,7 @@
         <button class="q-bookmark" id="bookmarkBtn" onclick="toggleBookmark()">☆ บันทึก</button>
       </div>
       <div class="q-text" id="qText"></div>
+      <div id="qImgContainer"></div>
       <div class="options" id="optionsContainer"></div>
       <div class="feedback" id="feedback">
         <div class="fb-header" id="fbHeader"></div>
@@ -259,18 +260,18 @@ const QUESTIONS = [
   {id:100, q:"100. สุนัขอายุ 3 ปี มีพฤติกรรมกัดหางตัวเอง มีอาการคัน ผิวหนังอักเสบบริเวณสะโพก ท้อง และหาง คาดว่าเกิดจากสาเหตุใดมากที่สุด", opts:[{key:"1",text:"Flea bite hypersensitivity"},{key:"2",text:"Hypothyroidism"},{key:"3",text:"Ichthyosis"},{key:"4",text:"Dermatophytosis"},{key:"5",text:"Atopic dermatitis"}], answer:"1", explanation:"Flea Allergy Dermatitis (FAD) มักแสดงอาการคัน ผิวหนังอักเสบ และ self-trauma บริเวณ dorsal lumbosacral area, perianal, tail base, caudal thighs และท้อง ซึ่งตรงกับการกระจายของรอยโรคในโจทย์", ref:"Scott DW, Miller WH, Griffin CE. Muller & Kirk's Small Animal Dermatology. 6th ed. Elsevier; 2001."}
 ]; 
 const imageMap = {
-  12: "./images/2023/sec2/q12.png”,
-  16: "./images/2023/sec2/q16.png”,
-  29: "./images/2022/sec2/q29.png”,
-  46: "./images/2022/sec2/q46.png”,
-  57: "./images/2022/sec2/q57.png”,
-  74: "./images/2022/sec2/q74.png”, 
-  89: "./images/2022/sec2/q89.png”,
-  92: "./images/2022/sec2/q92.png”,
+  12: "NL-Exam/images/2023/sec2/q12.png",
+  16: "NL-Exam/images/2023/sec2/q16.png",
+  29: "NL-Exam/images/2022/sec2/q29.png",
+  46: "NL-Exam/images/2022/sec2/q46.png",
+  57: "NL-Exam/images/2022/sec2/q57.png",
+  74: "NL-Exam/images/2022/sec2/q74.png", 
+  89: "NL-Exam/images/2022/sec2/q89.png",
+  92: "NL-Exam/images/2022/sec2/q92.png",
 };
 
-QUESTIONS.forEach((q, i) => {
-  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+QUESTIONS.forEach((q) => {
+  if (imageMap[q.id]) q.img = imageMap[q.id];
 });
 
 let current = 0;
@@ -285,6 +286,12 @@ function render() {
   if (state.bookmarks.has(current)) { bm.textContent = '★ บันทึกแล้ว'; bm.classList.add('active'); }
   else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
   document.getElementById('qText').textContent = q.q;
+  const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
   q.opts.forEach(opt => {
