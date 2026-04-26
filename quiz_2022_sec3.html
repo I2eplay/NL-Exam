@@ -99,6 +99,7 @@
         <button class="q-bookmark" id="bookmarkBtn" onclick="toggleBookmark()">☆ บันทึก</button>
       </div>
       <div class="q-text" id="qText"></div>
+      <div id="qImgContainer"></div>
       <div class="options" id="optionsContainer"></div>
       <div class="feedback" id="feedback">
         <div class="fb-header" id="fbHeader"></div>
@@ -280,19 +281,19 @@ const QUESTIONS = [
   {id:149,q:"149. มาตรฐานวัตถุดิบอาหารสำหรับโค",opts:[{key:"1",text:"GAP"},{key:"2",text:"ISO 14000"},{key:"3",text:"GMP"},{key:"4",text:"HACCP"}],answer:"3",explanation:"GMP (Good Manufacturing Practice) เป็นมาตรฐานที่ใช้สำหรับการผลิตวัตถุดิบและอาหารสัตว์ เน้นกระบวนการผลิตที่ถูกสุขลักษณะ ส่วน HACCP ใช้สำหรับกระบวนการผลิตอาหารที่มีการวิเคราะห์อันตรายและ CCP",ref:"Codex Alimentarius Code of Practice on Good Animal Feeding. CAC/RCP 54-2004."}
 ]; 
 const imageMap = {
-  19: "./images/2022/sec3/q19.png”,
-  31: "./images/2022/sec3/q31.png”,
-  38: "./images/2022/sec3/q38.png”,
-  43: "./images/2022/sec3/q43.png”,
-  77: "./images/2022/sec3/q77.png”,
-  84: "./images/2022/sec3/q84.png”, 
-  103: "./images/2022/sec3/q103.png”,
-  105: "./images/2022/sec3/q105.png”,
-  119: "./images/2022/sec3/q119.png”,
+  19: "/NL-Exam/images/2022/sec3/q19.png",
+  31: "/NL-Exam/images/2022/sec3/q31.png",
+  38: "/NL-Exam/images/2022/sec3/q38.png",
+  43: "/NL-Exam/images/2022/sec3/q43.png",
+  77: "/NL-Exam/images/2022/sec3/q77.png",
+  84: "/NL-Exam/images/2022/sec3/q84.png", 
+  103: "/NL-Exam/images/2022/sec3/q103.png",
+  105: "/NL-Exam/images/2022/sec3/q105.png",
+  119: "/NL-Exam/images/2022/sec3/q119.png",
 };
 
-QUESTIONS.forEach((q, i) => {
-  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+QUESTIONS.forEach((q) => {
+  if (imageMap[q.id]) q.img = imageMap[q.id];
 });
 
 
@@ -308,6 +309,12 @@ function render() {
   if (state.bookmarks.has(current)) { bm.textContent = '★ บันทึกแล้ว'; bm.classList.add('active'); }
   else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
   document.getElementById('qText').textContent = q.q;
+  const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
   q.opts.forEach(opt => {
