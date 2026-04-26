@@ -112,6 +112,7 @@
         <button class="q-bookmark" id="bookmarkBtn" onclick="toggleBookmark()">☆ บันทึก</button>
       </div>
       <div class="q-text" id="qText"></div>
+      <div id="qImgContainer"></div>
       <div class="options" id="optionsContainer"></div>
       <div class="feedback" id="feedback">
         <div class="fb-header" id="fbHeader"></div>
@@ -263,20 +264,20 @@ const QUESTIONS = [
   {id:101, q:"101. ตรวจเจอสัตว์ตายด้วย Anthrax ต้องแจ้งใครตามพรบ.โรคระบาดสัตว์ 2558", opts:[{key:"1",text:"สำนักงานปศุสัตว์ในพื้นที่"},{key:"2",text:"องค์การบริหารส่วนตำบล"},{key:"3",text:"สาธารณสุขจังหวัด"},{key:"4",text:"องค์การอาหารและยา"},{key:"5",text:"โรงพยาบาลสัตว์"}], answer:"1", explanation:"ตามพระราชบัญญัติโรคระบาดสัตว์ พ.ศ. 2558 เมื่อพบสัตว์ป่วยหรือตายด้วยโรคระบาดอันตราย (เช่น Anthrax) ต้องแจ้ง 'พนักงานเจ้าหน้าที่' คือสัตวแพทย์หรือเจ้าหน้าที่ปศุสัตว์ในพื้นที่ (สำนักงานปศุสัตว์จังหวัด/อำเภอ) ทันที", ref:"พระราชบัญญัติโรคระบาดสัตว์ พ.ศ. 2558 มาตรา 15-16."}
 ]; 
 const imageMap = {
-  14: "./images/2023/sec3/q14.png”,
-  28: "./images/2023/sec3/q28.png”,
-  31: "./images/2022/sec3/q31.png”,
-  32: "./images/2022/sec3/q32.png”,
-  40: "./images/2022/sec3/q40.png”,
-  53: "./images/2022/sec3/q53.png”, 
-  54: "./images/2022/sec3/q54.png”,
-  55: "./images/2022/sec3/q55.png”,
-  56: "./images/2022/sec3/q56.png”,
-  73: "./images/2022/sec3/q73.png”,
+  14: "/NL-Exam/images/2023/sec3/q14.png",
+  28: "/NL-Exam/images/2023/sec3/q28.png",
+  31: "/NL-Exam/images/2023/sec3/q31.png",
+  32: "/NL-Exam/images/2023/sec3/q32.png",
+  40: "/NL-Exam/images/2023/sec3/q40.png",
+  53: "/NL-Exam/images/2023/sec3/q53.png", 
+  54: "/NL-Exam/images/2023/sec3/q54.png",
+  55: "/NL-Exam/images/2023/sec3/q55.png",
+  56: "/NL-Exam/images/2023/sec3/q56.png",
+  73: "/NL-Exam/images/2023/sec3/q73.png",
 };
 
-QUESTIONS.forEach((q, i) => {
-  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+QUESTIONS.forEach((q) => {
+  if (imageMap[q.id]) q.img = imageMap[q.id];
 });
 
 
@@ -292,6 +293,12 @@ function render() {
   if (state.bookmarks.has(current)) { bm.textContent = '★ บันทึกแล้ว'; bm.classList.add('active'); }
   else { bm.textContent = '☆ บันทึก'; bm.classList.remove('active'); }
   document.getElementById('qText').textContent = q.q;
+  const imgEl = document.getElementById('qImgContainer');
+if (q.img) {
+  imgEl.innerHTML = `<img src="${q.img}" style="max-width:100%;border-radius:8px;margin-bottom:16px;border:0.5px solid var(--border);">`;
+} else {
+  imgEl.innerHTML = '';
+}
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
   q.opts.forEach(opt => {
