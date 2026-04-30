@@ -1268,8 +1268,8 @@ const imageMap = {
   125: "/NL-Exam/images/2020/sec2/q125.png",
 };
 
-QUESTIONS.forEach((q, i) => {
-  if (imageMap[i + 1]) q.img = imageMap[i + 1];
+QUESTIONS.forEach((q) => {
+  if (imageMap[q.id]) q.img = imageMap[q.id];
 });
 
 let current = 0;
