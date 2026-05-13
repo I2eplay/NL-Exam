@@ -1128,8 +1128,8 @@ const imageMap = {
   145: "NL-Exam/images/2018/sec2/q145.png",
 };
 
-QUESTIONS.forEach((q) => {
-  if (imageMap[q.id]) q.img = imageMap[q.id];
+QUESTIONS.forEach((q, i) => {
+  if (imageMap[i + 1]) q.img = imageMap[i + 1];
 });
 
 let current = 0;
